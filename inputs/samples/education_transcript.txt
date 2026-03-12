@@ -1,0 +1,52 @@
+Meeting Date: February 15, 2026
+Duration: 55 minutes
+Location: Virtual (Zoom)
+Project: Client Discovery Call — BrightPath Academy
+
+Attendees:
+- Dr. Emily Foster (Director, BrightPath Academy — Client)
+- Michael Torres (IT Manager, BrightPath — Client)
+- Riya Gupta (Business Analyst, Our Team)
+- Sam Mitchell (Sales Lead, Our Team)
+
+---
+
+Sam: Dr. Foster, Michael — what does BrightPath need?
+
+Dr. Foster: BrightPath is a K-12 private school network with 5 campuses and
+3,000 students. We're still using paper-based processes for enrollment,
+attendance, and grade reporting. Parents call the front desk for everything.
+We need a complete school management platform.
+
+Michael: Our pain points: enrollment takes 2 weeks of paperwork. Attendance
+is tracked on paper and entered into spreadsheets weekly. Report cards are
+generated manually in Word. Parents have zero visibility into their child's
+progress between report card periods.
+
+Dr. Foster: We need: online enrollment with document upload, daily digital
+attendance tracking, real-time grade book for teachers, parent portal with
+student progress dashboards, and communication tools (announcements,
+messaging between parents and teachers).
+
+Michael: For teachers: lesson planning tools, assignment creation with
+online submission, and a gradebook that automatically calculates weighted
+grades. For admin: enrollment analytics, attendance reports, and financial
+reports (tuition payments).
+
+Dr. Foster: Accessibility is critical — WCAG 2.1 AA compliance. We have
+students and parents with disabilities. FERPA compliance for student records.
+Parents should only see their own children's data.
+
+Michael: We use PowerSchool currently for basic SIS but it's outdated.
+We need data migration for student records. Google Classroom integration
+for assignment delivery. Integration with our existing payment gateway
+for tuition.
+
+Dr. Foster: 300 teachers, 3,000 students, 5,000 parents, 50 admin staff.
+Timeline: ready for next academic year (4 months). Budget: $80,000.
+
+Decisions Made:
+- Phase 1: Enrollment, Attendance, Gradebook, Parent Portal
+- Phase 2: Lesson Planning, Advanced Analytics, Mobile App
+- FERPA and WCAG 2.1 AA compliance required
+- 4 months for Phase 1

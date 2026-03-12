@@ -1,0 +1,51 @@
+Meeting Date: February 20, 2026
+Duration: 65 minutes
+Location: Virtual (Teams)
+Project: Client Discovery Call — PayWise Financial
+
+Attendees:
+- Robert Kim (CTO, PayWise Financial — Client)
+- Anna Lopez (Compliance Officer, PayWise — Client)
+- Dev Patel (Business Analyst, Our Team)
+- Nisha Rao (Sales Lead, Our Team)
+
+---
+
+Nisha: Robert, Anna — what's driving this project?
+
+Robert: PayWise is a lending platform. We process 500 loan applications daily.
+Everything is manual — our underwriters review each application by hand, checking
+credit scores, income verification, and risk assessment. It takes 3-5 business
+days. We need to bring this to under 4 hours for standard applications.
+
+Anna: From compliance perspective, we need full KYC/AML checks automated.
+Currently our compliance team manually verifies identity documents. We need
+automated document verification integrated with third-party KYC providers.
+
+Robert: We need: automated loan underwriting engine with configurable risk
+rules, document upload and OCR for income verification, real-time credit
+score integration, customer portal for application tracking, and admin
+dashboard for underwriters to handle edge cases.
+
+Anna: SOC2 Type II is required. PCI-DSS for any payment processing. All
+customer PII must be encrypted at rest and in transit. Complete audit trail
+for every decision — regulatory auditors need to trace why any loan was
+approved or denied.
+
+Robert: Integration needs: Experian/TransUnion for credit, Plaid for bank
+verification, DocuSign for loan agreements, and Twilio for notifications.
+
+Robert: 200 internal users, 10,000 applicants monthly. Expecting 50,000
+monthly within a year. System must handle burst traffic during promotions.
+
+Anna: Two-factor auth mandatory. Session timeout at 15 minutes for admin.
+Fraud detection for duplicate applications and identity theft.
+
+Robert: 6-month timeline. $200,000 budget. Phase 1: core underwriting,
+KYC, customer portal. Phase 2: AI risk scoring, advanced analytics.
+
+Decisions Made:
+- Phase 1: Loan underwriting, KYC/AML, customer portal, admin dashboard
+- Phase 2: AI risk scoring, predictive analytics, partner API
+- SOC2 and PCI-DSS compliance required
+- 6 months for Phase 1

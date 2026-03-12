@@ -1,0 +1,56 @@
+Meeting Date: February 10, 2026
+Duration: 60 minutes
+Location: Virtual (Zoom)
+Project: Client Discovery Call — MedCare Hospital Network
+
+Attendees:
+- Dr. Rajesh Mehta (CTO, MedCare Hospital Network — Client)
+- Priya Sharma (Hospital Admin Manager, MedCare — Client)
+- Sai Kumar (Business Analyst, Our Team)
+- Anita Desai (Sales Lead, Our Team)
+- Vikram Patel (Technical Lead, Our Team)
+
+---
+
+Anita (Sales): Thank you all for joining. Dr. Mehta, Priya — let's start with
+what's driving this initiative.
+
+Dr. Mehta: Our biggest problem is appointment no-shows. We're losing roughly
+30% of appointments because patients forget. We need automated SMS and email
+reminders — at least 24 hours before the appointment.
+
+Priya: The insurance claim process is a nightmare. It takes 7 days to process
+a claim manually. We want to bring this down to under 24 hours with automated
+validation against insurance providers' databases.
+
+Sai: So the two main pain points are: appointment no-shows and slow insurance
+claim processing. What about the booking process?
+
+Dr. Mehta: We need an online booking portal. Patients call in to book. We want
+online booking, rescheduling, and cancellation. Doctors should manage their
+own availability.
+
+Priya: I need an admin dashboard for managing users and generating reports on
+appointment volumes, no-show rates, and claim processing times.
+
+Dr. Mehta: Security is critical. We handle PHI. We MUST be HIPAA compliant.
+Every login needs MFA. We need audit trails for patient data access.
+
+Vikram: Do you have an existing patient database?
+
+Dr. Mehta: Yes, legacy PostgreSQL with 50,000 patient records. Migration needed
+with zero downtime. We also have a Twilio account for SMS.
+
+Dr. Mehta: We want to go live in 6 months. Phase 1: booking, insurance validation,
+admin dashboard. Phase 2: telemedicine, advanced analytics, patient records.
+
+Priya: Budget is flexible. We need a clear SOW before committing.
+
+Dr. Mehta: 200 doctors, 5,000 active patients monthly, 50 admin staff.
+Peak concurrent users: 500-1000.
+
+Decisions Made:
+- Phase 1: Booking, Insurance, Admin Dashboard, Notifications
+- Phase 2: Telemedicine, Advanced Analytics, Mobile App
+- HIPAA compliance non-negotiable
+- 6 months for Phase 1

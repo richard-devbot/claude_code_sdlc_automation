@@ -1,0 +1,152 @@
+Meeting Date: March 5, 2026
+Duration: 75 minutes
+Location: Virtual (Microsoft Teams)
+Project: Client Discovery Call — TechNova Solutions
+Company: TechNova Solutions (Digital Agency)
+
+Attendees:
+- Marcus Chen (CEO, TechNova Solutions — Client)
+- Sarah Williams (Head of Operations, TechNova — Client)
+- David Park (Business Analyst, Our Team)
+- Rachel Torres (Sales Lead, Our Team)
+- Alex Kumar (Technical Lead, Our Team)
+
+---
+
+Rachel (Sales): Thanks everyone for joining today. Marcus, Sarah — we're excited
+to understand your vision. Let's start with what you're looking for.
+
+Marcus: Thanks Rachel. So TechNova is a digital agency with about 150 employees.
+We manage projects for over 40 active clients at any time. Our biggest problem
+right now is that everything is scattered — we use spreadsheets for tracking
+projects, emails for client communication, and a basic shared drive for documents.
+It's chaos.
+
+Sarah: I can add to that. As Head of Operations, my life is a nightmare every
+Monday morning. I spend 3 hours just compiling status reports from different
+team leads because there's no single place to see project progress. We're also
+constantly missing deadlines because we don't have visibility into who's
+overloaded and who has capacity.
+
+David: So the core pain point is operational visibility and project management
+centralization?
+
+Marcus: Exactly. But it goes beyond that. We also need a proper client portal.
+Right now, clients email us asking "what's the status of my project?" and we
+scramble to find answers. I want clients to log in, see their project dashboard,
+view deliverables, approve milestones, and communicate with their dedicated
+team — all in one place.
+
+Sarah: And invoicing! Oh my god, invoicing. We track billable hours in
+spreadsheets, and by the time we generate invoices, we've usually under-billed
+by 15-20% because people forget to log time. We need automated time tracking
+that ties directly to projects and generates invoices automatically.
+
+David: Got it. So we're looking at:
+1. Internal project management platform
+2. Client-facing portal with dashboards
+3. Time tracking and automated invoicing
+4. Resource allocation and capacity planning
+
+Is that a fair summary?
+
+Marcus: Yes, and add one more — a document management system. We need version
+control for deliverables. Right now someone uploads "final_v2_FINAL_actual.psd"
+to the shared drive and nobody knows which one is current. We need proper
+versioning, client approval workflows, and commenting on deliverables.
+
+Sarah: For the resource allocation piece specifically — I need to see at a
+glance: which developers are assigned to which projects, what's their utilization
+rate, and when someone becomes available. Right now I have to ask each team lead
+individually. A visual resource board would be amazing.
+
+Alex: Marcus, on the technical side — do you have any existing systems we'd
+need to integrate with?
+
+Marcus: We use QuickBooks for accounting, so the invoicing system needs to sync
+with that. We also use Slack heavily for internal communication — it would be
+great if the platform could send Slack notifications for things like "milestone
+approved" or "new client comment." And we use Google Workspace for email and
+calendar, so calendar integration for project deadlines would be helpful.
+
+Sarah: Also, our design team uses Figma, and the developers use GitHub. If the
+document management could at least link to or preview Figma files and show Git
+commit activity per project, that would be incredible. But I understand if
+that's Phase 2.
+
+David: What about security and compliance? Any specific requirements?
+
+Marcus: We handle client data — some of our clients are in healthcare and
+finance, so we need to be careful. I'd say SOC2 compliance is a must. We need
+role-based access so that clients can only see their own projects, team members
+see only what's assigned to them, and managers get the full picture. Audit
+trails for who changed what and when.
+
+Sarah: And two-factor authentication for sure. We've had a scare before where
+an intern's password was compromised. Never again.
+
+David: Understood. What about mobile access?
+
+Marcus: Responsive web app is fine for Phase 1. Our team is mostly on laptops.
+But a mobile app for time tracking on the go would be nice eventually — Phase 2.
+
+Rachel: What's your timeline expectation for this?
+
+Marcus: We want to start the transition before our next fiscal year. So ideally
+Phase 1 live within 5 months. Phase 1 should cover: project management, client
+portal, time tracking with basic invoicing, and document management. Phase 2
+can add the advanced integrations, mobile app, advanced analytics, and AI-powered
+project estimation.
+
+Sarah: Budget-wise, we've allocated around $150,000 for Phase 1. We need a
+detailed SOW before signing. We've been burned before by scope creep with no
+documentation, so clear deliverables and milestones are essential.
+
+Marcus: One more thing — we need reporting. I want to see:
+- Revenue per client
+- Project profitability (hours spent vs quoted)
+- Team utilization rates
+- On-time delivery percentage
+- Client satisfaction scores (we do NPS surveys quarterly)
+
+Those dashboards are critical for our board meetings.
+
+David: How many users would we be looking at?
+
+Sarah: About 150 internal users (all employees), maybe 60-80 client users
+(main contacts from our 40+ clients), and 5 admin/management users who need
+the full dashboards.
+
+Marcus: And the system needs to handle growth. We plan to be at 250 employees
+and 80 clients within 18 months. So scalability matters.
+
+Alex: Any specific performance requirements?
+
+Sarah: Pages should load in under 2 seconds. The current spreadsheet system
+takes forever. And the reporting dashboards — those aggregate a lot of data,
+so ideally under 5 seconds for those.
+
+David: Perfect. Let me capture the open questions:
+
+Open Questions:
+- QuickBooks API version and authentication method they use
+- Exact Figma and GitHub integration scope for Phase 1 vs Phase 2
+- NPS survey integration specifics (tool they use for NPS)
+- Data migration needs (existing project data in spreadsheets)
+- Specific report templates for board meetings
+- Preferred cloud hosting region (data residency requirements)
+- SSO requirements (Google Workspace SAML/OIDC)
+
+Decisions Made:
+- Phase 1 scope: Project Management, Client Portal, Time Tracking + Invoicing,
+  Document Management, Reporting Dashboards
+- Phase 2 scope: Mobile App, AI Project Estimation, Advanced Integrations
+  (Figma deep integration, GitHub activity), Advanced Analytics
+- SOC2 compliance is required
+- 2FA is mandatory
+- Responsive web app for Phase 1 (no native mobile)
+- Budget: $150,000 for Phase 1
+- Timeline: 5 months for Phase 1 go-live
+- QuickBooks integration for invoicing is Phase 1
+- Slack notification integration is Phase 1
+- Google Calendar integration is Phase 1

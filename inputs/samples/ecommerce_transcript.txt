@@ -1,0 +1,51 @@
+Meeting Date: March 1, 2026
+Duration: 50 minutes
+Location: Virtual (Google Meet)
+Project: Client Discovery Call — UrbanBazaar Marketplace
+
+Attendees:
+- Lisa Wang (CEO, UrbanBazaar — Client)
+- Tom Bradley (Head of E-Commerce, UrbanBazaar — Client)
+- Meera Singh (Business Analyst, Our Team)
+- James Wilson (Sales Lead, Our Team)
+
+---
+
+James: Lisa, Tom — tell us about the initiative.
+
+Lisa: UrbanBazaar is a curated marketplace for local artisans. We have 500
+sellers and 20,000 monthly active buyers. Currently on Shopify but we've
+outgrown it. We need a custom marketplace with multi-vendor support.
+
+Tom: Main pain points: Shopify's commission structure is killing our margins.
+We can't customize the seller onboarding. Search is terrible — our artisans
+tag products inconsistently. And we have no recommendation engine.
+
+Lisa: We need: multi-vendor marketplace with independent seller dashboards,
+advanced search with filters (category, price, location, ratings), a
+recommendation engine based on browsing history, and a review/rating system.
+
+Tom: Payment is critical — we need split payments. When a buyer purchases from
+3 sellers in one cart, the payment should split automatically. We use Stripe
+currently. Also need support for discount codes and seasonal promotions.
+
+Lisa: Mobile-first design. 70% of our traffic is mobile. Performance matters —
+product pages must load in under 1.5 seconds.
+
+Tom: For sellers: they need dashboards showing sales analytics, inventory
+management, order fulfillment tracking, and the ability to run their own
+promotions.
+
+Meera: Any compliance requirements?
+
+Lisa: PCI-DSS for payments obviously. GDPR because we have European buyers.
+We need cookie consent management and data deletion requests.
+
+Tom: Timeline: 4 months for MVP. Budget: $120,000.
+Expected scale: 2,000 sellers and 100,000 MAU within a year.
+
+Decisions Made:
+- Phase 1: Multi-vendor marketplace, search, payments, seller dashboards
+- Phase 2: Recommendation engine, mobile app, AI-powered tagging
+- Stripe for payments with split payment support
+- Mobile-first responsive design

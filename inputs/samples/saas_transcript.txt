@@ -1,0 +1,49 @@
+Meeting Date: March 3, 2026
+Duration: 45 minutes
+Location: Virtual (Teams)
+Project: Client Discovery Call — CloudMetrics Inc.
+
+Attendees:
+- Jason Park (CEO, CloudMetrics — Client)
+- Katie Chen (VP Product, CloudMetrics — Client)
+- Arun Nair (Business Analyst, Our Team)
+- Lisa Wong (Sales Lead, Our Team)
+
+---
+
+Lisa: Jason, Katie — what's CloudMetrics building?
+
+Jason: CloudMetrics is launching a B2B SaaS analytics platform. We help
+companies track their cloud infrastructure costs across AWS, Azure, and GCP.
+We have an MVP built but it's not production-ready. We need help building
+the full multi-tenant platform.
+
+Katie: Key features needed: multi-tenant architecture with workspace isolation,
+subscription management (free, pro, enterprise tiers), usage-based billing,
+interactive cost dashboards with drill-down charts, anomaly detection for
+cost spikes, and team collaboration features (shared dashboards, comments).
+
+Jason: Integration is everything for us. We need to connect to AWS Cost
+Explorer, Azure Cost Management, and GCP Billing APIs. Users connect their
+cloud accounts via OAuth/IAM roles and we pull their cost data.
+
+Katie: Admin panel for our internal team: tenant management, subscription
+management, feature flags per tier, and usage monitoring. Also need a
+self-service onboarding flow — users should go from sign-up to seeing their
+first dashboard in under 5 minutes.
+
+Jason: SOC2 compliance is a must — our enterprise customers require it.
+Multi-factor auth, SSO (SAML/OIDC) for enterprise tier, and data encryption.
+
+Katie: We expect 100 tenants in month 1, scaling to 1,000 within a year.
+Each tenant may have 5-50 users. Data isolation between tenants is critical.
+
+Jason: Timeline: 5 months. Budget: $180,000. Phase 1: multi-tenant platform,
+billing, AWS integration. Phase 2: Azure/GCP, AI anomaly detection.
+
+Decisions Made:
+- Phase 1: Multi-tenant platform, Stripe billing, AWS integration, dashboards
+- Phase 2: Azure + GCP integration, AI anomaly detection, advanced reports
+- SOC2 compliance required
+- SSO for enterprise tier
+- 5 months for Phase 1
