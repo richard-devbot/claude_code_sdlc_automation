@@ -1,0 +1,2333 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "jira_agent",
+  "timestamp": "2026-03-12T00:00:00Z",
+  "ticketing_mode": "file_based",
+  "project": {
+    "name": "TechNova Solutions — Client Project Management Platform",
+    "client": "TechNova Solutions",
+    "domain": "Professional Services / Digital Agency Management"
+  },
+  "summary": {
+    "total_epics": 11,
+    "total_stories": 56,
+    "total_tasks": 168,
+    "total_story_points": 299,
+    "total_domain_stories": 8,
+    "stories_per_sprint": {
+      "sprint_0": 6,
+      "sprint_1": 10,
+      "sprint_2": 4,
+      "sprint_3": 5,
+      "sprint_4": 5,
+      "sprint_5": 5,
+      "sprint_6": 5,
+      "sprint_7": 6,
+      "sprint_8": 7,
+      "sprint_9": 3
+    },
+    "fr_coverage": {
+      "total_frs": 48,
+      "covered_frs": 48,
+      "uncovered_frs": 0,
+      "coverage_percentage": 100
+    }
+  },
+  "epics": [
+    {
+      "epic_id": "EPIC-001",
+      "epic_name": "Project Management",
+      "description": "Core project tracking, task management, milestone tracking, and Kanban/list views to replace spreadsheet-based project tracking.",
+      "module": "Project Management",
+      "priority": "CRITICAL",
+      "user_stories": [
+        {
+          "story_id": "US-001",
+          "title": "As a Project Manager, I want to view a centralized dashboard of all active projects so that I can monitor status, deadlines, and team assignments at a glance",
+          "description": "Implement a centralized project dashboard displaying all active projects with their current status, assigned team members, deadlines, and completion percentages. The dashboard must support filtering, sorting, and real-time status indicators for 40+ active client projects.",
+          "acceptance_criteria": [
+            "GIVEN I am a logged-in Project Manager WHEN I navigate to the project dashboard THEN I see all active projects with status, team, deadline, and completion percentage columns",
+            "GIVEN the dashboard is displayed WHEN I click on a column header THEN the projects are sorted by that column in ascending/descending order",
+            "GIVEN the dashboard is displayed WHEN I apply filters by status, client, or team member THEN only matching projects are shown",
+            "GIVEN a project status changes WHEN another user updates it THEN the dashboard reflects the change within 5 seconds without a full page refresh"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 2,
+          "labels": ["project-management", "dashboard", "core"],
+          "linked_requirements": ["FR-001"],
+          "tasks": [
+            {
+              "task_id": "T-001",
+              "title": "Build project dashboard REST API with filtering, sorting, and pagination",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-002",
+              "title": "Implement project dashboard UI with data table, filters, and real-time indicators",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-003",
+              "title": "Write E2E tests for dashboard filtering, sorting, pagination, and real-time updates",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-002",
+          "title": "As an Administrator, I want to create, edit, and archive projects with configurable fields so that project records are complete and organized",
+          "description": "Enable project CRUD operations with configurable fields including project name, client, start date, deadline, budget, assigned team, and project phases/milestones. Archived projects remain searchable but hidden from active views.",
+          "acceptance_criteria": [
+            "GIVEN I am an Administrator WHEN I click 'Create Project' THEN I see a form with all configurable fields (name, client, dates, budget, team, phases)",
+            "GIVEN a project exists WHEN I edit any field and save THEN the changes are persisted and reflected in the dashboard immediately",
+            "GIVEN a completed project WHEN I click 'Archive' THEN it is hidden from the active dashboard but remains accessible via search",
+            "GIVEN I search for an archived project WHEN I view its details THEN all historical data including tasks, milestones, and time entries are preserved"
+          ],
+          "story_points": 5,
+          "priority": "Critical",
+          "sprint": 2,
+          "labels": ["project-management", "crud", "core"],
+          "linked_requirements": ["FR-002"],
+          "tasks": [
+            {
+              "task_id": "T-004",
+              "title": "Build Project domain model and CRUD REST APIs with validation",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-005",
+              "title": "Implement project creation wizard and edit forms with field validation",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-006",
+              "title": "Test project CRUD operations, archival, and search for archived projects",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-003",
+          "title": "As a Team Member, I want to manage tasks within projects with status tracking and dependencies so that I can organize and track my work",
+          "description": "Implement task management with creation, assignment, due dates, status tracking (To Do, In Progress, In Review, Done), and predecessor/successor dependencies.",
+          "acceptance_criteria": [
+            "GIVEN I am within a project WHEN I create a task THEN I can assign it to team members, set a due date, and add a description",
+            "GIVEN a task exists WHEN I change its status THEN only valid transitions are allowed (e.g., To Do -> In Progress, In Progress -> In Review)",
+            "GIVEN Task B depends on Task A WHEN Task A is not yet Done THEN Task B shows a dependency warning if moved to In Progress",
+            "GIVEN I am a Project Manager WHEN I view the task list THEN I can see all tasks with their status, assignee, due date, and dependency indicators"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 2,
+          "labels": ["project-management", "tasks", "core"],
+          "linked_requirements": ["FR-003"],
+          "tasks": [
+            {
+              "task_id": "T-007",
+              "title": "Build Task domain model, status workflow engine, and dependency graph logic",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-008",
+              "title": "Implement task list view with inline editing, status transitions, and dependency indicators",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-009",
+              "title": "Test task workflow transitions, dependency validation, and edge cases",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-004",
+          "title": "As a Project Manager, I want to define milestones with target dates and client approval requirements so that I can track project progress against key deliverables",
+          "description": "Implement milestone definition within projects with configurable names, target dates, deliverable associations, and client approval flags. Milestones requiring client approval trigger notifications.",
+          "acceptance_criteria": [
+            "GIVEN I am a Project Manager WHEN I create a milestone THEN I can set a name, target date, link deliverables, and toggle client approval requirement",
+            "GIVEN a milestone requires client approval WHEN it is marked complete THEN the client receives a notification and the milestone cannot be finalized until approved",
+            "GIVEN a Client User receives an approval request WHEN they approve the milestone THEN it is marked as approved with a timestamp",
+            "GIVEN milestones exist WHEN I view the project timeline THEN all milestones display with their status (pending, awaiting approval, approved, overdue)"
+          ],
+          "story_points": 5,
+          "priority": "Critical",
+          "sprint": 2,
+          "labels": ["project-management", "milestones", "core"],
+          "linked_requirements": ["FR-004"],
+          "tasks": [
+            {
+              "task_id": "T-010",
+              "title": "Build Milestone service with approval state machine and notification triggers",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-011",
+              "title": "Implement milestone timeline component and approval UI",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-012",
+              "title": "Test milestone approval flows, notifications, and edge cases",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-005",
+          "title": "As a Team Member, I want to use a Kanban board with drag-and-drop to move tasks between status columns so that I can visually manage my workflow",
+          "description": "Provide Kanban and list views for task management within each project, allowing team members to drag-and-drop tasks between status columns with real-time updates.",
+          "acceptance_criteria": [
+            "GIVEN I am viewing a project WHEN I toggle to Kanban view THEN I see tasks organized in columns by status (To Do, In Progress, In Review, Done)",
+            "GIVEN I am in Kanban view WHEN I drag a task from one column to another THEN the task status updates in real time for all viewers",
+            "GIVEN I am in Kanban view WHEN I toggle to list view THEN I see the same tasks in a tabular format with sorting and filtering",
+            "GIVEN another user moves a task WHEN I am viewing the Kanban board THEN the change is reflected without a page refresh"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 3,
+          "labels": ["project-management", "kanban", "ux"],
+          "linked_requirements": ["FR-005"],
+          "tasks": [
+            {
+              "task_id": "T-013",
+              "title": "Build Kanban board API endpoints with real-time status update support via WebSocket",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-014",
+              "title": "Implement Kanban board UI with drag-and-drop and list view toggle",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-015",
+              "title": "Test Kanban drag-and-drop across browsers and real-time sync between users",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-002",
+      "epic_name": "Client Portal",
+      "description": "Client-facing portal with project dashboards, deliverable review, milestone approvals, messaging, and email notifications.",
+      "module": "Client Portal",
+      "priority": "CRITICAL",
+      "user_stories": [
+        {
+          "story_id": "US-006",
+          "title": "As a Client User, I want to log in to a dedicated portal and view my project dashboard so that I can check project status without contacting the team",
+          "description": "Provide a dedicated client-facing portal where client users can log in, view their project dashboard, see overall project status, and access project-specific information with strict data isolation.",
+          "acceptance_criteria": [
+            "GIVEN I am a Client User WHEN I log in to the client portal THEN I see only projects belonging to my organization",
+            "GIVEN I am on my client dashboard WHEN I view project details THEN I see status, milestones, recent activity, and upcoming deadlines",
+            "GIVEN I am a Client User WHEN I attempt to access another client's project THEN I receive an access denied error",
+            "GIVEN I am a Client User WHEN I navigate the portal THEN the UI is distinct from the internal application with a client-friendly theme"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 4,
+          "labels": ["client-portal", "dashboard", "security"],
+          "linked_requirements": ["FR-006"],
+          "tasks": [
+            {
+              "task_id": "T-016",
+              "title": "Build client portal API layer with tenant isolation middleware",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-017",
+              "title": "Build client portal UI shell with separate theme and client dashboard",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-018",
+              "title": "Test client data isolation with cross-tenant access penetration tests",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-007",
+          "title": "As a Client User, I want to view and download deliverables and approve or request revisions on milestones so that I can provide timely feedback",
+          "description": "Allow client users to view and download deliverables associated with their projects, and to approve or request revisions on milestones through the portal with optional comments.",
+          "acceptance_criteria": [
+            "GIVEN I am a Client User WHEN I navigate to a milestone THEN I see associated deliverables with download links",
+            "GIVEN a deliverable is available WHEN I click 'Download' THEN the file downloads successfully",
+            "GIVEN a milestone requires my approval WHEN I click 'Approve' THEN the milestone status updates and the team is notified",
+            "GIVEN a milestone requires my approval WHEN I click 'Request Revision' THEN I must enter a comment explaining the required changes"
+          ],
+          "story_points": 5,
+          "priority": "Critical",
+          "sprint": 4,
+          "labels": ["client-portal", "deliverables", "approval"],
+          "linked_requirements": ["FR-007"],
+          "tasks": [
+            {
+              "task_id": "T-019",
+              "title": "Build deliverable approval state machine and notification triggers for client actions",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-020",
+              "title": "Implement deliverable review interface with download, approve, and revision request UI",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-021",
+              "title": "Test deliverable approval workflow including edge cases and notification delivery",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-008",
+          "title": "As a Client User, I want to communicate with my project team through threaded messages so that all project discussions are centralized",
+          "description": "Provide a messaging/communication feature within the client portal for project-scoped threaded conversations between client users and their dedicated project team.",
+          "acceptance_criteria": [
+            "GIVEN I am a Client User WHEN I open a project's messaging section THEN I see threaded conversations with the project team",
+            "GIVEN I am composing a message WHEN I type and send THEN the message appears in the thread and the team receives a notification",
+            "GIVEN a Team Member replies WHEN I return to the portal THEN I see the new reply in the conversation thread",
+            "GIVEN I am sending a message WHEN I attach a file THEN the file is uploaded and accessible within the thread"
+          ],
+          "story_points": 5,
+          "priority": "Critical",
+          "sprint": 4,
+          "labels": ["client-portal", "messaging", "communication"],
+          "linked_requirements": ["FR-008"],
+          "tasks": [
+            {
+              "task_id": "T-022",
+              "title": "Build messaging service with WebSocket real-time delivery and file attachment support",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-023",
+              "title": "Implement threaded messaging component with file attachment and real-time updates",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-024",
+              "title": "Test messaging delivery, notifications, file attachments, and cross-browser behavior",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-009",
+          "title": "As a Client User, I want to view a Gantt-style timeline of my project showing milestones and progress so that I understand the project schedule",
+          "description": "Display a project timeline/Gantt-style visualization to client users showing milestone dates, current progress, and upcoming deliverables.",
+          "acceptance_criteria": [
+            "GIVEN I am a Client User WHEN I navigate to the timeline view THEN I see a Gantt chart with milestones, phases, and progress indicators",
+            "GIVEN the timeline is displayed WHEN I hover over a milestone THEN I see details including name, target date, status, and associated deliverables",
+            "GIVEN a project date changes WHEN I view the timeline THEN the updated dates are reflected automatically",
+            "GIVEN the current date is displayed WHEN I view the timeline THEN a 'today' marker shows the current position relative to the schedule"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 5,
+          "labels": ["client-portal", "timeline", "visualization"],
+          "linked_requirements": ["FR-009"],
+          "tasks": [
+            {
+              "task_id": "T-025",
+              "title": "Build timeline data API aggregating milestones, phases, and progress metrics",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-026",
+              "title": "Implement Gantt chart component with milestone markers and progress visualization",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-027",
+              "title": "Test Gantt chart rendering accuracy, date updates, and responsiveness",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-010",
+          "title": "As a Client User, I want to receive automated email notifications for key project events so that I stay informed without logging in",
+          "description": "Send automated email notifications to client users for milestone completion, deliverable uploads, approval requests, and message replies, with configurable preferences.",
+          "acceptance_criteria": [
+            "GIVEN I am a Client User WHEN a milestone is completed THEN I receive an email notification with details",
+            "GIVEN I am a Client User WHEN a new deliverable is uploaded for my review THEN I receive an email with a direct link",
+            "GIVEN I am a Client User WHEN I configure my notification preferences THEN only selected event types trigger emails",
+            "GIVEN an email is sent WHEN I click a link in the email THEN I am directed to the relevant page in the client portal (with authentication)"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 5,
+          "labels": ["client-portal", "notifications", "email"],
+          "linked_requirements": ["FR-010"],
+          "tasks": [
+            {
+              "task_id": "T-028",
+              "title": "Build email notification service with event-driven triggers and user preference management",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-029",
+              "title": "Implement email notification preference settings UI in client portal",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-030",
+              "title": "Test email delivery for all event types, preference enforcement, and link deep-linking",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-003",
+      "epic_name": "Time Tracking & Invoicing",
+      "description": "Billable/non-billable time tracking with timers and manual entry, configurable billing rates, approval workflows, timesheet views, and automated invoice generation.",
+      "module": "Time Tracking & Invoicing",
+      "priority": "CRITICAL",
+      "user_stories": [
+        {
+          "story_id": "US-011",
+          "title": "As a Team Member, I want to log billable and non-billable hours using a start/stop timer or manual entry so that my time is accurately captured",
+          "description": "Provide time tracking where team members can log billable and non-billable hours against specific projects and tasks, with start/stop timer and manual entry options.",
+          "acceptance_criteria": [
+            "GIVEN I am a Team Member WHEN I start a timer against a task THEN the timer runs persistently across page navigation until I stop it",
+            "GIVEN I am a Team Member WHEN I manually enter time THEN I can specify date, hours, project, task, description, and billable/non-billable flag",
+            "GIVEN I have logged time entries WHEN I view my time log THEN I see all entries with project, task, hours, date, and billable status",
+            "GIVEN I am logging time WHEN I do not select a project and task THEN the system prevents submission and shows a validation error"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 3,
+          "labels": ["time-tracking", "timer", "core"],
+          "linked_requirements": ["FR-011"],
+          "tasks": [
+            {
+              "task_id": "T-031",
+              "title": "Build time entry service with timer state management and manual entry APIs",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-032",
+              "title": "Implement timer widget persistent across navigation and manual time entry form",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-033",
+              "title": "Test timer accuracy, persistence, manual entry validation, and edge cases",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-012",
+          "title": "As a Finance Manager, I want the system to generate draft invoices from approved time entries so that billing is accurate and automated",
+          "description": "Automatically generate draft invoices from approved time entries, calculating totals based on project-specific billing rates, with support for manual adjustments before finalization.",
+          "acceptance_criteria": [
+            "GIVEN approved time entries exist WHEN I generate a draft invoice THEN line items are calculated using the correct billing rate hierarchy",
+            "GIVEN a draft invoice is generated WHEN I review it THEN I can adjust line items, add discounts, or add manual entries before finalizing",
+            "GIVEN I finalize an invoice WHEN the invoice is saved THEN it becomes immutable and receives a unique invoice number",
+            "GIVEN finalized invoices exist WHEN I view the invoice list THEN I see status (Draft, Finalized, Sent, Paid) and totals"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 7,
+          "labels": ["invoicing", "billing", "automation"],
+          "linked_requirements": ["FR-012"],
+          "tasks": [
+            {
+              "task_id": "T-034",
+              "title": "Build invoice generation engine aggregating approved time entries with billing rate application",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-035",
+              "title": "Implement invoice generation wizard with line item editing, adjustment, and finalization UI",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-036",
+              "title": "Test invoice calculation accuracy against time entries and billing rates, immutability after finalization",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-013",
+          "title": "As an Administrator, I want to configure billing rates at global, client, and project levels so that invoicing reflects our pricing structure",
+          "description": "Support configurable billing rates per project, per team member role, and per client, with rate overrides at the project level taking precedence over defaults.",
+          "acceptance_criteria": [
+            "GIVEN I am an Administrator WHEN I set global billing rates by role THEN those rates apply as defaults for all clients and projects",
+            "GIVEN I am a Finance Manager WHEN I set a client-level rate override THEN it takes precedence over the global rate for that client",
+            "GIVEN I set a project-level rate WHEN time is logged against that project THEN the project rate takes precedence over both client and global rates",
+            "GIVEN multiple rate levels exist WHEN an invoice is generated THEN the system correctly applies the most specific rate (project > client > global)"
+          ],
+          "story_points": 5,
+          "priority": "Critical",
+          "sprint": 3,
+          "labels": ["billing", "configuration", "rates"],
+          "linked_requirements": ["FR-026"],
+          "tasks": [
+            {
+              "task_id": "T-037",
+              "title": "Build billing rate hierarchy engine with cascading override logic",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-038",
+              "title": "Implement billing rate configuration UI for global, client, and project levels",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-039",
+              "title": "Test billing rate override precedence validation across all levels",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-014",
+          "title": "As a Team Lead, I want to review and approve time entries before they are included in invoices so that billing accuracy is ensured",
+          "description": "Provide time entry approval workflow where team leads or project managers review and approve time entries before invoice generation inclusion.",
+          "acceptance_criteria": [
+            "GIVEN a Team Member submits time entries WHEN I am their approver THEN I see the entries in my approval queue",
+            "GIVEN I review a time entry WHEN I approve it THEN it is marked as approved and eligible for invoice generation",
+            "GIVEN I review a time entry WHEN I reject it THEN I must provide a reason and the Team Member is notified",
+            "GIVEN I reject a time entry WHEN the Team Member modifies and resubmits THEN it reappears in my approval queue"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 3,
+          "labels": ["time-tracking", "approval", "workflow"],
+          "linked_requirements": ["FR-027"],
+          "tasks": [
+            {
+              "task_id": "T-040",
+              "title": "Build time entry approval workflow state machine with notification triggers",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-041",
+              "title": "Implement approval queue view with approve, reject, and request modification actions",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-042",
+              "title": "Test approval workflow edge cases including reject-resubmit cycles",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-015",
+          "title": "As a Team Member, I want to view weekly and monthly timesheets with project breakdowns so that I can track my utilization",
+          "description": "Provide timesheet views showing weekly and monthly summaries per team member with breakdown by project, billable vs. non-billable hours, and utilization percentage.",
+          "acceptance_criteria": [
+            "GIVEN I am a Team Member WHEN I view my timesheet THEN I see a weekly grid with daily hours broken down by project",
+            "GIVEN I am a Team Lead WHEN I view my team's timesheets THEN I see each member's weekly/monthly summary",
+            "GIVEN I toggle to monthly view WHEN viewing timesheets THEN I see the monthly summary with billable vs. non-billable breakdown",
+            "GIVEN I am viewing a timesheet WHEN I click export THEN I can download the data as CSV or PDF"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 3,
+          "labels": ["time-tracking", "timesheet", "reporting"],
+          "linked_requirements": ["FR-028"],
+          "tasks": [
+            {
+              "task_id": "T-043",
+              "title": "Build timesheet aggregation queries with billable/non-billable breakdowns and export",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-044",
+              "title": "Implement timesheet grid with weekly/monthly toggle and export functionality",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-045",
+              "title": "Test timesheet calculation accuracy and export format validation",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-004",
+      "epic_name": "Resource Management",
+      "description": "Visual resource allocation board, team assignment management with capacity conflict detection, and capacity forecasting.",
+      "module": "Resource Management",
+      "priority": "HIGH",
+      "user_stories": [
+        {
+          "story_id": "US-016",
+          "title": "As a Project Manager, I want to view a visual resource allocation board showing team utilization so that I can identify availability and overallocation",
+          "description": "Provide a visual resource allocation board showing all team members, their assigned projects, utilization rate, and availability windows with real-time updates.",
+          "acceptance_criteria": [
+            "GIVEN I am a Project Manager WHEN I open the resource board THEN I see all team members with their assigned projects and utilization percentage",
+            "GIVEN the resource board is displayed WHEN a team member is over 100% utilization THEN their row is visually highlighted as overallocated",
+            "GIVEN the resource board is displayed WHEN I filter by team or department THEN only matching members are shown",
+            "GIVEN assignments change WHEN I refresh the board THEN utilization percentages update to reflect current state"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 5,
+          "labels": ["resource-management", "visualization", "allocation"],
+          "linked_requirements": ["FR-013"],
+          "tasks": [
+            {
+              "task_id": "T-046",
+              "title": "Build resource allocation query service with utilization calculations",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-047",
+              "title": "Implement resource allocation board with utilization bars and availability indicators",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-048",
+              "title": "Test resource utilization calculation accuracy and filter functionality",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-017",
+          "title": "As a Project Manager, I want to assign and reassign team members with conflict detection so that no one is overallocated",
+          "description": "Allow managers to assign and reassign team members to projects and tasks, with automatic conflict detection when a team member would exceed their capacity threshold.",
+          "acceptance_criteria": [
+            "GIVEN I am assigning a team member WHEN I drag-and-drop them to a project THEN the assignment is created and utilization updates",
+            "GIVEN I am assigning a team member WHEN the assignment would push them over 100% utilization THEN a warning is displayed",
+            "GIVEN a warning is displayed WHEN I choose to proceed anyway THEN the assignment is saved with an overallocation flag",
+            "GIVEN I need to reassign WHEN I move a member from one project to another THEN both projects' resource allocations update"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 6,
+          "labels": ["resource-management", "assignment", "conflict-detection"],
+          "linked_requirements": ["FR-014"],
+          "tasks": [
+            {
+              "task_id": "T-049",
+              "title": "Build resource assignment service with capacity threshold conflict detection",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-050",
+              "title": "Implement drag-and-drop assignment UI with overallocation warnings",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-051",
+              "title": "Test resource conflict detection edge cases and reassignment flows",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-018",
+          "title": "As a Team Lead, I want to view capacity forecasting for the next 4-12 weeks so that I can plan future project staffing",
+          "description": "Provide capacity forecasting showing projected team availability over the next 4-12 weeks based on current project schedules and assignments.",
+          "acceptance_criteria": [
+            "GIVEN I am a Team Lead WHEN I open the capacity forecast THEN I see projected utilization per team member for the next 4-12 weeks",
+            "GIVEN the forecast is displayed WHEN I adjust the time window slider THEN the view updates to show the selected period",
+            "GIVEN the forecast is displayed WHEN I filter by team, skill, or department THEN only matching members are shown",
+            "GIVEN current assignments change WHEN I refresh the forecast THEN projections update to reflect the new schedule"
+          ],
+          "story_points": 5,
+          "priority": "Medium",
+          "sprint": 6,
+          "labels": ["resource-management", "forecasting", "planning"],
+          "linked_requirements": ["FR-015"],
+          "tasks": [
+            {
+              "task_id": "T-052",
+              "title": "Build capacity forecasting engine using current schedule data with time window parameters",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-053",
+              "title": "Implement capacity forecast chart with time window slider and team/skill/department filters",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-054",
+              "title": "Test forecast accuracy against manual calculations and filter functionality",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-005",
+      "epic_name": "Document Management",
+      "description": "Project document repository with version control, in-browser preview, commenting/annotation, and client approval workflows for deliverables.",
+      "module": "Document Management",
+      "priority": "HIGH",
+      "user_stories": [
+        {
+          "story_id": "US-019",
+          "title": "As a Team Member, I want to upload, download, preview, and organize documents in project folders so that all project files are centralized",
+          "description": "Provide a document management repository for each project with folder structures, supporting upload, download, in-browser preview, and deletion with appropriate permissions.",
+          "acceptance_criteria": [
+            "GIVEN I am within a project WHEN I navigate to documents THEN I see a folder structure with uploaded files",
+            "GIVEN I am uploading a document WHEN I select a file and target folder THEN the file uploads with a progress indicator",
+            "GIVEN a document is uploaded WHEN I click preview THEN common file types (PDF, images, Office docs) render in the browser",
+            "GIVEN I have appropriate permissions WHEN I delete a document THEN a confirmation dialog appears and the file is removed on confirmation"
+          ],
+          "story_points": 8,
+          "priority": "High",
+          "sprint": 4,
+          "labels": ["document-management", "upload", "repository"],
+          "linked_requirements": ["FR-016"],
+          "tasks": [
+            {
+              "task_id": "T-055",
+              "title": "Build document storage service (S3-compatible) with folder CRUD and permission checks",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-056",
+              "title": "Implement document manager UI with folder tree, upload progress, and in-browser preview",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-057",
+              "title": "Test document upload/download/preview/delete across file types and permissions",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-020",
+          "title": "As a Project Manager, I want automatic version history for all documents so that I can view, compare, and restore previous versions",
+          "description": "Maintain automatic version history for all uploaded documents, allowing users to view previous versions, compare versions, and restore earlier versions.",
+          "acceptance_criteria": [
+            "GIVEN a document is re-uploaded WHEN the upload completes THEN a new version is created automatically with the previous version preserved",
+            "GIVEN a document has multiple versions WHEN I view version history THEN I see a list of all versions with timestamps and uploaders",
+            "GIVEN version history is displayed WHEN I select a previous version THEN I can download or preview that version",
+            "GIVEN version history is displayed WHEN I click 'Restore' on a previous version THEN it becomes the current version"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 4,
+          "labels": ["document-management", "versioning", "history"],
+          "linked_requirements": ["FR-017"],
+          "tasks": [
+            {
+              "task_id": "T-058",
+              "title": "Build document versioning engine with version history, comparison, and restore APIs",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-059",
+              "title": "Implement version history UI with list view, preview, and restore functionality",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-060",
+              "title": "Test version creation, download, preview, and restore across file types",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-021",
+          "title": "As a Team Member, I want to comment and annotate on documents so that I can provide feedback directly on deliverables",
+          "description": "Support commenting and annotation on deliverables, allowing team members and clients to provide threaded feedback directly on documents with notifications.",
+          "acceptance_criteria": [
+            "GIVEN I am viewing a document WHEN I add a comment THEN it is saved and visible to other users with permissions",
+            "GIVEN a comment exists WHEN another user replies THEN a threaded reply is created under the original comment",
+            "GIVEN a new comment is added WHEN relevant users are watching the document THEN they receive a notification",
+            "GIVEN I am a Client User WHEN I comment on a deliverable THEN the project team sees the comment and can reply"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 5,
+          "labels": ["document-management", "commenting", "collaboration"],
+          "linked_requirements": ["FR-018"],
+          "tasks": [
+            {
+              "task_id": "T-061",
+              "title": "Build document comment service with threading, notifications, and permission enforcement",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-062",
+              "title": "Implement document annotation and commenting overlay with threaded replies",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-063",
+              "title": "Test commenting and annotation across browsers, user roles, and notification delivery",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-022",
+          "title": "As a Project Manager, I want to submit deliverables for client approval through a formal workflow so that sign-offs are tracked",
+          "description": "Provide a client approval workflow for deliverables where documents can be submitted for client review and the client can approve, reject, or request changes with comments.",
+          "acceptance_criteria": [
+            "GIVEN I am a Project Manager WHEN I mark a deliverable as 'Submitted for Review' THEN the client receives a notification",
+            "GIVEN a Client User reviews a deliverable WHEN they click 'Approve' THEN the deliverable status changes to Approved with timestamp",
+            "GIVEN a Client User reviews a deliverable WHEN they click 'Reject' or 'Request Changes' THEN they must enter a comment explaining why",
+            "GIVEN a deliverable status changes WHEN I view the deliverables list THEN the current status (Draft, Submitted, Approved, Rejected, Changes Requested) is visible"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 5,
+          "labels": ["document-management", "approval", "workflow"],
+          "linked_requirements": ["FR-019"],
+          "tasks": [
+            {
+              "task_id": "T-064",
+              "title": "Build deliverable approval workflow engine with status transitions and notification triggers",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-065",
+              "title": "Implement deliverable submission and approval UI flow with status indicators",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-066",
+              "title": "Test deliverable approval state transitions and edge cases",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-006",
+      "epic_name": "Integrations",
+      "description": "Third-party integrations with QuickBooks (invoicing sync), Slack (notifications), Google Calendar (deadlines), Figma (design previews), and GitHub (commit activity).",
+      "module": "Integrations",
+      "priority": "HIGH",
+      "user_stories": [
+        {
+          "story_id": "US-023",
+          "title": "As a Finance Manager, I want finalized invoices to sync bi-directionally with QuickBooks so that our accounting system stays current",
+          "description": "Integrate with QuickBooks to synchronize finalized invoices including line items, client details, and payment status with bi-directional sync.",
+          "acceptance_criteria": [
+            "GIVEN an invoice is finalized WHEN sync runs THEN the invoice with line items and client details is pushed to QuickBooks",
+            "GIVEN a payment is recorded in QuickBooks WHEN sync runs THEN the payment status is reflected in the platform",
+            "GIVEN a sync error occurs WHEN the system logs it THEN the error is visible in the sync status dashboard with details",
+            "GIVEN invoices are syncing WHEN I check the sync log THEN I see timestamps, status, and any error details for each sync event"
+          ],
+          "story_points": 8,
+          "priority": "High",
+          "sprint": 6,
+          "labels": ["integration", "quickbooks", "invoicing"],
+          "linked_requirements": ["FR-020"],
+          "tasks": [
+            {
+              "task_id": "T-067",
+              "title": "Build QuickBooks API client with OAuth2 flow, invoice push, and payment status pull with retry queue",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 16,
+              "type": "development"
+            },
+            {
+              "task_id": "T-068",
+              "title": "Implement QuickBooks sync status dashboard with log viewer",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-069",
+              "title": "Test QuickBooks sync data mapping, error handling, and retry behavior",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-024",
+          "title": "As a Team Member, I want to receive Slack notifications for project events so that I stay informed in my primary communication tool",
+          "description": "Send Slack notifications for configurable events including milestone approvals, new client comments, task assignments, approaching deadlines, and deliverable uploads.",
+          "acceptance_criteria": [
+            "GIVEN Slack integration is configured WHEN a configured event occurs THEN a notification is sent to the specified Slack channel or DM",
+            "GIVEN I am an Administrator WHEN I configure Slack integration THEN I can map event types to channels and DMs",
+            "GIVEN a notification is sent WHEN I view it in Slack THEN it contains a direct link back to the relevant item in the platform",
+            "GIVEN Slack is temporarily unavailable WHEN notifications fail THEN they are queued and retried automatically"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 6,
+          "labels": ["integration", "slack", "notifications"],
+          "linked_requirements": ["FR-021"],
+          "tasks": [
+            {
+              "task_id": "T-070",
+              "title": "Build Slack webhook/bot integration with event routing and retry queue",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-071",
+              "title": "Implement Slack integration settings page with event-to-channel mapping",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-072",
+              "title": "Test Slack notification delivery per event type and retry behavior",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-025",
+          "title": "As a Project Manager, I want project deadlines and milestones to sync with Google Calendar so that schedules are visible in my calendar",
+          "description": "Integrate with Google Calendar to sync project deadlines, milestone dates, and meeting schedules with automatic updates when project dates change.",
+          "acceptance_criteria": [
+            "GIVEN Google Calendar is connected WHEN a milestone date is set THEN a calendar event is created automatically",
+            "GIVEN a milestone date changes in the platform WHEN sync runs THEN the calendar event is updated accordingly",
+            "GIVEN I am a Team Member WHEN I connect my Google Calendar THEN I see project milestones and deadlines as events",
+            "GIVEN Google Calendar is temporarily unavailable WHEN sync fails THEN changes are queued and synced when available"
+          ],
+          "story_points": 5,
+          "priority": "Medium",
+          "sprint": 7,
+          "labels": ["integration", "google-calendar", "scheduling"],
+          "linked_requirements": ["FR-022"],
+          "tasks": [
+            {
+              "task_id": "T-073",
+              "title": "Build Google Calendar API integration with OAuth, event CRUD, and auto-sync on date changes",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-074",
+              "title": "Implement Google Calendar connection settings UI",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 4,
+              "type": "development"
+            },
+            {
+              "task_id": "T-075",
+              "title": "Test calendar sync accuracy and bi-directional update handling",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-026",
+          "title": "As a Team Member, I want to link Figma files to projects with preview thumbnails so that design assets are accessible from the platform",
+          "description": "Provide Figma integration allowing linking of Figma project files to platform projects with embedded preview thumbnails in the document management system.",
+          "acceptance_criteria": [
+            "GIVEN I am within a project's documents WHEN I paste a Figma URL THEN the system validates and saves the link",
+            "GIVEN a Figma URL is linked WHEN I view the documents section THEN a thumbnail preview of the Figma design is displayed",
+            "GIVEN a thumbnail is displayed WHEN I click it THEN Figma opens in a new browser tab",
+            "GIVEN an invalid Figma URL is pasted WHEN I submit THEN a validation error is shown"
+          ],
+          "story_points": 3,
+          "priority": "Low",
+          "sprint": 7,
+          "labels": ["integration", "figma", "design"],
+          "linked_requirements": ["FR-023"],
+          "tasks": [
+            {
+              "task_id": "T-076",
+              "title": "Build Figma oEmbed/API integration for URL validation and thumbnail generation",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-077",
+              "title": "Implement Figma link input with preview embed in document view",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 4,
+              "type": "development"
+            },
+            {
+              "task_id": "T-078",
+              "title": "Test Figma URL validation, thumbnail rendering, and link navigation",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 2,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-027",
+          "title": "As a Team Lead, I want to view GitHub commit activity and PR status within the project dashboard so that I can track development progress",
+          "description": "Integrate with GitHub to display commit activity per project, showing recent commits, active branches, and pull request status within the project dashboard.",
+          "acceptance_criteria": [
+            "GIVEN a GitHub repository is linked WHEN I view the project dashboard THEN I see recent commits, branches, and PR status",
+            "GIVEN the GitHub widget is displayed WHEN new commits are pushed THEN the display refreshes at configurable intervals",
+            "GIVEN I am an Administrator WHEN I link a GitHub repo THEN I authenticate via GitHub OAuth and select the repository",
+            "GIVEN a PR is open WHEN I view the GitHub widget THEN I see the PR title, status, and author"
+          ],
+          "story_points": 3,
+          "priority": "Low",
+          "sprint": 7,
+          "labels": ["integration", "github", "development"],
+          "linked_requirements": ["FR-024"],
+          "tasks": [
+            {
+              "task_id": "T-079",
+              "title": "Build GitHub API client for commit, branch, and PR data retrieval with OAuth",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-080",
+              "title": "Implement GitHub activity widget for project dashboard",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-081",
+              "title": "Test GitHub integration display accuracy and data refresh",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 3,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-028",
+          "title": "As an Administrator, I want to configure the QuickBooks connection with OAuth, account mapping, and sync monitoring so that the integration runs reliably",
+          "description": "Provide a QuickBooks connection configuration interface for OAuth authentication, chart of accounts mapping, sync frequency configuration, and sync status monitoring.",
+          "acceptance_criteria": [
+            "GIVEN I am an Administrator WHEN I open QuickBooks settings THEN I can initiate an OAuth connection to QuickBooks",
+            "GIVEN QuickBooks is connected WHEN I configure account mapping THEN I can map internal invoice fields to QuickBooks accounts",
+            "GIVEN account mapping is complete WHEN I set a sync schedule THEN the system syncs at the configured intervals",
+            "GIVEN syncs are running WHEN I view the sync log THEN I see timestamps, records synced, and any errors"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 6,
+          "labels": ["integration", "quickbooks", "configuration"],
+          "linked_requirements": ["FR-025"],
+          "tasks": [
+            {
+              "task_id": "T-082",
+              "title": "Build QuickBooks OAuth configuration API with account mapping and schedule management",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-083",
+              "title": "Implement QuickBooks admin configuration panel with OAuth, mapping, and sync logs",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-084",
+              "title": "Test QuickBooks OAuth flow, account mapping persistence, and sync schedule execution",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-007",
+      "epic_name": "Reporting & Analytics",
+      "description": "Executive dashboards, project profitability reports, configurable report exports, NPS tracking, AI-powered estimation, and advanced analytics.",
+      "module": "Reporting & Analytics",
+      "priority": "CRITICAL",
+      "user_stories": [
+        {
+          "story_id": "US-029",
+          "title": "As an Executive, I want an executive dashboard displaying five core KPIs so that I have real-time operational visibility",
+          "description": "Provide an executive dashboard displaying revenue per client, project profitability, team utilization rates, on-time delivery percentage, and client satisfaction scores with drill-down capability.",
+          "acceptance_criteria": [
+            "GIVEN I am an Executive WHEN I open the executive dashboard THEN I see all five KPIs: revenue/client, profitability, utilization, on-time delivery, and NPS",
+            "GIVEN a KPI is displayed WHEN I click on it THEN I can drill down to the underlying data (e.g., profitability per project)",
+            "GIVEN the dashboard is loaded WHEN data changes THEN KPIs refresh in near-real-time without manual refresh",
+            "GIVEN I need to present data WHEN I view the dashboard THEN it is visually suitable for board meeting presentations"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 7,
+          "labels": ["reporting", "dashboard", "executive"],
+          "linked_requirements": ["FR-029"],
+          "tasks": [
+            {
+              "task_id": "T-085",
+              "title": "Build executive dashboard aggregation queries for all five KPIs with drill-down data",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-086",
+              "title": "Implement executive dashboard UI with drill-down charts using Chart.js or Recharts",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-087",
+              "title": "Test executive dashboard data accuracy, drill-down functionality, and performance",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-030",
+          "title": "As a Project Manager, I want project profitability reports with variance analysis so that I can identify budget overruns early",
+          "description": "Provide project profitability reports comparing actual hours and costs against quoted/budgeted values with variance analysis at project, client, and portfolio levels.",
+          "acceptance_criteria": [
+            "GIVEN I am a Project Manager WHEN I generate a profitability report THEN I see budget vs. actual for hours and cost per project",
+            "GIVEN the report is displayed WHEN variance exceeds a threshold THEN it is highlighted in red/amber as a warning",
+            "GIVEN I need to filter WHEN I select a date range, client, or project THEN the report updates to reflect the filter",
+            "GIVEN I want to share the report WHEN I export it THEN I can download as PDF, CSV, or Excel"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 8,
+          "labels": ["reporting", "profitability", "analytics"],
+          "linked_requirements": ["FR-030"],
+          "tasks": [
+            {
+              "task_id": "T-088",
+              "title": "Build report generation engine with variance calculations at project/client/portfolio levels",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-089",
+              "title": "Implement report builder UI with parameter selection, variance highlighting, and chart visualizations",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-090",
+              "title": "Test report calculation accuracy against raw data and export format validation",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-031",
+          "title": "As an Administrator, I want to export reports in multiple formats and schedule automated delivery so that stakeholders receive reports regularly",
+          "description": "Provide configurable reports with export functionality (PDF, CSV, Excel) and the ability to schedule automated report delivery via email.",
+          "acceptance_criteria": [
+            "GIVEN a report is generated WHEN I click export THEN I can choose PDF, CSV, or Excel format",
+            "GIVEN I want regular reports WHEN I configure a schedule THEN the system sends the report via email at the configured frequency",
+            "GIVEN a scheduled report is due WHEN the system generates it THEN recipients receive an email with the report attached",
+            "GIVEN I am managing schedules WHEN I view scheduled reports THEN I see all active schedules with last run and next run times"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 8,
+          "labels": ["reporting", "export", "scheduling"],
+          "linked_requirements": ["FR-031"],
+          "tasks": [
+            {
+              "task_id": "T-091",
+              "title": "Build PDF/CSV/Excel export service and scheduled report cron with email delivery",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-092",
+              "title": "Implement export buttons and schedule configuration dialog for reports",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-093",
+              "title": "Test export format integrity (PDF rendering, CSV/Excel data accuracy) and scheduled delivery",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-032",
+          "title": "As a Project Manager, I want to track and display NPS scores per project and client so that I can monitor client satisfaction trends",
+          "description": "Track and display client satisfaction scores (NPS) per project and per client, with the ability to record survey results and display trends over time.",
+          "acceptance_criteria": [
+            "GIVEN I am a Project Manager WHEN I record an NPS score for a project THEN it is saved with a timestamp",
+            "GIVEN NPS scores exist WHEN I view the NPS dashboard THEN I see a trend chart showing scores over time per client and project",
+            "GIVEN NPS scores are recorded WHEN I view the executive dashboard THEN the average NPS appears as a KPI widget",
+            "GIVEN I need historical data WHEN I filter by date range THEN the trend chart updates accordingly"
+          ],
+          "story_points": 3,
+          "priority": "Medium",
+          "sprint": 8,
+          "labels": ["reporting", "nps", "client-satisfaction"],
+          "linked_requirements": ["FR-032"],
+          "tasks": [
+            {
+              "task_id": "T-094",
+              "title": "Build NPS data model and aggregation service with trend calculations",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-095",
+              "title": "Implement NPS entry form and trend chart with filtering",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-096",
+              "title": "Test NPS trend chart data accuracy and executive dashboard integration",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 3,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-033",
+          "title": "As a Project Manager, I want AI-powered project estimation suggesting effort and timelines based on historical data so that I can plan new projects more accurately",
+          "description": "Provide AI-powered project estimation capabilities that analyze historical project data to suggest effort estimates, timelines, and resource requirements for new projects. Phase 2 feature — stub with data collection hooks.",
+          "acceptance_criteria": [
+            "GIVEN I am creating a new project WHEN I request an estimate THEN the system suggests hours, timeline, and team size based on similar past projects",
+            "GIVEN an estimate is provided WHEN I review it THEN I see confidence intervals and the similar projects it was based on",
+            "GIVEN the feature is Phase 2 WHEN the system is deployed THEN historical data collection hooks are active for future training",
+            "GIVEN the stub is deployed WHEN I access the estimation feature THEN I see a 'Coming in Phase 2' placeholder with data collection confirmation"
+          ],
+          "story_points": 3,
+          "priority": "Low",
+          "sprint": 9,
+          "labels": ["reporting", "ai", "estimation", "phase-2"],
+          "linked_requirements": ["FR-044"],
+          "tasks": [
+            {
+              "task_id": "T-097",
+              "title": "Implement historical data collection hooks and feature flag for AI estimation stub",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-098",
+              "title": "Build Phase 2 placeholder UI for AI estimation with data collection status",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 3,
+              "type": "development"
+            },
+            {
+              "task_id": "T-099",
+              "title": "Verify data collection hooks capture necessary fields for future model training",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 2,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-034",
+          "title": "As an Executive, I want advanced analytics with trend analysis and predictive scoring so that I can make data-driven strategic decisions",
+          "description": "Provide advanced analytics including trend analysis, predictive project health scoring, revenue forecasting, and custom dashboard widgets beyond standard reports. Phase 2 feature — stub with data pipeline foundations.",
+          "acceptance_criteria": [
+            "GIVEN the system has historical data WHEN I access advanced analytics THEN I see trend lines and predictive health scores",
+            "GIVEN custom dashboards are available WHEN I configure widgets THEN I can drag-and-drop to create personalized views",
+            "GIVEN the feature is Phase 2 WHEN the system is deployed THEN data pipeline foundations are in place for future analytics",
+            "GIVEN the stub is deployed WHEN I access advanced analytics THEN I see a 'Coming in Phase 2' placeholder with existing data pipeline info"
+          ],
+          "story_points": 3,
+          "priority": "Low",
+          "sprint": 9,
+          "labels": ["reporting", "analytics", "advanced", "phase-2"],
+          "linked_requirements": ["FR-045"],
+          "tasks": [
+            {
+              "task_id": "T-100",
+              "title": "Build advanced analytics data pipeline foundations and feature flag stub",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-101",
+              "title": "Build Phase 2 placeholder UI for advanced analytics with pipeline status",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 3,
+              "type": "development"
+            },
+            {
+              "task_id": "T-102",
+              "title": "Verify data pipeline foundations capture and store metrics for future analytics",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 2,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-008",
+      "epic_name": "Security & Access Control",
+      "description": "Role-based access control, two-factor authentication, audit trails, client data isolation, SSO with Google Workspace, password policies, and session management.",
+      "module": "Security & Access Control",
+      "priority": "CRITICAL",
+      "user_stories": [
+        {
+          "story_id": "US-035",
+          "title": "As an Administrator, I want to define and enforce role-based access control with 7 predefined roles so that each user sees only what they are authorized to access",
+          "description": "Implement RBAC with predefined roles: Administrator, Executive, Project Manager, Team Lead, Team Member, Finance Manager, and Client User. Each role has specific permissions for viewing, creating, editing, and deleting resources.",
+          "acceptance_criteria": [
+            "GIVEN 7 roles are predefined WHEN an Administrator assigns a role to a user THEN the user can only perform actions permitted by that role",
+            "GIVEN a user has a role WHEN they attempt an action beyond their permissions THEN they receive an access denied error",
+            "GIVEN a Client User role WHEN the user logs in THEN they can only access projects belonging to their organization",
+            "GIVEN multiple roles exist WHEN an Administrator views the permission matrix THEN all roles and their permissions are displayed clearly"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 1,
+          "labels": ["security", "rbac", "permissions", "core"],
+          "linked_requirements": ["FR-033"],
+          "tasks": [
+            {
+              "task_id": "T-103",
+              "title": "Build RBAC engine with 7 roles, permission matrix, and middleware enforcement",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 16,
+              "type": "development"
+            },
+            {
+              "task_id": "T-104",
+              "title": "Implement role management UI and permission matrix display in admin panel",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-105",
+              "title": "Test RBAC permission matrix validation across all 7 roles and edge cases",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 10,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-036",
+          "title": "As a User, I want to set up mandatory two-factor authentication so that my account is protected against unauthorized access",
+          "description": "Enforce mandatory 2FA for all users, supporting authenticator app (TOTP) and SMS-based verification methods with admin reset capability.",
+          "acceptance_criteria": [
+            "GIVEN I am a new user WHEN I log in for the first time THEN I am required to set up 2FA before accessing the platform",
+            "GIVEN I have 2FA enabled WHEN I log in THEN I must enter my password and a 2FA code",
+            "GIVEN I choose TOTP WHEN I set up 2FA THEN I scan a QR code with my authenticator app and verify with a code",
+            "GIVEN I am locked out of 2FA WHEN I contact an admin THEN the admin can reset my 2FA to allow re-enrollment"
+          ],
+          "story_points": 5,
+          "priority": "Critical",
+          "sprint": 1,
+          "labels": ["security", "2fa", "authentication"],
+          "linked_requirements": ["FR-034"],
+          "tasks": [
+            {
+              "task_id": "T-106",
+              "title": "Build 2FA service with TOTP (speakeasy) and SMS (Twilio) support including admin reset",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-107",
+              "title": "Implement 2FA setup wizard with QR code generation and SMS verification flow",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-108",
+              "title": "Test 2FA enrollment, login flow, bypass attempts, and admin reset functionality",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-037",
+          "title": "As an Administrator, I want comprehensive audit trails of all user actions so that we can meet SOC2 compliance requirements",
+          "description": "Maintain comprehensive audit trails logging all user actions including data creation, modification, deletion, login/logout events, permission changes, and export activities with timestamps.",
+          "acceptance_criteria": [
+            "GIVEN any user performs an action WHEN the action modifies data THEN an immutable audit log entry is created with timestamp, user ID, action type, and before/after values",
+            "GIVEN audit logs exist WHEN an Administrator searches the logs THEN they can filter by user, date range, action type, and affected resource",
+            "GIVEN audit logs are needed for compliance WHEN an Administrator exports logs THEN they can be downloaded in CSV format",
+            "GIVEN audit logs are stored WHEN any attempt is made to modify them THEN the modification is blocked and an alert is triggered"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 1,
+          "labels": ["security", "audit-trail", "compliance", "soc2"],
+          "linked_requirements": ["FR-035"],
+          "tasks": [
+            {
+              "task_id": "T-109",
+              "title": "Build audit trail event system with immutable log storage and search/export APIs",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-110",
+              "title": "Implement audit log viewer in admin panel with search, filter, and export functionality",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-111",
+              "title": "Test audit log completeness, immutability, search accuracy, and export integrity",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-038",
+          "title": "As a Client User, I want strict data isolation so that I can never see another client's data",
+          "description": "Ensure strict client data isolation so that client users can only view and interact with projects, documents, and data belonging to their organization with no cross-client data leakage.",
+          "acceptance_criteria": [
+            "GIVEN I am a Client User WHEN I access the portal THEN all queries are filtered to my tenant/organization",
+            "GIVEN I attempt to access another client's resource via URL manipulation WHEN the request is processed THEN I receive an access denied error",
+            "GIVEN the system is tested WHEN penetration tests are run THEN no cross-tenant data access is possible",
+            "GIVEN I am viewing any list of resources WHEN the results are displayed THEN only my organization's data appears"
+          ],
+          "story_points": 5,
+          "priority": "Critical",
+          "sprint": 1,
+          "labels": ["security", "data-isolation", "multi-tenancy"],
+          "linked_requirements": ["FR-036"],
+          "tasks": [
+            {
+              "task_id": "T-112",
+              "title": "Implement tenant-scoped query filters across all data access layers",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-113",
+              "title": "Ensure all UI data-fetching passes tenant context and handles isolation errors gracefully",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 4,
+              "type": "development"
+            },
+            {
+              "task_id": "T-114",
+              "title": "Execute cross-tenant penetration tests and data isolation validation",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-039",
+          "title": "As an Internal User, I want to log in using my Google Workspace credentials via SSO so that I do not need a separate password",
+          "description": "Support Single Sign-On with Google Workspace using SAML 2.0 or OIDC protocols for internal user authentication with fallback to email/password.",
+          "acceptance_criteria": [
+            "GIVEN SSO is configured WHEN I click 'Sign in with Google' THEN I am authenticated via Google Workspace and redirected to the platform",
+            "GIVEN I am a first-time SSO user WHEN I sign in THEN my account is provisioned with the appropriate role",
+            "GIVEN Google Workspace is unavailable WHEN I try SSO THEN I can fall back to email/password login",
+            "GIVEN I am an Administrator WHEN I configure SSO THEN I can set the Google Workspace domain and enable/disable SSO"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 7,
+          "labels": ["security", "sso", "google-workspace"],
+          "linked_requirements": ["FR-046"],
+          "tasks": [
+            {
+              "task_id": "T-115",
+              "title": "Build SSO service with SAML 2.0/OIDC for Google Workspace with email/password fallback",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-116",
+              "title": "Implement SSO login button and admin SSO configuration UI",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-117",
+              "title": "Test SSO authentication flow, first-time provisioning, fallback, and edge cases",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-040",
+          "title": "As a User, I want enforced password policies so that account security meets organizational standards",
+          "description": "Enforce password policies including minimum length (12 characters), complexity requirements, password expiry (90 days), and prevention of password reuse for the last 10 passwords.",
+          "acceptance_criteria": [
+            "GIVEN I am creating or changing a password WHEN the password is fewer than 12 characters or lacks complexity THEN a validation error is shown",
+            "GIVEN my password is 90 days old WHEN I log in THEN I am prompted to change my password before proceeding",
+            "GIVEN I am changing my password WHEN I enter one of the last 10 passwords THEN the system rejects it with an error",
+            "GIVEN my password is expiring soon WHEN I log in within 14 days of expiry THEN I see a warning notification"
+          ],
+          "story_points": 3,
+          "priority": "High",
+          "sprint": 1,
+          "labels": ["security", "password-policy", "compliance"],
+          "linked_requirements": ["FR-047"],
+          "tasks": [
+            {
+              "task_id": "T-118",
+              "title": "Build password policy engine with complexity, expiry, and reuse prevention logic",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-119",
+              "title": "Implement password change flow with real-time complexity indicator and expiry warnings",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 4,
+              "type": "development"
+            },
+            {
+              "task_id": "T-120",
+              "title": "Test password policy enforcement including all complexity rules, expiry, and reuse prevention",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-041",
+          "title": "As a User, I want automatic session timeout with a warning before expiry so that idle sessions do not pose a security risk",
+          "description": "Implement automatic session timeout after 30 minutes of inactivity with a warning prompt 5 minutes before session expiry allowing the user to extend their session.",
+          "acceptance_criteria": [
+            "GIVEN I am logged in WHEN I am inactive for 25 minutes THEN a warning modal appears with a countdown timer",
+            "GIVEN the warning modal is displayed WHEN I click 'Continue Session' THEN the session timer resets to 30 minutes",
+            "GIVEN the warning modal is displayed WHEN I do not respond within 5 minutes THEN I am logged out and redirected to the login page",
+            "GIVEN I was logged out due to timeout WHEN I log back in THEN I see a message explaining the session expired"
+          ],
+          "story_points": 3,
+          "priority": "High",
+          "sprint": 1,
+          "labels": ["security", "session", "timeout"],
+          "linked_requirements": ["FR-048"],
+          "tasks": [
+            {
+              "task_id": "T-121",
+              "title": "Build session management service with inactivity tracking and timeout logic",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-122",
+              "title": "Implement session timeout warning modal with countdown and extend session button",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 4,
+              "type": "development"
+            },
+            {
+              "task_id": "T-123",
+              "title": "Test session timeout at 30 minutes, warning at 25 minutes, and session extension",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-009",
+      "epic_name": "Platform & UX",
+      "description": "Responsive web application, global search, in-app notification center, and mobile app (Phase 2).",
+      "module": "Platform & UX",
+      "priority": "HIGH",
+      "user_stories": [
+        {
+          "story_id": "US-042",
+          "title": "As a User, I want the application to work responsively across desktop and tablet browsers so that I can use it on any supported device",
+          "description": "Deliver a responsive web application functioning correctly on Chrome, Firefox, Safari, and Edge with a minimum viewport of 768px.",
+          "acceptance_criteria": [
+            "GIVEN I am on a desktop browser (1920px) WHEN I use the application THEN all features are fully functional with optimal layout",
+            "GIVEN I am on a tablet (768px) WHEN I use the application THEN all critical workflows are usable without horizontal scrolling",
+            "GIVEN I switch browsers (Chrome, Firefox, Safari, Edge) WHEN I use the application THEN behavior and layout are consistent",
+            "GIVEN the application is responsive WHEN I resize the browser THEN the layout adapts smoothly between breakpoints"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 8,
+          "labels": ["platform", "responsive", "cross-browser"],
+          "linked_requirements": ["FR-037"],
+          "tasks": [
+            {
+              "task_id": "T-124",
+              "title": "Audit and fix responsive layout across all breakpoints (768px-1920px)",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 16,
+              "type": "development"
+            },
+            {
+              "task_id": "T-125",
+              "title": "Execute cross-browser responsive testing matrix (Chrome, Firefox, Safari, Edge)",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 10,
+              "type": "testing"
+            },
+            {
+              "task_id": "T-126",
+              "title": "Ensure all API responses work correctly with responsive UI components",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 4,
+              "type": "development"
+            }
+          ]
+        },
+        {
+          "story_id": "US-043",
+          "title": "As an Internal User, I want a global search that searches across projects, tasks, documents, and clients so that I can quickly find anything",
+          "description": "Provide global search functionality allowing users to search across projects, tasks, documents, and client records with RBAC-filtered results.",
+          "acceptance_criteria": [
+            "GIVEN I am logged in WHEN I type in the global search bar THEN I see autocomplete suggestions from projects, tasks, documents, and clients",
+            "GIVEN I submit a search query WHEN results are returned THEN they are categorized by type (project, task, document, client)",
+            "GIVEN I am a Team Member WHEN I search THEN I only see results I have permission to access",
+            "GIVEN I search for a term WHEN results exist THEN they display within 2 seconds"
+          ],
+          "story_points": 5,
+          "priority": "Medium",
+          "sprint": 8,
+          "labels": ["platform", "search", "ux"],
+          "linked_requirements": ["FR-038"],
+          "tasks": [
+            {
+              "task_id": "T-127",
+              "title": "Build full-text search index across projects, tasks, documents, clients with RBAC filtering",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-128",
+              "title": "Implement global search bar with autocomplete and categorized result display",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-129",
+              "title": "Test search relevance, RBAC filtering accuracy, and performance under load",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-044",
+          "title": "As a User, I want an in-app notification center so that I can see real-time updates for task assignments, deadlines, and messages",
+          "description": "Provide an in-app notification center displaying real-time notifications for task assignments, mentions, approaching deadlines, approval requests, and client messages.",
+          "acceptance_criteria": [
+            "GIVEN I am logged in WHEN a relevant event occurs THEN a notification badge appears on the bell icon with unread count",
+            "GIVEN I click the notification bell WHEN the panel opens THEN I see notifications categorized and sorted by recency",
+            "GIVEN I read a notification WHEN I mark it as read THEN the unread count decreases",
+            "GIVEN I want to manage notifications WHEN I open preferences THEN I can configure which event types trigger notifications"
+          ],
+          "story_points": 5,
+          "priority": "Medium",
+          "sprint": 8,
+          "labels": ["platform", "notifications", "real-time"],
+          "linked_requirements": ["FR-039"],
+          "tasks": [
+            {
+              "task_id": "T-130",
+              "title": "Build WebSocket notification service with event dispatching and user preference management",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 10,
+              "type": "development"
+            },
+            {
+              "task_id": "T-131",
+              "title": "Implement notification bell icon with dropdown panel, categories, and preference settings",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-132",
+              "title": "Test notification delivery timing, preference enforcement, and real-time updates",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-045",
+          "title": "As a Team Member, I want a mobile-optimized native app for time tracking so that I can log hours on the go",
+          "description": "Provide a mobile-optimized native application focused on time tracking with start/stop timer, manual entry, and task assignment views. Phase 2 feature — stub with mobile-optimized API endpoints.",
+          "acceptance_criteria": [
+            "GIVEN the Phase 2 mobile app is planned WHEN APIs are designed THEN mobile-optimized endpoints are documented and available",
+            "GIVEN I access the platform on mobile WHEN using the responsive web THEN time tracking features are usable at small viewports",
+            "GIVEN the stub is deployed WHEN mobile API endpoints are tested THEN they return correct data with minimal payload sizes",
+            "GIVEN Phase 2 is planned WHEN documentation is reviewed THEN mobile app API contracts are ready for native development"
+          ],
+          "story_points": 3,
+          "priority": "Low",
+          "sprint": 9,
+          "labels": ["platform", "mobile", "phase-2"],
+          "linked_requirements": ["FR-043"],
+          "tasks": [
+            {
+              "task_id": "T-133",
+              "title": "Document and build mobile-optimized API endpoints for time tracking and task views",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-134",
+              "title": "Ensure responsive web time tracking is usable at mobile viewport widths",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 4,
+              "type": "development"
+            },
+            {
+              "task_id": "T-135",
+              "title": "Test mobile API endpoints for payload size, response time, and correctness",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 3,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-010",
+      "epic_name": "Administration",
+      "description": "Admin panel for user management, role/permission configuration, integration settings, billing rate management, and user onboarding with email invitations.",
+      "module": "Administration",
+      "priority": "CRITICAL",
+      "user_stories": [
+        {
+          "story_id": "US-046",
+          "title": "As an Administrator, I want a centralized admin panel to manage users, roles, integrations, and system settings so that I have full platform control",
+          "description": "Provide an administration panel for managing users, roles, permissions, system configuration, integration settings, billing rate configuration, and platform-wide settings.",
+          "acceptance_criteria": [
+            "GIVEN I am an Administrator WHEN I navigate to the admin panel THEN I see sections for Users, Roles, Integrations, Billing, and Settings",
+            "GIVEN I am managing users WHEN I create, edit, or deactivate a user THEN the changes take effect immediately",
+            "GIVEN I am managing roles WHEN I view the permission matrix THEN I can see and modify permissions per role",
+            "GIVEN I am configuring integrations WHEN I update QuickBooks or Slack settings THEN the configuration is saved and applied"
+          ],
+          "story_points": 8,
+          "priority": "Critical",
+          "sprint": 1,
+          "labels": ["administration", "admin-panel", "core"],
+          "linked_requirements": ["FR-040"],
+          "tasks": [
+            {
+              "task_id": "T-136",
+              "title": "Build admin panel API endpoints for user CRUD, role management, and system configuration",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-137",
+              "title": "Implement admin panel layout with user management, role management, and settings screens",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-138",
+              "title": "Test admin panel CRUD operations, role changes, and settings persistence",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 6,
+              "type": "testing"
+            }
+          ]
+        },
+        {
+          "story_id": "US-047",
+          "title": "As an Administrator, I want to invite users via email with predefined role assignments so that onboarding is streamlined",
+          "description": "Support user onboarding with email invitation workflow, allowing administrators to invite new internal users and client users with predefined role assignments.",
+          "acceptance_criteria": [
+            "GIVEN I am an Administrator WHEN I send an invitation THEN I specify the user's email and assign a role before sending",
+            "GIVEN an invitation is sent WHEN the invitee clicks the link THEN they are directed to set up their account and 2FA",
+            "GIVEN an invitation is pending WHEN the configurable expiry period passes THEN the invitation expires and can no longer be used",
+            "GIVEN I am managing invitations WHEN I view the invitation list THEN I see status (Pending, Accepted, Expired) for each"
+          ],
+          "story_points": 5,
+          "priority": "High",
+          "sprint": 1,
+          "labels": ["administration", "onboarding", "invitation"],
+          "linked_requirements": ["FR-041"],
+          "tasks": [
+            {
+              "task_id": "T-139",
+              "title": "Build invitation service with email dispatch, token generation, expiry, and acceptance flow",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 8,
+              "type": "development"
+            },
+            {
+              "task_id": "T-140",
+              "title": "Implement invitation form in admin panel and account setup page for invitees",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 6,
+              "type": "development"
+            },
+            {
+              "task_id": "T-141",
+              "title": "Test invitation sending, acceptance, expiry, and role pre-assignment",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 4,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_id": "EPIC-011",
+      "epic_name": "Data Migration",
+      "description": "Bulk import of existing project data, client records, and historical time entries from CSV/Excel to facilitate migration from TechNova's spreadsheet-based system.",
+      "module": "Data Migration",
+      "priority": "HIGH",
+      "user_stories": [
+        {
+          "story_id": "US-048",
+          "title": "As an Administrator, I want to bulk import project data, clients, and time entries from CSV/Excel so that historical data is migrated into the platform",
+          "description": "Support bulk import of existing project data, client records, and historical time entries from CSV/Excel files with validation, dry-run preview, and batch processing.",
+          "acceptance_criteria": [
+            "GIVEN I am an Administrator WHEN I open the import wizard THEN I can upload CSV or Excel files for projects, clients, or time entries",
+            "GIVEN I upload a file WHEN the system validates it THEN I see a report of valid records, warnings, and errors before committing",
+            "GIVEN validation passes WHEN I choose 'Dry Run' THEN I see a preview of the data as it would appear after import without actually importing",
+            "GIVEN I choose 'Import' WHEN the batch runs THEN records are imported transactionally and I see a progress indicator and final summary"
+          ],
+          "story_points": 8,
+          "priority": "High",
+          "sprint": 8,
+          "labels": ["data-migration", "import", "csv"],
+          "linked_requirements": ["FR-042"],
+          "tasks": [
+            {
+              "task_id": "T-142",
+              "title": "Build CSV/Excel parser with validation engine, dry-run mode, and batch import transaction management",
+              "assignee_role": "Backend Dev",
+              "estimated_hours": 14,
+              "type": "development"
+            },
+            {
+              "task_id": "T-143",
+              "title": "Implement data migration wizard with file upload, field mapping, validation results, and import progress",
+              "assignee_role": "Frontend Dev",
+              "estimated_hours": 12,
+              "type": "development"
+            },
+            {
+              "task_id": "T-144",
+              "title": "Test data migration with valid, invalid, and edge-case data files including large datasets",
+              "assignee_role": "QA Engineer",
+              "estimated_hours": 8,
+              "type": "testing"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "domain_specific_stories": [
+    {
+      "story_id": "US-049",
+      "title": "As an Administrator, I want multi-tenancy data isolation configured from day one so that client data is never exposed across organizations",
+      "description": "Standard SaaS story: Ensure multi-tenant architecture with logical data separation between client organizations to support SOC2 confidentiality requirements. All database queries must include tenant context.",
+      "acceptance_criteria": [
+        "GIVEN the database schema is designed WHEN tables contain client data THEN every table includes a tenant_id foreign key",
+        "GIVEN a query is executed WHEN it touches client-scoped data THEN the tenant_id filter is always applied at the ORM/query layer",
+        "GIVEN two tenants exist WHEN one tenant's user queries data THEN zero records from the other tenant appear",
+        "GIVEN the architecture is audited WHEN an engineer reviews the code THEN no raw SQL bypasses tenant isolation"
+      ],
+      "story_points": 5,
+      "priority": "Critical",
+      "sprint": 0,
+      "labels": ["saas", "multi-tenancy", "security", "architecture"],
+      "linked_requirements": ["FR-036", "NFR-018"],
+      "epic_id": "EPIC-008",
+      "tasks": [
+        {
+          "task_id": "T-145",
+          "title": "Design and implement multi-tenant database schema with tenant_id on all client-scoped tables",
+          "assignee_role": "Backend Dev",
+          "estimated_hours": 12,
+          "type": "development"
+        },
+        {
+          "task_id": "T-146",
+          "title": "Implement tenant context provider in frontend for all API requests",
+          "assignee_role": "Frontend Dev",
+          "estimated_hours": 4,
+          "type": "development"
+        },
+        {
+          "task_id": "T-147",
+          "title": "Write automated tests verifying tenant isolation across all data access endpoints",
+          "assignee_role": "QA Engineer",
+          "estimated_hours": 8,
+          "type": "testing"
+        }
+      ]
+    },
+    {
+      "story_id": "US-050",
+      "title": "As an Administrator, I want subscription and billing management so that we can manage client billing plans and payment tracking",
+      "description": "Standard SaaS story: Provide billing management for tracking client subscriptions, payment status, and billing plan configurations. Supports both flat-rate and usage-based billing models.",
+      "acceptance_criteria": [
+        "GIVEN I am an Administrator WHEN I view the billing management section THEN I see all clients with their billing plan, status, and payment history",
+        "GIVEN a client is onboarded WHEN I configure their billing THEN I can assign a billing plan and set billing frequency",
+        "GIVEN a billing cycle completes WHEN the system processes it THEN an invoice is generated and the client is notified",
+        "GIVEN a payment is overdue WHEN the grace period expires THEN the system flags the account and notifies the administrator"
+      ],
+      "story_points": 5,
+      "priority": "High",
+      "sprint": 0,
+      "labels": ["saas", "billing", "subscription"],
+      "linked_requirements": [],
+      "epic_id": "EPIC-010",
+      "tasks": [
+        {
+          "task_id": "T-148",
+          "title": "Build billing management service with subscription plans, payment tracking, and invoice generation",
+          "assignee_role": "Backend Dev",
+          "estimated_hours": 10,
+          "type": "development"
+        },
+        {
+          "task_id": "T-149",
+          "title": "Implement billing management UI in admin panel",
+          "assignee_role": "Frontend Dev",
+          "estimated_hours": 8,
+          "type": "development"
+        },
+        {
+          "task_id": "T-150",
+          "title": "Test billing cycle processing, payment status updates, and overdue flagging",
+          "assignee_role": "QA Engineer",
+          "estimated_hours": 6,
+          "type": "testing"
+        }
+      ]
+    },
+    {
+      "story_id": "US-051",
+      "title": "As a new User, I want a guided onboarding experience so that I can quickly learn how to use the platform",
+      "description": "Standard SaaS story: Provide a first-login onboarding flow that guides new users through key platform features, completes required setup (2FA, profile), and provides contextual help for their role.",
+      "acceptance_criteria": [
+        "GIVEN I am a new user WHEN I log in for the first time THEN I am guided through a multi-step onboarding wizard",
+        "GIVEN the onboarding wizard starts WHEN I complete profile setup and 2FA THEN I see a role-specific tutorial highlighting key features",
+        "GIVEN I am a Client User WHEN the onboarding completes THEN I land on my project dashboard with contextual tooltips",
+        "GIVEN I skip the tutorial WHEN I navigate to any page THEN contextual help icons are available for key features"
+      ],
+      "story_points": 5,
+      "priority": "High",
+      "sprint": 0,
+      "labels": ["saas", "onboarding", "ux"],
+      "linked_requirements": ["FR-041"],
+      "epic_id": "EPIC-009",
+      "tasks": [
+        {
+          "task_id": "T-151",
+          "title": "Build onboarding state tracker and role-specific tutorial content API",
+          "assignee_role": "Backend Dev",
+          "estimated_hours": 6,
+          "type": "development"
+        },
+        {
+          "task_id": "T-152",
+          "title": "Implement multi-step onboarding wizard and contextual tooltip system",
+          "assignee_role": "Frontend Dev",
+          "estimated_hours": 10,
+          "type": "development"
+        },
+        {
+          "task_id": "T-153",
+          "title": "Test onboarding flow for all 7 user roles and tooltip display",
+          "assignee_role": "QA Engineer",
+          "estimated_hours": 4,
+          "type": "testing"
+        }
+      ]
+    },
+    {
+      "story_id": "US-052",
+      "title": "As an Administrator, I want platform health monitoring and system status so that I can proactively identify issues",
+      "description": "Standard SaaS story: Provide a system health dashboard showing API response times, error rates, storage usage, active user counts, and integration sync statuses for proactive monitoring.",
+      "acceptance_criteria": [
+        "GIVEN I am an Administrator WHEN I open the system health page THEN I see key metrics: API latency, error rate, active users, and storage usage",
+        "GIVEN the health page is displayed WHEN any metric exceeds its threshold THEN it is highlighted as a warning or critical alert",
+        "GIVEN integrations are configured WHEN I view sync statuses THEN I see the last sync time and current status for each integration",
+        "GIVEN a metric has historical data WHEN I view its chart THEN I see trend data for the last 24 hours, 7 days, and 30 days"
+      ],
+      "story_points": 5,
+      "priority": "Medium",
+      "sprint": 0,
+      "labels": ["saas", "monitoring", "admin"],
+      "linked_requirements": [],
+      "epic_id": "EPIC-010",
+      "tasks": [
+        {
+          "task_id": "T-154",
+          "title": "Build system health metrics collection and aggregation service",
+          "assignee_role": "Backend Dev",
+          "estimated_hours": 8,
+          "type": "development"
+        },
+        {
+          "task_id": "T-155",
+          "title": "Implement system health dashboard with metric charts and alert indicators",
+          "assignee_role": "Frontend Dev",
+          "estimated_hours": 8,
+          "type": "development"
+        },
+        {
+          "task_id": "T-156",
+          "title": "Test metric accuracy, threshold alerts, and historical trend data",
+          "assignee_role": "QA Engineer",
+          "estimated_hours": 4,
+          "type": "testing"
+        }
+      ]
+    },
+    {
+      "story_id": "US-053",
+      "title": "As an Administrator, I want to configure environment-specific settings for staging and production so that deployments are consistent and controlled",
+      "description": "Standard SaaS story: Provide environment configuration management for staging and production environments including feature flags, environment variables, and deployment settings.",
+      "acceptance_criteria": [
+        "GIVEN I am an Administrator WHEN I access environment settings THEN I see separate configuration for staging and production",
+        "GIVEN I toggle a feature flag WHEN I save THEN the feature is enabled/disabled in the target environment only",
+        "GIVEN environment variables are configured WHEN a deployment runs THEN the correct values are applied per environment",
+        "GIVEN I make a configuration change WHEN the change is saved THEN an audit log entry is created"
+      ],
+      "story_points": 3,
+      "priority": "Medium",
+      "sprint": 0,
+      "labels": ["saas", "configuration", "devops"],
+      "linked_requirements": [],
+      "epic_id": "EPIC-010",
+      "tasks": [
+        {
+          "task_id": "T-157",
+          "title": "Build environment configuration management service with feature flags and audit logging",
+          "assignee_role": "Backend Dev",
+          "estimated_hours": 8,
+          "type": "development"
+        },
+        {
+          "task_id": "T-158",
+          "title": "Implement environment configuration UI with feature flag toggles",
+          "assignee_role": "Frontend Dev",
+          "estimated_hours": 4,
+          "type": "development"
+        },
+        {
+          "task_id": "T-159",
+          "title": "Test environment configuration isolation and feature flag enforcement",
+          "assignee_role": "QA Engineer",
+          "estimated_hours": 3,
+          "type": "testing"
+        }
+      ]
+    },
+    {
+      "story_id": "US-054",
+      "title": "As an Administrator, I want automated database backup and restore capabilities so that data is protected against loss",
+      "description": "Standard SaaS story: Implement automated database backup with configurable schedules, point-in-time recovery, and tested restore procedures meeting RPO/RTO requirements.",
+      "acceptance_criteria": [
+        "GIVEN backups are configured WHEN the scheduled time arrives THEN an automated backup runs and completes within the maintenance window",
+        "GIVEN a backup exists WHEN I need to restore THEN I can initiate a restore to any backup point within the retention period",
+        "GIVEN RPO is 1 hour WHEN measuring backup frequency THEN backups run at least every hour",
+        "GIVEN RTO is 4 hours WHEN a restore is initiated THEN the system is operational within 4 hours"
+      ],
+      "story_points": 5,
+      "priority": "High",
+      "sprint": 0,
+      "labels": ["saas", "backup", "disaster-recovery"],
+      "linked_requirements": ["NFR-012"],
+      "epic_id": "EPIC-008",
+      "tasks": [
+        {
+          "task_id": "T-160",
+          "title": "Configure automated database backup service with hourly snapshots and retention policies",
+          "assignee_role": "Backend Dev",
+          "estimated_hours": 8,
+          "type": "development"
+        },
+        {
+          "task_id": "T-161",
+          "title": "Build backup status and restore initiation UI in admin panel",
+          "assignee_role": "Frontend Dev",
+          "estimated_hours": 4,
+          "type": "development"
+        },
+        {
+          "task_id": "T-162",
+          "title": "Test backup execution, restore procedures, and RPO/RTO compliance",
+          "assignee_role": "QA Engineer",
+          "estimated_hours": 6,
+          "type": "testing"
+        }
+      ]
+    },
+    {
+      "story_id": "US-055",
+      "title": "As an Administrator, I want rate limiting and brute-force protection on authentication endpoints so that the platform is protected from attacks",
+      "description": "Standard SaaS story: Implement rate limiting on authentication endpoints to prevent brute-force attacks with account lockout after 5 failed attempts for 15 minutes.",
+      "acceptance_criteria": [
+        "GIVEN a user attempts login WHEN they fail 5 consecutive times THEN the account is locked for 15 minutes",
+        "GIVEN an account is locked WHEN the lockout period expires THEN the user can attempt login again",
+        "GIVEN auth endpoints are rate-limited WHEN more than 10 requests per minute come from one IP THEN excess requests are rejected with a 429 status",
+        "GIVEN an account is locked WHEN an Administrator views the user THEN they can manually unlock the account"
+      ],
+      "story_points": 3,
+      "priority": "High",
+      "sprint": 1,
+      "labels": ["saas", "security", "rate-limiting"],
+      "linked_requirements": ["NFR-020"],
+      "epic_id": "EPIC-008",
+      "tasks": [
+        {
+          "task_id": "T-163",
+          "title": "Implement rate limiting middleware and account lockout logic on authentication endpoints",
+          "assignee_role": "Backend Dev",
+          "estimated_hours": 6,
+          "type": "development"
+        },
+        {
+          "task_id": "T-164",
+          "title": "Display account lockout status and manual unlock option in admin panel",
+          "assignee_role": "Frontend Dev",
+          "estimated_hours": 2,
+          "type": "development"
+        },
+        {
+          "task_id": "T-165",
+          "title": "Test brute-force protection: 5 failed attempts lockout, rate limiting, and manual unlock",
+          "assignee_role": "QA Engineer",
+          "estimated_hours": 4,
+          "type": "testing"
+        }
+      ]
+    },
+    {
+      "story_id": "US-056",
+      "title": "As an Administrator, I want GDPR-compliant data management with data subject rights support so that we meet regulatory requirements",
+      "description": "Standard SaaS story: Implement GDPR compliance features including data subject access requests, data erasure (right to be forgotten), data portability, and consent management.",
+      "acceptance_criteria": [
+        "GIVEN a data subject requests access WHEN an Administrator processes the request THEN a complete data export is generated within 30 days",
+        "GIVEN a data subject requests erasure WHEN processed THEN all personal data is anonymized or deleted while preserving audit trail integrity",
+        "GIVEN consent is required WHEN a user first accesses the platform THEN they see a consent dialog and their choice is recorded",
+        "GIVEN GDPR requests are tracked WHEN an Administrator views the request log THEN all requests are listed with status and resolution dates"
+      ],
+      "story_points": 5,
+      "priority": "High",
+      "sprint": 1,
+      "labels": ["saas", "gdpr", "compliance", "privacy"],
+      "linked_requirements": ["NFR-007"],
+      "epic_id": "EPIC-008",
+      "tasks": [
+        {
+          "task_id": "T-166",
+          "title": "Build GDPR data subject rights service with export, erasure, and consent tracking",
+          "assignee_role": "Backend Dev",
+          "estimated_hours": 10,
+          "type": "development"
+        },
+        {
+          "task_id": "T-167",
+          "title": "Implement consent dialog, data request form, and GDPR request log in admin panel",
+          "assignee_role": "Frontend Dev",
+          "estimated_hours": 6,
+          "type": "development"
+        },
+        {
+          "task_id": "T-168",
+          "title": "Test data export completeness, erasure thoroughness, and consent enforcement",
+          "assignee_role": "QA Engineer",
+          "estimated_hours": 6,
+          "type": "testing"
+        }
+      ]
+    }
+  ],
+  "next_agent": "architecture_agent",
+  "next_input_file": "outputs/jira/jira_tickets.json"
+}

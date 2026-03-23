@@ -1,0 +1,891 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "requirement_agent",
+  "timestamp": "2026-03-12T00:00:00Z",
+  "project": {
+    "name": "TechNova Solutions — Client Discovery Call",
+    "client": "TechNova Solutions",
+    "domain": "Professional Services / Digital Agency Management"
+  },
+  "business_goals": [
+    "Centralize all project management, client communication, and document management into a single platform to eliminate scattered tooling chaos",
+    "Recover 15-20% revenue leakage by automating time tracking and invoicing with QuickBooks integration",
+    "Provide real-time operational visibility through reporting dashboards to eliminate 3+ hours of weekly manual status compilation",
+    "Deliver a client-facing portal that enables self-service project status, deliverable review, and milestone approvals",
+    "Enable resource allocation and capacity planning to eliminate missed deadlines caused by workload imbalance",
+    "Achieve SOC2 compliance and robust security posture with RBAC, 2FA, and audit trails to protect client data across healthcare and finance verticals",
+    "Scale the platform to support growth from 150 to 250 employees and 40 to 80 clients within 18 months"
+  ],
+  "pain_point_to_feature_mapping": [
+    {
+      "pain_point": "Scattered tools and lack of centralization",
+      "severity": "HIGH",
+      "mapped_features": ["F-001", "F-005"],
+      "mapped_requirements": ["FR-001", "FR-002", "FR-003", "FR-018"]
+    },
+    {
+      "pain_point": "No operational visibility — manual status report compilation",
+      "severity": "HIGH",
+      "mapped_features": ["F-001", "F-013"],
+      "mapped_requirements": ["FR-003", "FR-029", "FR-030", "FR-031"]
+    },
+    {
+      "pain_point": "Missed deadlines due to lack of workload visibility",
+      "severity": "HIGH",
+      "mapped_features": ["F-004"],
+      "mapped_requirements": ["FR-013", "FR-014", "FR-015"]
+    },
+    {
+      "pain_point": "No client-facing portal — scrambling for status updates",
+      "severity": "HIGH",
+      "mapped_features": ["F-002"],
+      "mapped_requirements": ["FR-006", "FR-007", "FR-008", "FR-009", "FR-010"]
+    },
+    {
+      "pain_point": "Revenue leakage from manual time tracking and under-billing",
+      "severity": "HIGH",
+      "mapped_features": ["F-003", "F-006"],
+      "mapped_requirements": ["FR-011", "FR-012", "FR-024"]
+    },
+    {
+      "pain_point": "Document version control chaos",
+      "severity": "MEDIUM",
+      "mapped_features": ["F-005"],
+      "mapped_requirements": ["FR-016", "FR-017", "FR-018", "FR-019"]
+    },
+    {
+      "pain_point": "No resource allocation visibility",
+      "severity": "HIGH",
+      "mapped_features": ["F-004"],
+      "mapped_requirements": ["FR-013", "FR-014", "FR-015"]
+    },
+    {
+      "pain_point": "Previous security incident — compromised intern password",
+      "severity": "HIGH",
+      "mapped_features": ["F-011", "F-012"],
+      "mapped_requirements": ["FR-033", "FR-034", "FR-035", "FR-036"]
+    }
+  ],
+  "functional_requirements": [
+    {
+      "id": "FR-001",
+      "module": "Project Management",
+      "description": "The system shall provide a centralized project dashboard displaying all active projects with their current status, assigned team members, deadlines, and completion percentages.",
+      "priority": "CRITICAL",
+      "actors": ["Project Manager", "Team Lead", "Administrator"],
+      "source_feature": "F-001",
+      "acceptance_summary": "Users can view all 40+ active client projects in a single dashboard with real-time status indicators, filtering, and sorting capabilities."
+    },
+    {
+      "id": "FR-002",
+      "module": "Project Management",
+      "description": "The system shall allow creation, editing, and archival of projects with configurable fields including project name, client, start date, deadline, budget, assigned team, and project phases/milestones.",
+      "priority": "CRITICAL",
+      "actors": ["Project Manager", "Administrator"],
+      "source_feature": "F-001",
+      "acceptance_summary": "A project can be created with all required fields, edited at any time, and archived when completed. Archived projects remain searchable but are hidden from active views."
+    },
+    {
+      "id": "FR-003",
+      "module": "Project Management",
+      "description": "The system shall provide task management within projects, including task creation, assignment to team members, due dates, status tracking (To Do, In Progress, In Review, Done), and dependencies between tasks.",
+      "priority": "CRITICAL",
+      "actors": ["Project Manager", "Team Member", "Team Lead"],
+      "source_feature": "F-001",
+      "acceptance_summary": "Tasks can be created within a project, assigned to one or more team members, tracked through status transitions, and linked with predecessor/successor dependencies."
+    },
+    {
+      "id": "FR-004",
+      "module": "Project Management",
+      "description": "The system shall support milestone definition within projects, with configurable milestone names, target dates, deliverable associations, and client approval requirements.",
+      "priority": "CRITICAL",
+      "actors": ["Project Manager", "Client User"],
+      "source_feature": "F-001",
+      "acceptance_summary": "Milestones can be created per project with target dates. Milestones requiring client approval trigger notifications and cannot be marked complete until the client approves."
+    },
+    {
+      "id": "FR-005",
+      "module": "Project Management",
+      "description": "The system shall provide Kanban and list views for task management within each project, allowing team members to drag-and-drop tasks between status columns.",
+      "priority": "HIGH",
+      "actors": ["Team Member", "Project Manager", "Team Lead"],
+      "source_feature": "F-001",
+      "acceptance_summary": "Users can toggle between Kanban board and list views. Tasks can be moved between status columns via drag-and-drop and the change is reflected in real time."
+    },
+    {
+      "id": "FR-006",
+      "module": "Client Portal",
+      "description": "The system shall provide a dedicated client-facing portal where client users can log in, view their project dashboard, see overall project status, and access project-specific information.",
+      "priority": "CRITICAL",
+      "actors": ["Client User"],
+      "source_feature": "F-002",
+      "acceptance_summary": "Client users can log in and see only their own projects with a dashboard showing project status, upcoming milestones, and recent activity."
+    },
+    {
+      "id": "FR-007",
+      "module": "Client Portal",
+      "description": "The system shall allow client users to view and download deliverables associated with their projects, and to approve or request revisions on milestones through the portal.",
+      "priority": "CRITICAL",
+      "actors": ["Client User"],
+      "source_feature": "F-002",
+      "acceptance_summary": "Client users can browse deliverables per milestone, download files, and click Approve or Request Revision with an optional comment. Approval status is tracked with timestamps."
+    },
+    {
+      "id": "FR-008",
+      "module": "Client Portal",
+      "description": "The system shall provide a messaging/communication feature within the client portal, allowing client users to communicate with their dedicated project team in a threaded conversation format.",
+      "priority": "CRITICAL",
+      "actors": ["Client User", "Project Manager", "Team Member"],
+      "source_feature": "F-002",
+      "acceptance_summary": "Clients and team members can exchange messages in project-scoped threads. Messages support text and file attachments. All parties receive notifications for new messages."
+    },
+    {
+      "id": "FR-009",
+      "module": "Client Portal",
+      "description": "The system shall display project timeline/Gantt-style visualization to client users showing milestone dates, current progress, and upcoming deliverables.",
+      "priority": "HIGH",
+      "actors": ["Client User"],
+      "source_feature": "F-002",
+      "acceptance_summary": "Client users can view a timeline visualization of their project showing past and upcoming milestones, current phase, and expected completion date."
+    },
+    {
+      "id": "FR-010",
+      "module": "Client Portal",
+      "description": "The system shall send automated email notifications to client users for key events: milestone completion, deliverable uploads, approval requests, and message replies.",
+      "priority": "HIGH",
+      "actors": ["Client User", "System"],
+      "source_feature": "F-002",
+      "acceptance_summary": "Client users receive email notifications for predefined events. Notification preferences can be configured per client user."
+    },
+    {
+      "id": "FR-011",
+      "module": "Time Tracking & Invoicing",
+      "description": "The system shall provide time tracking functionality where team members can log billable and non-billable hours against specific projects and tasks, with start/stop timer and manual entry options.",
+      "priority": "CRITICAL",
+      "actors": ["Team Member", "Team Lead"],
+      "source_feature": "F-003",
+      "acceptance_summary": "Team members can start/stop a timer or manually enter time entries linked to a project and task. Each entry captures date, hours, description, and billable/non-billable flag."
+    },
+    {
+      "id": "FR-012",
+      "module": "Time Tracking & Invoicing",
+      "description": "The system shall automatically generate draft invoices from approved time entries, calculating totals based on project-specific billing rates, and support manual adjustments before finalization.",
+      "priority": "CRITICAL",
+      "actors": ["Project Manager", "Administrator", "Finance Manager"],
+      "source_feature": "F-003",
+      "acceptance_summary": "Draft invoices are generated from approved time entries with correct billing rates. Authorized users can adjust line items before finalizing. Finalized invoices are immutable."
+    },
+    {
+      "id": "FR-013",
+      "module": "Resource Management",
+      "description": "The system shall provide a visual resource allocation board showing all team members, their assigned projects, utilization rate (percentage of capacity used), and availability windows.",
+      "priority": "HIGH",
+      "actors": ["Project Manager", "Team Lead", "Administrator"],
+      "source_feature": "F-004",
+      "acceptance_summary": "A visual board displays each team member with their project assignments, utilization percentage, and open availability slots. Data updates in real time as assignments change."
+    },
+    {
+      "id": "FR-014",
+      "module": "Resource Management",
+      "description": "The system shall allow managers to assign and reassign team members to projects and tasks, with conflict detection when a team member would exceed their capacity threshold.",
+      "priority": "HIGH",
+      "actors": ["Project Manager", "Team Lead", "Administrator"],
+      "source_feature": "F-004",
+      "acceptance_summary": "Managers can drag-and-drop or select team members for assignment. The system warns when assignment would push utilization above a configurable threshold (e.g., 100%)."
+    },
+    {
+      "id": "FR-015",
+      "module": "Resource Management",
+      "description": "The system shall provide capacity forecasting showing projected team availability over the next 4-12 weeks based on current project schedules and assignments.",
+      "priority": "MEDIUM",
+      "actors": ["Project Manager", "Team Lead", "Administrator"],
+      "source_feature": "F-004",
+      "acceptance_summary": "A forecast view shows projected utilization per team member for the next 4-12 weeks. Users can adjust the time window and filter by team, skill, or department."
+    },
+    {
+      "id": "FR-016",
+      "module": "Document Management",
+      "description": "The system shall provide a document management repository for each project with folder structures, supporting upload, download, preview, and deletion of deliverables and project files.",
+      "priority": "HIGH",
+      "actors": ["Team Member", "Project Manager", "Client User"],
+      "source_feature": "F-005",
+      "acceptance_summary": "Users can upload documents to project-specific folders, preview common file types in-browser, download files, and delete files (with appropriate permissions)."
+    },
+    {
+      "id": "FR-017",
+      "module": "Document Management",
+      "description": "The system shall maintain automatic version history for all uploaded documents, allowing users to view previous versions, compare versions, and restore earlier versions.",
+      "priority": "HIGH",
+      "actors": ["Team Member", "Project Manager"],
+      "source_feature": "F-005",
+      "acceptance_summary": "Each document upload creates a new version. Users can view the version history list, download any previous version, and restore a previous version as the current one."
+    },
+    {
+      "id": "FR-018",
+      "module": "Document Management",
+      "description": "The system shall support commenting and annotation on deliverables, allowing team members and clients to provide feedback directly on documents.",
+      "priority": "HIGH",
+      "actors": ["Team Member", "Project Manager", "Client User"],
+      "source_feature": "F-005",
+      "acceptance_summary": "Users can add comments on documents. Comments are threaded and support replies. Notifications are sent to relevant parties when new comments are added."
+    },
+    {
+      "id": "FR-019",
+      "module": "Document Management",
+      "description": "The system shall provide a client approval workflow for deliverables, where documents can be submitted for client review and the client can approve, reject, or request changes with comments.",
+      "priority": "HIGH",
+      "actors": ["Project Manager", "Client User"],
+      "source_feature": "F-005",
+      "acceptance_summary": "A deliverable can be marked 'Submitted for Review.' The client receives a notification, reviews the document, and selects Approve, Reject, or Request Changes with a required comment for non-approvals."
+    },
+    {
+      "id": "FR-020",
+      "module": "Integrations",
+      "description": "The system shall integrate with QuickBooks to synchronize finalized invoices, including line items, client details, and payment status. The integration shall support bi-directional sync for payment status updates.",
+      "priority": "HIGH",
+      "actors": ["Finance Manager", "Administrator", "System"],
+      "source_feature": "F-006",
+      "acceptance_summary": "Finalized invoices are automatically pushed to QuickBooks. Payment status updates in QuickBooks are reflected back in the platform. Sync errors are logged and reported."
+    },
+    {
+      "id": "FR-021",
+      "module": "Integrations",
+      "description": "The system shall send Slack notifications for configurable events including: milestone approvals, new client comments, task assignments, approaching deadlines, and deliverable uploads.",
+      "priority": "HIGH",
+      "actors": ["Team Member", "Project Manager", "System"],
+      "source_feature": "F-007",
+      "acceptance_summary": "Slack notifications are sent to configured channels or DMs for each event type. Users and admins can configure which events trigger notifications and to which channels."
+    },
+    {
+      "id": "FR-022",
+      "module": "Integrations",
+      "description": "The system shall integrate with Google Calendar to sync project deadlines, milestone dates, and meeting schedules. Calendar events shall be created/updated automatically when project dates change.",
+      "priority": "MEDIUM",
+      "actors": ["Team Member", "Project Manager", "System"],
+      "source_feature": "F-008",
+      "acceptance_summary": "Project milestones and deadlines appear as events in connected Google Calendars. Changes to dates in the platform are automatically reflected in the calendar."
+    },
+    {
+      "id": "FR-023",
+      "module": "Integrations",
+      "description": "The system shall provide a Figma integration that allows linking Figma project files to platform projects and embedding preview thumbnails of Figma designs within the document management system.",
+      "priority": "LOW",
+      "actors": ["Team Member", "Project Manager"],
+      "source_feature": "F-009",
+      "acceptance_summary": "Users can paste a Figma URL to link a design file to a project. The system displays a thumbnail preview. Clicking the thumbnail opens Figma in a new tab."
+    },
+    {
+      "id": "FR-024",
+      "module": "Integrations",
+      "description": "The system shall integrate with GitHub to display commit activity per project, showing recent commits, active branches, and pull request status within the project dashboard.",
+      "priority": "LOW",
+      "actors": ["Team Lead", "Project Manager"],
+      "source_feature": "F-010",
+      "acceptance_summary": "A linked GitHub repository shows recent commits, branch activity, and PR status within the project view. Data refreshes at configurable intervals."
+    },
+    {
+      "id": "FR-025",
+      "module": "Integrations",
+      "description": "The system shall provide a QuickBooks connection configuration interface where administrators can authenticate, map chart of accounts, configure sync frequency, and monitor sync status.",
+      "priority": "HIGH",
+      "actors": ["Administrator", "Finance Manager"],
+      "source_feature": "F-006",
+      "acceptance_summary": "An admin panel allows OAuth connection to QuickBooks, mapping of internal invoice fields to QuickBooks accounts, setting sync schedules, and viewing sync logs."
+    },
+    {
+      "id": "FR-026",
+      "module": "Time Tracking & Invoicing",
+      "description": "The system shall support configurable billing rates per project, per team member role, and per client. Rate overrides at the project level shall take precedence over defaults.",
+      "priority": "CRITICAL",
+      "actors": ["Administrator", "Finance Manager", "Project Manager"],
+      "source_feature": "F-003",
+      "acceptance_summary": "Billing rates can be set at global (role-based), client-level, and project-level. Project-level rates override client rates, which override global rates."
+    },
+    {
+      "id": "FR-027",
+      "module": "Time Tracking & Invoicing",
+      "description": "The system shall provide time entry approval workflow where team leads or project managers review and approve time entries before they are included in invoice generation.",
+      "priority": "HIGH",
+      "actors": ["Team Lead", "Project Manager"],
+      "source_feature": "F-003",
+      "acceptance_summary": "Time entries are submitted for approval. Approvers can approve, reject (with reason), or request modification. Only approved entries are included in invoice calculations."
+    },
+    {
+      "id": "FR-028",
+      "module": "Time Tracking & Invoicing",
+      "description": "The system shall provide timesheet views showing weekly and monthly summaries per team member with breakdown by project, billable vs. non-billable hours, and utilization percentage.",
+      "priority": "HIGH",
+      "actors": ["Team Member", "Team Lead", "Project Manager"],
+      "source_feature": "F-003",
+      "acceptance_summary": "Team members can view their own timesheets. Managers can view timesheets for their team. Views support weekly and monthly groupings with export capability."
+    },
+    {
+      "id": "FR-029",
+      "module": "Reporting & Analytics",
+      "description": "The system shall provide an executive dashboard displaying: revenue per client, project profitability (hours spent vs. hours quoted), team utilization rates, on-time delivery percentage, and client satisfaction scores.",
+      "priority": "CRITICAL",
+      "actors": ["Administrator", "Executive"],
+      "source_feature": "F-013",
+      "acceptance_summary": "An executive dashboard shows all five KPIs with drill-down capability. Data is refreshed in real time or near-real-time. Dashboard is suitable for board meeting presentations."
+    },
+    {
+      "id": "FR-030",
+      "module": "Reporting & Analytics",
+      "description": "The system shall provide project profitability reports comparing actual hours spent and costs against quoted/budgeted values, with variance analysis at the project, client, and portfolio levels.",
+      "priority": "CRITICAL",
+      "actors": ["Project Manager", "Administrator", "Executive"],
+      "source_feature": "F-013",
+      "acceptance_summary": "Reports show budget vs. actual for hours and cost per project. Variance is calculated as percentage and absolute value. Reports can be filtered by date range, client, and project."
+    },
+    {
+      "id": "FR-031",
+      "module": "Reporting & Analytics",
+      "description": "The system shall provide configurable reports with export functionality (PDF, CSV, Excel) and the ability to schedule automated report delivery via email.",
+      "priority": "HIGH",
+      "actors": ["Project Manager", "Administrator", "Executive"],
+      "source_feature": "F-013",
+      "acceptance_summary": "Users can generate reports with configurable parameters, export in PDF/CSV/Excel formats, and schedule recurring report delivery to specified email addresses."
+    },
+    {
+      "id": "FR-032",
+      "module": "Reporting & Analytics",
+      "description": "The system shall track and display client satisfaction scores (NPS) per project and per client, with the ability to record NPS survey results and display trends over time.",
+      "priority": "MEDIUM",
+      "actors": ["Project Manager", "Administrator"],
+      "source_feature": "F-013",
+      "acceptance_summary": "NPS scores can be recorded per project or client. A trend chart shows score changes over time. Scores are included in the executive dashboard."
+    },
+    {
+      "id": "FR-033",
+      "module": "Security & Access Control",
+      "description": "The system shall implement role-based access control (RBAC) with predefined roles: Administrator, Executive, Project Manager, Team Lead, Team Member, Finance Manager, and Client User. Each role has specific permissions for viewing, creating, editing, and deleting resources.",
+      "priority": "CRITICAL",
+      "actors": ["Administrator", "System"],
+      "source_feature": "F-011",
+      "acceptance_summary": "Roles are predefined with granular permissions. Users are assigned one or more roles. Access to every resource is checked against the user's role permissions. Client users can only access their own projects."
+    },
+    {
+      "id": "FR-034",
+      "module": "Security & Access Control",
+      "description": "The system shall enforce mandatory two-factor authentication (2FA) for all users, supporting authenticator app (TOTP) and SMS-based verification methods.",
+      "priority": "CRITICAL",
+      "actors": ["All Users", "System"],
+      "source_feature": "F-012",
+      "acceptance_summary": "All users must set up 2FA during first login. Login requires password + 2FA code. Both TOTP (Google Authenticator, Authy) and SMS methods are supported. Admins can reset 2FA for locked-out users."
+    },
+    {
+      "id": "FR-035",
+      "module": "Security & Access Control",
+      "description": "The system shall maintain comprehensive audit trails logging all user actions including data creation, modification, deletion, login/logout events, permission changes, and export activities with timestamps and user identification.",
+      "priority": "CRITICAL",
+      "actors": ["System", "Administrator"],
+      "source_feature": "F-011",
+      "acceptance_summary": "Every data modification is logged with timestamp, user ID, action type, affected resource, and before/after values. Audit logs are immutable, searchable, and exportable."
+    },
+    {
+      "id": "FR-036",
+      "module": "Security & Access Control",
+      "description": "The system shall ensure strict client data isolation so that client users can only view and interact with projects, documents, and data belonging to their organization. No cross-client data leakage shall be possible.",
+      "priority": "CRITICAL",
+      "actors": ["System", "Client User"],
+      "source_feature": "F-011",
+      "acceptance_summary": "Client users see only their own organization's data. All queries are tenant-filtered. Penetration tests confirm no cross-tenant data access is possible."
+    },
+    {
+      "id": "FR-037",
+      "module": "Platform & UX",
+      "description": "The system shall be delivered as a responsive web application that functions correctly on desktop browsers (Chrome, Firefox, Safari, Edge) and tablet devices with a minimum viewport of 768px.",
+      "priority": "HIGH",
+      "actors": ["All Users"],
+      "source_feature": "F-014",
+      "acceptance_summary": "The application renders correctly and is fully functional on desktop and tablet viewports. All critical workflows are usable on a 768px-wide screen without horizontal scrolling."
+    },
+    {
+      "id": "FR-038",
+      "module": "Platform & UX",
+      "description": "The system shall provide a global search functionality allowing users to search across projects, tasks, documents, and client records with results filtered by the user's access permissions.",
+      "priority": "MEDIUM",
+      "actors": ["All Internal Users"],
+      "source_feature": "F-001",
+      "acceptance_summary": "A search bar is available from all pages. Search results include projects, tasks, documents, and clients. Results respect RBAC — users only see results they have permission to access."
+    },
+    {
+      "id": "FR-039",
+      "module": "Platform & UX",
+      "description": "The system shall provide an in-app notification center displaying real-time notifications for task assignments, mentions, approaching deadlines, approval requests, and client messages.",
+      "priority": "MEDIUM",
+      "actors": ["All Users"],
+      "source_feature": "F-001",
+      "acceptance_summary": "A notification bell icon shows unread count. Clicking it opens a notification panel with categorized items. Users can mark notifications as read and configure notification preferences."
+    },
+    {
+      "id": "FR-040",
+      "module": "Administration",
+      "description": "The system shall provide an administration panel for managing users, roles, permissions, system configuration, integration settings, billing rate configuration, and platform-wide settings.",
+      "priority": "CRITICAL",
+      "actors": ["Administrator"],
+      "source_feature": "F-011",
+      "acceptance_summary": "Administrators can create/edit/deactivate users, assign roles, configure integrations, set billing rates, and manage system-wide settings from a centralized admin panel."
+    },
+    {
+      "id": "FR-041",
+      "module": "Administration",
+      "description": "The system shall support user onboarding with email invitation workflow, allowing administrators to invite new internal users and client users with predefined role assignments.",
+      "priority": "HIGH",
+      "actors": ["Administrator", "Project Manager"],
+      "source_feature": "F-011",
+      "acceptance_summary": "Admins can send email invitations with a role pre-assigned. Invitees receive a link to set up their account and 2FA. Invitations expire after a configurable period."
+    },
+    {
+      "id": "FR-042",
+      "module": "Data Migration",
+      "description": "The system shall support bulk import of existing project data, client records, and historical time entries from CSV/Excel files to facilitate migration from TechNova's current spreadsheet-based system.",
+      "priority": "HIGH",
+      "actors": ["Administrator", "System"],
+      "source_feature": "F-001",
+      "acceptance_summary": "An import wizard supports CSV and Excel uploads for projects, clients, and time entries. Validation errors are reported before import. A dry-run mode previews changes without committing."
+    },
+    {
+      "id": "FR-043",
+      "module": "Platform & UX",
+      "description": "The system shall provide a mobile-optimized native application focused on time tracking, allowing team members to start/stop timers, log hours, and view current task assignments on the go.",
+      "priority": "LOW",
+      "actors": ["Team Member"],
+      "source_feature": "F-015",
+      "acceptance_summary": "A native mobile app (iOS and Android) provides time tracking with timer, manual entry, and task list views. Syncs with the web platform in real time."
+    },
+    {
+      "id": "FR-044",
+      "module": "Reporting & Analytics",
+      "description": "The system shall provide AI-powered project estimation capabilities that analyze historical project data to suggest effort estimates, timelines, and resource requirements for new projects.",
+      "priority": "LOW",
+      "actors": ["Project Manager", "Executive"],
+      "source_feature": "F-016",
+      "acceptance_summary": "When creating a new project, the system suggests estimated hours, timeline, and team size based on analysis of similar completed projects. Estimates include confidence intervals."
+    },
+    {
+      "id": "FR-045",
+      "module": "Reporting & Analytics",
+      "description": "The system shall provide advanced analytics including trend analysis, predictive project health scoring, revenue forecasting, and custom dashboard widgets beyond standard reports.",
+      "priority": "LOW",
+      "actors": ["Executive", "Administrator"],
+      "source_feature": "F-017",
+      "acceptance_summary": "Advanced analytics provide trend lines, predictive scores, and forecasts. Users can create custom dashboards with drag-and-drop widgets. Data supports drill-down to granular levels."
+    },
+    {
+      "id": "FR-046",
+      "module": "Security & Access Control",
+      "description": "The system shall support Single Sign-On (SSO) integration with Google Workspace using SAML 2.0 or OIDC protocols for internal user authentication.",
+      "priority": "HIGH",
+      "actors": ["All Internal Users", "Administrator", "System"],
+      "source_feature": "F-011",
+      "acceptance_summary": "Internal users can authenticate using their Google Workspace credentials via SSO. SSO can be configured by administrators. Fallback to email/password is available if SSO is unavailable."
+    },
+    {
+      "id": "FR-047",
+      "module": "Security & Access Control",
+      "description": "The system shall enforce password policies including minimum length (12 characters), complexity requirements, password expiry (90 days), and prevention of password reuse for the last 10 passwords.",
+      "priority": "HIGH",
+      "actors": ["All Users", "System"],
+      "source_feature": "F-012",
+      "acceptance_summary": "Password creation and change enforce all configured policies. Users are notified before password expiry. Passwords are stored using bcrypt or equivalent hashing."
+    },
+    {
+      "id": "FR-048",
+      "module": "Security & Access Control",
+      "description": "The system shall implement automatic session timeout after 30 minutes of inactivity, with a warning prompt 5 minutes before session expiry allowing the user to extend their session.",
+      "priority": "HIGH",
+      "actors": ["All Users", "System"],
+      "source_feature": "F-012",
+      "acceptance_summary": "Sessions expire after 30 minutes of inactivity. Users see a warning at 25 minutes. Clicking 'Continue Session' resets the timer. Expired sessions redirect to the login page."
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "id": "NFR-001",
+      "category": "Performance",
+      "description": "All standard pages shall load within 2 seconds under normal operating conditions (up to 200 concurrent users).",
+      "measurable_target": "Page load time <= 2 seconds at 95th percentile with 200 concurrent users"
+    },
+    {
+      "id": "NFR-002",
+      "category": "Performance",
+      "description": "Executive and reporting dashboards shall load within 5 seconds, including data aggregation across all active projects.",
+      "measurable_target": "Dashboard load time <= 5 seconds at 95th percentile with complex queries spanning 40+ projects"
+    },
+    {
+      "id": "NFR-003",
+      "category": "Scalability",
+      "description": "The system shall support scaling from 150 internal users and 60-80 client users to 250 internal users and 80 client users within 18 months without architecture changes.",
+      "measurable_target": "Support 330+ concurrent users with no degradation beyond 10% of baseline performance metrics"
+    },
+    {
+      "id": "NFR-004",
+      "category": "Availability",
+      "description": "The system shall maintain 99.5% uptime during business hours (6 AM - 10 PM local time, Monday-Friday), excluding planned maintenance windows.",
+      "measurable_target": "99.5% availability during business hours, measured monthly"
+    },
+    {
+      "id": "NFR-005",
+      "category": "Security",
+      "description": "All data in transit shall be encrypted using TLS 1.2 or higher. All data at rest shall be encrypted using AES-256 encryption.",
+      "measurable_target": "100% of communications use TLS 1.2+; 100% of stored data encrypted with AES-256"
+    },
+    {
+      "id": "NFR-006",
+      "category": "Compliance",
+      "description": "The system shall be designed and operated in compliance with SOC2 Type II requirements, covering Security, Availability, and Confidentiality trust service criteria.",
+      "measurable_target": "Pass SOC2 Type II audit within 12 months of go-live"
+    },
+    {
+      "id": "NFR-007",
+      "category": "Compliance",
+      "description": "The system shall comply with GDPR requirements for handling personal data of EU-based clients and employees, including data subject rights (access, erasure, portability).",
+      "measurable_target": "Full GDPR compliance including data processing records, consent management, and subject rights fulfillment within 30 days of request"
+    },
+    {
+      "id": "NFR-008",
+      "category": "Security",
+      "description": "The system shall undergo regular security assessments including vulnerability scanning (monthly) and penetration testing (annually) with all critical and high findings remediated before go-live.",
+      "measurable_target": "Zero critical/high vulnerabilities at go-live; monthly vulnerability scans; annual penetration test"
+    },
+    {
+      "id": "NFR-009",
+      "category": "Usability",
+      "description": "The system shall be intuitive enough for non-technical client users to navigate without training, targeting a System Usability Scale (SUS) score of 75 or above.",
+      "measurable_target": "SUS score >= 75 in user acceptance testing with a sample of client users"
+    },
+    {
+      "id": "NFR-010",
+      "category": "Usability",
+      "description": "The system shall support responsive design with full functionality on viewports from 768px (tablet) to 1920px (desktop) width.",
+      "measurable_target": "All critical user flows functional and visually correct at 768px, 1024px, 1366px, and 1920px viewport widths"
+    },
+    {
+      "id": "NFR-011",
+      "category": "Performance",
+      "description": "API response times shall not exceed 500ms for standard CRUD operations and 3 seconds for complex aggregation queries.",
+      "measurable_target": "95th percentile API response time <= 500ms for CRUD, <= 3 seconds for aggregations"
+    },
+    {
+      "id": "NFR-012",
+      "category": "Availability",
+      "description": "The system shall support automated backups with a Recovery Point Objective (RPO) of 1 hour and a Recovery Time Objective (RTO) of 4 hours.",
+      "measurable_target": "RPO <= 1 hour; RTO <= 4 hours; backup restoration tested quarterly"
+    },
+    {
+      "id": "NFR-013",
+      "category": "Security",
+      "description": "Audit logs shall be retained for a minimum of 2 years and stored in an immutable, tamper-proof manner separate from application data.",
+      "measurable_target": "Audit log retention >= 2 years; logs stored in append-only storage with integrity verification"
+    },
+    {
+      "id": "NFR-014",
+      "category": "Security",
+      "description": "The system shall implement input validation on all user inputs to prevent SQL injection, XSS, CSRF, and other OWASP Top 10 vulnerabilities.",
+      "measurable_target": "Zero OWASP Top 10 vulnerabilities in security scans; all user inputs validated server-side"
+    },
+    {
+      "id": "NFR-015",
+      "category": "Scalability",
+      "description": "The document management system shall support file uploads up to 500MB per file and total storage of at least 1TB with the ability to scale storage as needed.",
+      "measurable_target": "Max file size >= 500MB; initial storage >= 1TB; auto-scaling storage enabled"
+    },
+    {
+      "id": "NFR-016",
+      "category": "Performance",
+      "description": "Real-time notifications (in-app and Slack) shall be delivered within 5 seconds of the triggering event.",
+      "measurable_target": "Notification delivery latency <= 5 seconds at 95th percentile"
+    },
+    {
+      "id": "NFR-017",
+      "category": "Availability",
+      "description": "Planned maintenance windows shall not exceed 2 hours per month and shall be scheduled outside business hours with 48 hours advance notice.",
+      "measurable_target": "Maintenance downtime <= 2 hours/month; scheduled with >= 48 hours notice"
+    },
+    {
+      "id": "NFR-018",
+      "category": "Compliance",
+      "description": "The system shall implement multi-tenancy architecture ensuring logical data separation between client organizations to support SOC2 confidentiality requirements.",
+      "measurable_target": "Client data isolation verified through automated tests and annual penetration testing"
+    },
+    {
+      "id": "NFR-019",
+      "category": "Usability",
+      "description": "The system shall provide user-friendly error messages for all error conditions, with unique error codes for support escalation and contextual help links.",
+      "measurable_target": "100% of error states display user-friendly messages with error codes; no raw technical errors shown to end users"
+    },
+    {
+      "id": "NFR-020",
+      "category": "Security",
+      "description": "The system shall implement rate limiting on authentication endpoints to prevent brute-force attacks, locking accounts after 5 consecutive failed login attempts for 15 minutes.",
+      "measurable_target": "Account lockout after 5 failed attempts; 15-minute lockout period; rate limiting at 10 requests/minute on auth endpoints"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "CON-001",
+      "type": "Budget",
+      "description": "Phase 1 development budget is capped at $150,000. All Phase 1 features must be delivered within this budget.",
+      "impact": "Feature scope and technology choices must align with budget constraints. Gold-plating and over-engineering must be avoided."
+    },
+    {
+      "id": "CON-002",
+      "type": "Timeline",
+      "description": "Phase 1 must be live within 5 months (target: August 2026, before TechNova's next fiscal year).",
+      "impact": "Aggressive timeline requires efficient sprint planning, minimal scope creep, and decisive stakeholder decisions."
+    },
+    {
+      "id": "CON-003",
+      "type": "Technology",
+      "description": "The system must integrate with TechNova's existing tool ecosystem: QuickBooks, Slack, Google Workspace, Figma, and GitHub.",
+      "impact": "Integration architecture must account for API limitations, authentication requirements, and rate limits of each third-party service."
+    },
+    {
+      "id": "CON-004",
+      "type": "Platform",
+      "description": "Phase 1 is web-only (responsive web application). No native mobile app development in Phase 1.",
+      "impact": "All user workflows must be fully functional in a browser. Time tracking must work adequately on a responsive web interface until the Phase 2 mobile app."
+    },
+    {
+      "id": "CON-005",
+      "type": "Contractual",
+      "description": "A detailed Statement of Work (SOW) with clear deliverables and milestones is required before contract signing. Client has been burned by scope creep previously.",
+      "impact": "All requirements must be precisely documented and agreed upon. Change request process must be formally defined."
+    },
+    {
+      "id": "CON-006",
+      "type": "Data",
+      "description": "Existing project data must be migrated from spreadsheets and shared drives. Data migration must not cause data loss.",
+      "impact": "Data migration planning and validation must be included in the project timeline. Data mapping and cleansing may require client involvement."
+    }
+  ],
+  "modules": [
+    {
+      "module_name": "Project Management",
+      "description": "Core project tracking, task management, milestone tracking, and Kanban/list views to replace spreadsheet-based project tracking.",
+      "functional_requirements": ["FR-001", "FR-002", "FR-003", "FR-004", "FR-005"],
+      "priority": "CRITICAL"
+    },
+    {
+      "module_name": "Client Portal",
+      "description": "Client-facing portal with project dashboards, deliverable review, milestone approvals, messaging, and email notifications.",
+      "functional_requirements": ["FR-006", "FR-007", "FR-008", "FR-009", "FR-010"],
+      "priority": "CRITICAL"
+    },
+    {
+      "module_name": "Time Tracking & Invoicing",
+      "description": "Billable/non-billable time tracking with timers and manual entry, configurable billing rates, approval workflows, timesheet views, and automated invoice generation.",
+      "functional_requirements": ["FR-011", "FR-012", "FR-026", "FR-027", "FR-028"],
+      "priority": "CRITICAL"
+    },
+    {
+      "module_name": "Resource Management",
+      "description": "Visual resource allocation board, team assignment management with capacity conflict detection, and capacity forecasting.",
+      "functional_requirements": ["FR-013", "FR-014", "FR-015"],
+      "priority": "HIGH"
+    },
+    {
+      "module_name": "Document Management",
+      "description": "Project document repository with version control, in-browser preview, commenting/annotation, and client approval workflows for deliverables.",
+      "functional_requirements": ["FR-016", "FR-017", "FR-018", "FR-019"],
+      "priority": "HIGH"
+    },
+    {
+      "module_name": "Integrations",
+      "description": "Third-party integrations with QuickBooks (invoicing sync), Slack (notifications), Google Calendar (deadlines), Figma (design previews), and GitHub (commit activity).",
+      "functional_requirements": ["FR-020", "FR-021", "FR-022", "FR-023", "FR-024", "FR-025"],
+      "priority": "HIGH"
+    },
+    {
+      "module_name": "Reporting & Analytics",
+      "description": "Executive dashboards, project profitability reports, configurable report exports, NPS tracking, AI-powered estimation, and advanced analytics.",
+      "functional_requirements": ["FR-029", "FR-030", "FR-031", "FR-032", "FR-044", "FR-045"],
+      "priority": "CRITICAL"
+    },
+    {
+      "module_name": "Security & Access Control",
+      "description": "Role-based access control, two-factor authentication, audit trails, client data isolation, SSO with Google Workspace, password policies, and session management.",
+      "functional_requirements": ["FR-033", "FR-034", "FR-035", "FR-036", "FR-046", "FR-047", "FR-048"],
+      "priority": "CRITICAL"
+    },
+    {
+      "module_name": "Platform & UX",
+      "description": "Responsive web application, global search, in-app notification center, and mobile app (Phase 2).",
+      "functional_requirements": ["FR-037", "FR-038", "FR-039", "FR-043"],
+      "priority": "HIGH"
+    },
+    {
+      "module_name": "Administration",
+      "description": "Admin panel for user management, role/permission configuration, integration settings, billing rate management, and user onboarding with email invitations.",
+      "functional_requirements": ["FR-040", "FR-041"],
+      "priority": "CRITICAL"
+    },
+    {
+      "module_name": "Data Migration",
+      "description": "Bulk import of existing project data, client records, and historical time entries from CSV/Excel to facilitate migration from TechNova's spreadsheet-based system.",
+      "functional_requirements": ["FR-042"],
+      "priority": "HIGH"
+    }
+  ],
+  "assumptions": [
+    "TechNova has an active QuickBooks Online subscription with API access (not QuickBooks Desktop).",
+    "TechNova's Slack workspace allows third-party app integrations and webhook configurations.",
+    "Google Workspace admin will cooperate to configure SSO (SAML/OIDC) integration.",
+    "Client users (60-80) will have valid email addresses for portal invitation and 2FA setup.",
+    "TechNova's existing spreadsheet data is structured consistently enough for automated migration with reasonable data cleansing effort.",
+    "TechNova will designate a product owner available for weekly sprint reviews and ad-hoc clarifications within 24 hours.",
+    "The 5-month timeline assumes no major scope changes after SOW signing and timely client feedback during UAT.",
+    "TechNova's existing shared drive documents can be exported in standard file formats (PDF, DOCX, PNG, etc.) for migration.",
+    "The $150,000 budget covers development, testing, and initial deployment but does not include ongoing hosting/maintenance costs.",
+    "TechNova does not require on-premises hosting; cloud hosting (AWS, Azure, or GCP) is acceptable.",
+    "NPS data will be manually entered or imported; NPS survey tool integration is out of scope for Phase 1.",
+    "The 150 internal users have access to modern web browsers (Chrome, Firefox, Safari, or Edge — latest two major versions).",
+    "Phase 2 budget and timeline will be negotiated separately after Phase 1 go-live.",
+    "TechNova will provide sample board meeting report templates during the design phase.",
+    "Two-factor authentication via authenticator app (TOTP) is the primary method; SMS is a fallback. No hardware security keys are required in Phase 1."
+  ],
+  "risks": [
+    {
+      "id": "R-001",
+      "description": "QuickBooks API integration complexity may be underestimated. Bi-directional sync with invoice line items, taxes, and payment status can involve complex data mapping and error handling.",
+      "probability": "MEDIUM",
+      "impact": "HIGH",
+      "mitigation": "Conduct a QuickBooks API spike in Sprint 1 to validate integration feasibility. Identify API version, authentication method, and rate limits early. Build a dedicated sync queue with retry logic."
+    },
+    {
+      "id": "R-002",
+      "description": "Data migration from unstructured spreadsheets may contain inconsistent or incomplete data, requiring significant cleansing effort that impacts the timeline.",
+      "probability": "HIGH",
+      "impact": "MEDIUM",
+      "mitigation": "Request sample spreadsheet data in the first week for analysis. Build a migration validation tool that reports data quality issues. Plan for 2 iterations of migration testing."
+    },
+    {
+      "id": "R-003",
+      "description": "The 5-month timeline is aggressive for the scope of Phase 1, with risk of scope creep given the client's prior bad experience and their desire for a comprehensive platform.",
+      "probability": "MEDIUM",
+      "impact": "HIGH",
+      "mitigation": "Implement strict change control process in the SOW. Clearly define Phase 1 vs Phase 2 boundaries. Use agile methodology with 2-week sprints and continuous client demos to manage expectations."
+    },
+    {
+      "id": "R-004",
+      "description": "SOC2 compliance requirements may introduce additional security controls and documentation overhead not fully accounted for in the budget and timeline.",
+      "probability": "MEDIUM",
+      "impact": "MEDIUM",
+      "mitigation": "Engage a SOC2 consultant early to define the control requirements. Build security controls into the architecture from day one rather than retrofitting. Allocate 10% of effort for compliance documentation."
+    },
+    {
+      "id": "R-005",
+      "description": "Client portal user adoption may be low if the UX does not meet client expectations, leading to continued reliance on email for status updates.",
+      "probability": "MEDIUM",
+      "impact": "MEDIUM",
+      "mitigation": "Conduct UX wireframe reviews with 3-5 TechNova clients during design phase. Implement an intuitive onboarding flow. Provide TechNova with client training materials."
+    },
+    {
+      "id": "R-006",
+      "description": "Integration with multiple third-party services (QuickBooks, Slack, Google Calendar, Google SSO) increases the attack surface and creates external dependencies for system availability.",
+      "probability": "LOW",
+      "impact": "HIGH",
+      "mitigation": "Design all integrations with graceful degradation — core functionality works even when external services are unavailable. Implement circuit breaker patterns and comprehensive error handling."
+    },
+    {
+      "id": "R-007",
+      "description": "The $150,000 budget may be insufficient given the breadth of Phase 1 scope (11 major features, 4 integrations, SOC2 compliance, data migration).",
+      "probability": "MEDIUM",
+      "impact": "HIGH",
+      "mitigation": "Prepare a detailed cost breakdown in the SOW with clear deliverables per sprint. Identify lower-priority items (FR with MEDIUM priority) that can be deferred if budget pressure arises. Build in a 10% contingency buffer."
+    },
+    {
+      "id": "R-008",
+      "description": "Real-time features (notifications, dashboard updates, resource board) may require WebSocket infrastructure that adds architectural complexity and hosting costs.",
+      "probability": "LOW",
+      "impact": "MEDIUM",
+      "mitigation": "Evaluate whether near-real-time polling (30-second refresh) is acceptable for most use cases, reserving true WebSocket connections for the most critical real-time features."
+    },
+    {
+      "id": "R-009",
+      "description": "Client approval workflows and milestone approval processes may need to accommodate varying client organizational structures (single approver vs. multi-level approval).",
+      "probability": "MEDIUM",
+      "impact": "LOW",
+      "mitigation": "Implement a simple single-approver workflow for Phase 1 with the architecture supporting future multi-level approval. Confirm with TechNova during design whether multi-level approval is needed immediately."
+    },
+    {
+      "id": "R-010",
+      "description": "Performance degradation when generating executive dashboards aggregating data across 40+ active projects with historical data may exceed the 5-second load target.",
+      "probability": "MEDIUM",
+      "impact": "MEDIUM",
+      "mitigation": "Implement data aggregation caching or materialized views for dashboard metrics. Pre-compute heavy aggregations on a schedule. Load test with realistic data volumes early in development."
+    }
+  ],
+  "dependencies": [
+    { "from": "FR-001", "to": "FR-033", "type": "requires", "description": "Project dashboard requires RBAC to filter visible projects per user role" },
+    { "from": "FR-002", "to": "FR-033", "type": "requires", "description": "Project creation/editing requires role-based permission checks" },
+    { "from": "FR-003", "to": "FR-002", "type": "requires", "description": "Tasks exist within projects; project management must be in place first" },
+    { "from": "FR-004", "to": "FR-002", "type": "requires", "description": "Milestones are defined within projects" },
+    { "from": "FR-006", "to": "FR-033", "type": "requires", "description": "Client portal requires RBAC for client data isolation" },
+    { "from": "FR-006", "to": "FR-036", "type": "requires", "description": "Client portal requires strict client data isolation" },
+    { "from": "FR-007", "to": "FR-006", "type": "requires", "description": "Deliverable viewing requires client portal to be functional" },
+    { "from": "FR-007", "to": "FR-016", "type": "requires", "description": "Deliverable approval requires document management to be in place" },
+    { "from": "FR-008", "to": "FR-006", "type": "requires", "description": "Client messaging requires client portal" },
+    { "from": "FR-011", "to": "FR-002", "type": "requires", "description": "Time tracking entries are linked to projects" },
+    { "from": "FR-012", "to": "FR-011", "type": "requires", "description": "Invoice generation depends on time entries being logged" },
+    { "from": "FR-012", "to": "FR-026", "type": "requires", "description": "Invoicing depends on billing rates being configured" },
+    { "from": "FR-012", "to": "FR-027", "type": "requires", "description": "Invoice generation uses only approved time entries" },
+    { "from": "FR-020", "to": "FR-012", "type": "requires", "description": "QuickBooks sync requires invoices to be generated first" },
+    { "from": "FR-020", "to": "FR-025", "type": "requires", "description": "QuickBooks sync requires the integration to be configured" },
+    { "from": "FR-021", "to": "FR-003", "type": "enhances", "description": "Slack notifications enhance task and milestone management with real-time alerts" },
+    { "from": "FR-022", "to": "FR-004", "type": "enhances", "description": "Google Calendar sync enhances milestone tracking by syncing dates" },
+    { "from": "FR-023", "to": "FR-016", "type": "enhances", "description": "Figma integration enhances document management with design file previews" },
+    { "from": "FR-024", "to": "FR-002", "type": "enhances", "description": "GitHub integration enhances project visibility with commit activity" },
+    { "from": "FR-029", "to": "FR-011", "type": "requires", "description": "Revenue dashboards require time tracking data" },
+    { "from": "FR-029", "to": "FR-012", "type": "requires", "description": "Profitability reports require invoice data" },
+    { "from": "FR-029", "to": "FR-013", "type": "requires", "description": "Utilization dashboard requires resource allocation data" },
+    { "from": "FR-030", "to": "FR-029", "type": "requires", "description": "Profitability reports are a drill-down from executive dashboard" },
+    { "from": "FR-034", "to": "FR-040", "type": "requires", "description": "2FA configuration requires admin panel for user management and 2FA reset" },
+    { "from": "FR-041", "to": "FR-033", "type": "requires", "description": "User onboarding requires RBAC to assign roles during invitation" },
+    { "from": "FR-041", "to": "FR-034", "type": "requires", "description": "Onboarding flow must include 2FA setup" },
+    { "from": "FR-042", "to": "FR-002", "type": "requires", "description": "Data migration imports into the project management data model" },
+    { "from": "FR-044", "to": "FR-029", "type": "requires", "description": "AI estimation requires historical project data from reporting" },
+    { "from": "FR-046", "to": "FR-033", "type": "enhances", "description": "SSO enhances RBAC by providing federated identity management" },
+    { "from": "FR-038", "to": "FR-033", "type": "requires", "description": "Global search results must be filtered by RBAC permissions" },
+    { "from": "FR-013", "to": "FR-003", "type": "requires", "description": "Resource board depends on task assignment data" },
+    { "from": "FR-019", "to": "FR-017", "type": "requires", "description": "Approval workflow requires version-controlled documents" },
+    { "from": "FR-010", "to": "FR-007", "type": "enhances", "description": "Email notifications enhance the deliverable approval experience" },
+    { "from": "FR-015", "to": "FR-013", "type": "requires", "description": "Capacity forecasting builds on current resource allocation data" },
+    { "from": "FR-031", "to": "FR-029", "type": "requires", "description": "Configurable report exports extend the executive dashboard data" },
+    { "from": "FR-032", "to": "FR-029", "type": "enhances", "description": "NPS tracking feeds into the executive dashboard satisfaction metric" },
+    { "from": "FR-028", "to": "FR-011", "type": "requires", "description": "Timesheet views aggregate time entry data" }
+  ],
+  "out_of_scope": [
+    "Native mobile application development (deferred to Phase 2 — F-015)",
+    "AI-powered project estimation (deferred to Phase 2 — F-016)",
+    "Advanced analytics beyond standard reporting dashboards (deferred to Phase 2 — F-017)",
+    "Deep Figma integration with real-time design sync (Phase 1 limited to link/preview — F-009 basic only)",
+    "GitHub activity integration with full CI/CD visibility (deferred to Phase 2 — F-010)",
+    "NPS survey tool integration — NPS scores will be manually entered in Phase 1",
+    "Multi-language / internationalization support",
+    "Offline mode or progressive web app (PWA) capabilities",
+    "Custom workflow builder for client-specific approval processes",
+    "White-labeling or custom branding per client",
+    "Integration with tools beyond QuickBooks, Slack, Google Workspace (e.g., Jira, Asana, Monday.com)",
+    "Automated payroll calculations or HR management features",
+    "Customer support / ticketing system",
+    "Phase 2 budget and timeline planning",
+    "Hardware security key (FIDO2/WebAuthn) support for 2FA",
+    "On-premises deployment — cloud-only for Phase 1"
+  ],
+  "open_questions_from_transcript": [
+    "QuickBooks API version and authentication method TechNova currently uses",
+    "Exact Figma and GitHub integration scope for Phase 1 vs Phase 2",
+    "NPS survey integration specifics — what tool does TechNova use for NPS surveys?",
+    "Data migration needs — volume and format of existing project data in spreadsheets",
+    "Specific report templates required for board meetings",
+    "Preferred cloud hosting region and data residency requirements",
+    "SSO requirements — Google Workspace SAML/OIDC configuration details",
+    "Phase 2 budget and timeline expectations",
+    "Specific performance SLAs beyond page load (2s) and dashboard load (5s)",
+    "Client approval workflow specifics — how many approval stages, who approves?"
+  ],
+  "next_agent": "documentation_agent",
+  "next_input_file": "outputs/requirements/requirement_spec.json"
+}

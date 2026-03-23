@@ -1,0 +1,122 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "code_agent",
+  "timestamp": "2026-03-12T11:45:00Z",
+  "backend_root": "outputs/code/backend/",
+  "frontend_root": "outputs/code/frontend/",
+  "tech_stack_used": {
+    "backend": "Node.js 20 LTS / Express.js 4.x",
+    "frontend": "React 18 / Vite / React Router 6",
+    "database": "PostgreSQL 16"
+  },
+  "files_created": [
+    "outputs/code/backend/package.json",
+    "outputs/code/backend/.env.example",
+    "outputs/code/backend/src/app.js",
+    "outputs/code/backend/src/config/database.js",
+    "outputs/code/backend/src/middleware/auth.middleware.js",
+    "outputs/code/backend/src/middleware/audit.middleware.js",
+    "outputs/code/backend/src/routes/auth.routes.js",
+    "outputs/code/backend/src/controllers/auth.controller.js",
+    "outputs/code/backend/src/routes/project.routes.js",
+    "outputs/code/backend/src/controllers/project.controller.js",
+    "outputs/code/backend/src/migrations/001_initial_schema.sql",
+    "outputs/code/frontend/package.json",
+    "outputs/code/frontend/src/App.jsx",
+    "outputs/code/frontend/src/pages/Login.jsx",
+    "outputs/code/frontend/src/pages/Dashboard.jsx",
+    "outputs/code/frontend/src/services/api.service.js",
+    "outputs/code/frontend/src/services/auth.service.js",
+    "outputs/code/frontend/src/hooks/useAuth.js",
+    "outputs/code/frontend/src/components/ProtectedRoute.jsx",
+    "outputs/code/README.md",
+    "outputs/code/.gitignore"
+  ],
+  "critical_files": [
+    {
+      "path": "outputs/code/backend/src/app.js",
+      "purpose": "Express application entry point with all middleware, routes, health check, and error handling"
+    },
+    {
+      "path": "outputs/code/backend/src/config/database.js",
+      "purpose": "PostgreSQL connection pool with query helper, transaction support, and health check"
+    },
+    {
+      "path": "outputs/code/backend/src/middleware/auth.middleware.js",
+      "purpose": "JWT token verification and RBAC role authorization middleware"
+    },
+    {
+      "path": "outputs/code/backend/src/middleware/audit.middleware.js",
+      "purpose": "SOC2-compliant audit logging capturing who, what, when, from where for all state-changing operations"
+    },
+    {
+      "path": "outputs/code/backend/src/controllers/auth.controller.js",
+      "purpose": "Authentication logic: register, login, 2FA setup/verify, token refresh, logout with bcrypt + JWT + TOTP"
+    },
+    {
+      "path": "outputs/code/backend/src/controllers/project.controller.js",
+      "purpose": "Project CRUD, task management (Kanban), milestone creation with full input validation"
+    },
+    {
+      "path": "outputs/code/backend/src/migrations/001_initial_schema.sql",
+      "purpose": "Full PostgreSQL schema with 25+ tables, indexes, triggers, RLS policies, and seed data for all 7 roles"
+    },
+    {
+      "path": "outputs/code/frontend/src/App.jsx",
+      "purpose": "React Router setup with AuthProvider and role-based protected routes"
+    },
+    {
+      "path": "outputs/code/frontend/src/services/api.service.js",
+      "purpose": "Axios HTTP client with automatic Bearer token injection and transparent token refresh on 401"
+    },
+    {
+      "path": "outputs/code/frontend/src/hooks/useAuth.js",
+      "purpose": "React context + hook for auth state management, login, logout, and role checking"
+    }
+  ],
+  "environment_variables": [
+    { "name": "NODE_ENV", "description": "Application environment", "example": "development" },
+    { "name": "PORT", "description": "API server port", "example": "3000" },
+    { "name": "FRONTEND_URL", "description": "Frontend URL for CORS", "example": "http://localhost:5173" },
+    { "name": "DB_HOST", "description": "PostgreSQL host", "example": "localhost" },
+    { "name": "DB_PORT", "description": "PostgreSQL port", "example": "5432" },
+    { "name": "DB_NAME", "description": "Database name", "example": "technova" },
+    { "name": "DB_USER", "description": "Database user", "example": "technova_user" },
+    { "name": "DB_PASSWORD", "description": "Database password", "example": "your_secure_password_here" },
+    { "name": "DB_SSL", "description": "Enable SSL for database connection", "example": "false" },
+    { "name": "DB_POOL_MIN", "description": "Minimum pool connections", "example": "2" },
+    { "name": "DB_POOL_MAX", "description": "Maximum pool connections", "example": "10" },
+    { "name": "JWT_ACCESS_SECRET", "description": "Secret key for signing JWT access tokens", "example": "your_jwt_access_secret_min_32_chars" },
+    { "name": "JWT_REFRESH_SECRET", "description": "Secret key for signing JWT refresh tokens", "example": "your_jwt_refresh_secret_min_32_chars" },
+    { "name": "JWT_ACCESS_EXPIRY", "description": "Access token expiry duration", "example": "15m" },
+    { "name": "JWT_REFRESH_EXPIRY", "description": "Refresh token expiry duration", "example": "7d" },
+    { "name": "BCRYPT_SALT_ROUNDS", "description": "bcrypt hashing cost factor", "example": "12" },
+    { "name": "TOTP_ISSUER", "description": "Issuer name for TOTP 2FA QR codes", "example": "TechNova Platform" },
+    { "name": "RATE_LIMIT_WINDOW_MS", "description": "Global rate limit window in ms", "example": "60000" },
+    { "name": "RATE_LIMIT_MAX_REQUESTS", "description": "Max requests per window", "example": "100" },
+    { "name": "AUTH_RATE_LIMIT_WINDOW_MS", "description": "Auth rate limit window in ms", "example": "60000" },
+    { "name": "AUTH_RATE_LIMIT_MAX_REQUESTS", "description": "Max auth requests per window", "example": "10" },
+    { "name": "ACCOUNT_LOCKOUT_THRESHOLD", "description": "Failed login attempts before lockout", "example": "5" },
+    { "name": "ACCOUNT_LOCKOUT_DURATION_MS", "description": "Lockout duration in ms", "example": "900000" },
+    { "name": "CORS_ORIGIN", "description": "Allowed CORS origins (comma-separated)", "example": "http://localhost:5173" },
+    { "name": "LOG_LEVEL", "description": "Winston log level", "example": "info" }
+  ],
+  "database_migrations": [
+    "outputs/code/backend/src/migrations/001_initial_schema.sql"
+  ],
+  "setup_commands": {
+    "backend": [
+      "cd outputs/code/backend && npm install",
+      "cp .env.example .env",
+      "createdb technova",
+      "psql -d technova -f src/migrations/001_initial_schema.sql",
+      "npm run dev"
+    ],
+    "frontend": [
+      "cd outputs/code/frontend && npm install",
+      "npm run dev"
+    ]
+  },
+  "next_agent": "testing_agent",
+  "next_input_file": "outputs/code/code_output.json"
+}

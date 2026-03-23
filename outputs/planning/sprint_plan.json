@@ -1,0 +1,596 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "planning_agent",
+  "timestamp": "2026-03-12T00:00:00Z",
+  "project_timeline": {
+    "start_date": "2026-03-16",
+    "end_date": "2026-08-21",
+    "total_weeks": 23,
+    "total_sprints": 11,
+    "buffer_percentage": 10,
+    "buffer_reason": "SaaS domain with multiple third-party integrations (QuickBooks, Slack, Google Calendar, Figma, GitHub). 10% buffer per domain rules for SaaS. SOC2 compliance overhead is partially absorbed within sprint capacity planning rather than additional buffer since security controls are built-in from Sprint 1."
+  },
+  "team_composition": {
+    "total_team_size": 14,
+    "backend_developers": {
+      "count": 4,
+      "seniority": "1 Senior (Tech Lead), 2 Mid-Level, 1 Junior"
+    },
+    "frontend_developers": {
+      "count": 3,
+      "seniority": "1 Senior, 1 Mid-Level, 1 Junior"
+    },
+    "qa_engineers": {
+      "count": 2,
+      "seniority": "1 Senior (QA Lead), 1 Mid-Level"
+    },
+    "project_manager": 1,
+    "business_analyst": 1,
+    "ui_ux_designer": {
+      "count": 2,
+      "seniority": "1 Senior (Lead Designer), 1 Mid-Level"
+    },
+    "devops_engineer": {
+      "count": 1,
+      "seniority": "1 Mid-Level"
+    },
+    "rationale": "VERY_HIGH complexity (48 FRs, 11 modules, SOC2 compliance) demands 12+ team members. 14-person team provides sufficient parallelism across backend, frontend, and QA streams to meet the aggressive 5-month timeline. Two UI/UX designers are needed because the platform has both internal dashboards and a client-facing portal requiring distinct UX paradigms. DevOps engineer is critical for CI/CD, infrastructure-as-code, and SOC2 compliance tooling."
+  },
+  "sprints": [
+    {
+      "sprint_number": 0,
+      "sprint_name": "Foundation & Environment Setup",
+      "duration_weeks": 2,
+      "goals": [
+        "Establish development environment, CI/CD pipeline, and infrastructure-as-code",
+        "Finalize solution architecture and technology stack decisions",
+        "Set up project scaffolding with multi-tenant database schema design",
+        "Configure monitoring, logging, and SOC2-compliant audit trail infrastructure"
+      ],
+      "deliverables": [
+        "Development environment with Docker Compose for local development",
+        "CI/CD pipeline (GitHub Actions) with linting, testing, and deployment stages",
+        "Infrastructure-as-code (Terraform) for staging environment",
+        "Database schema design document and initial migration scripts",
+        "Architecture Decision Records (ADRs) for technology choices",
+        "SOC2 control mapping document"
+      ],
+      "feature_ids": [],
+      "team_focus": {
+        "backend": "Set up Node.js/TypeScript project scaffolding, configure PostgreSQL with multi-tenant schema, implement database migration framework, set up API framework (Express/Fastify)",
+        "frontend": "Set up React/TypeScript project with design system foundation, configure Storybook for component library, establish responsive layout framework",
+        "qa": "Set up test frameworks (Jest, Playwright), configure test automation pipeline, define QA process and acceptance criteria templates, establish test environments"
+      }
+    },
+    {
+      "sprint_number": 1,
+      "sprint_name": "Core Authentication, Security & Admin Foundation",
+      "duration_weeks": 2,
+      "goals": [
+        "Implement RBAC with all 7 predefined roles and granular permissions",
+        "Build 2FA enrollment and login flow (TOTP + SMS fallback)",
+        "Implement password policies and session management",
+        "Build admin panel foundation for user and role management",
+        "Establish audit trail logging infrastructure"
+      ],
+      "deliverables": [
+        "User registration, login, and authentication API with JWT tokens",
+        "RBAC engine with 7 roles and permission matrix",
+        "2FA enrollment flow (TOTP and SMS)",
+        "Password policy enforcement (12-char minimum, complexity, expiry, reuse prevention)",
+        "Session timeout with 30-minute inactivity and 5-minute warning",
+        "Audit trail logging for all authentication events",
+        "Admin panel: user CRUD, role assignment, user invitation workflow"
+      ],
+      "feature_ids": ["FR-033", "FR-034", "FR-035", "FR-036", "FR-040", "FR-041", "FR-047", "FR-048"],
+      "team_focus": {
+        "backend": "Implement authentication service (JWT + refresh tokens), RBAC middleware, 2FA service (TOTP via speakeasy, SMS via Twilio), password policy engine, session management, audit trail event system with immutable log storage",
+        "frontend": "Build login page, 2FA setup wizard, password change flow, session timeout modal, admin panel layout with user management screens and invitation workflow",
+        "qa": "Write security test cases for authentication flows, RBAC permission matrix validation, 2FA bypass attempt tests, session timeout verification, audit log completeness checks"
+      }
+    },
+    {
+      "sprint_number": 2,
+      "sprint_name": "Project Management Core",
+      "duration_weeks": 2,
+      "goals": [
+        "Build centralized project dashboard with filtering and sorting",
+        "Implement project CRUD with configurable fields",
+        "Build task management with status workflows and dependencies",
+        "Implement milestone tracking with target dates and deliverable associations"
+      ],
+      "deliverables": [
+        "Project dashboard showing all active projects with status, team, deadlines, completion %",
+        "Project creation/edit/archive functionality with all configurable fields",
+        "Task management: creation, assignment, status transitions (To Do, In Progress, In Review, Done), dependencies",
+        "Milestone definition with target dates, deliverable links, and client approval flags",
+        "Project-level RBAC enforcement (only assigned team members see project internals)"
+      ],
+      "feature_ids": ["FR-001", "FR-002", "FR-003", "FR-004"],
+      "team_focus": {
+        "backend": "Build Project and Task domain models, REST APIs for CRUD operations, task dependency graph logic, milestone service with approval state machine, tenant-scoped queries",
+        "frontend": "Build project dashboard with data tables (filtering, sorting, pagination), project creation wizard, task list view with inline editing, milestone timeline component",
+        "qa": "End-to-end tests for project lifecycle, task workflow transitions, dependency validation, milestone approval flows, RBAC enforcement on project resources"
+      }
+    },
+    {
+      "sprint_number": 3,
+      "sprint_name": "Project Management UX & Time Tracking",
+      "duration_weeks": 2,
+      "goals": [
+        "Build Kanban board view with drag-and-drop task management",
+        "Implement time tracking with start/stop timer and manual entry",
+        "Build configurable billing rates (global, client, project levels)",
+        "Implement time entry approval workflow"
+      ],
+      "deliverables": [
+        "Kanban board view with drag-and-drop between status columns",
+        "Time tracking: start/stop timer, manual entry, billable/non-billable flag",
+        "Configurable billing rates with hierarchical override (global < client < project)",
+        "Time entry approval workflow (submit, approve, reject, request modification)",
+        "Timesheet views: weekly and monthly summaries with project breakdown"
+      ],
+      "feature_ids": ["FR-005", "FR-011", "FR-026", "FR-027", "FR-028"],
+      "team_focus": {
+        "backend": "Build time entry service with timer state management, billing rate hierarchy engine, approval workflow state machine, timesheet aggregation queries with billable/non-billable breakdowns",
+        "frontend": "Implement Kanban board with react-beautiful-dnd or similar, timer widget (persistent across navigation), manual time entry form, approval queue view, timesheet grid with weekly/monthly toggle and export",
+        "qa": "Test Kanban drag-and-drop across browsers, timer accuracy and persistence tests, billing rate override precedence validation, approval workflow edge cases, timesheet calculation accuracy"
+      }
+    },
+    {
+      "sprint_number": 4,
+      "sprint_name": "Client Portal & Document Management",
+      "duration_weeks": 2,
+      "goals": [
+        "Build client-facing portal with project dashboard and data isolation",
+        "Implement deliverable review and milestone approval through portal",
+        "Build portal messaging/communication feature",
+        "Implement document management with upload, versioning, and preview"
+      ],
+      "deliverables": [
+        "Client portal login with strict data isolation (tenant-filtered queries)",
+        "Client project dashboard showing status, milestones, and recent activity",
+        "Deliverable review: view, download, approve, or request revision with comments",
+        "Threaded messaging between client and project team",
+        "Document repository with folder structure, upload/download/preview/delete",
+        "Automatic version history with view, compare, and restore capabilities"
+      ],
+      "feature_ids": ["FR-006", "FR-007", "FR-008", "FR-016", "FR-017"],
+      "team_focus": {
+        "backend": "Build client portal API layer with tenant isolation middleware, deliverable approval state machine, messaging service with WebSocket for real-time updates, document storage service (S3-compatible) with versioning engine",
+        "frontend": "Build client portal UI shell (separate theme/layout from internal app), client dashboard, deliverable review interface, threaded messaging component, document manager with folder tree, upload progress, and in-browser preview (PDF, images, Office docs)",
+        "qa": "Client data isolation penetration tests (cross-tenant access attempts), deliverable approval workflow tests, messaging delivery and notification tests, document upload/version/restore tests across file types"
+      }
+    },
+    {
+      "sprint_number": 5,
+      "sprint_name": "Client Portal Completion & Resource Management",
+      "duration_weeks": 2,
+      "goals": [
+        "Build client portal timeline/Gantt visualization",
+        "Implement automated client email notifications",
+        "Build document commenting and annotation",
+        "Implement client approval workflow for deliverables",
+        "Build visual resource allocation board"
+      ],
+      "deliverables": [
+        "Gantt-style timeline view in client portal showing milestones and progress",
+        "Automated email notifications for milestone completion, deliverable uploads, approvals, messages",
+        "Document commenting with threaded replies and notifications",
+        "Deliverable submission and client approval workflow (Submit > Review > Approve/Reject/Request Changes)",
+        "Visual resource allocation board showing team members, assignments, and utilization %"
+      ],
+      "feature_ids": ["FR-009", "FR-010", "FR-018", "FR-019", "FR-013"],
+      "team_focus": {
+        "backend": "Build email notification service (SendGrid/SES) with event-driven triggers and user preferences, document comment service, deliverable approval workflow engine, resource allocation query service with utilization calculations",
+        "frontend": "Implement Gantt chart component (using dhtmlxGantt or custom D3.js), email notification preferences UI, document annotation/commenting overlay, deliverable approval UI flow, resource allocation board with utilization bars and availability indicators",
+        "qa": "Test email notification delivery and content for all event types, document commenting and annotation across browsers, deliverable approval state transitions, resource utilization calculation accuracy"
+      }
+    },
+    {
+      "sprint_number": 6,
+      "sprint_name": "Resource Management Completion & Core Integrations",
+      "duration_weeks": 2,
+      "goals": [
+        "Complete resource assignment with conflict detection",
+        "Build capacity forecasting (4-12 week lookahead)",
+        "Implement QuickBooks integration with bi-directional invoice sync",
+        "Build QuickBooks connection configuration interface",
+        "Implement Slack notification integration"
+      ],
+      "deliverables": [
+        "Resource assignment and reassignment with overallocation conflict detection",
+        "Capacity forecasting view (4-12 weeks) filtered by team, skill, department",
+        "QuickBooks OAuth connection and configuration admin panel",
+        "Bi-directional invoice sync: platform to QuickBooks (finalized invoices) and QuickBooks to platform (payment status)",
+        "Slack integration: configurable event notifications to channels/DMs"
+      ],
+      "feature_ids": ["FR-014", "FR-015", "FR-020", "FR-021", "FR-025"],
+      "team_focus": {
+        "backend": "Build resource assignment service with capacity threshold conflict detection, forecasting engine using current schedule data, QuickBooks OAuth2 flow and API client (invoice push, payment status pull), sync queue with retry logic, Slack webhook/bot integration with event routing",
+        "frontend": "Resource drag-and-drop assignment UI with overallocation warnings, capacity forecast chart (filterable by team/skill/department), QuickBooks admin configuration panel (OAuth, account mapping, sync logs), Slack integration settings page",
+        "qa": "Resource conflict detection edge cases, capacity forecast accuracy against manual calculations, QuickBooks sync validation (data mapping, error handling, retry behavior), Slack notification delivery verification per event type"
+      }
+    },
+    {
+      "sprint_number": 7,
+      "sprint_name": "Remaining Integrations, Reporting & Platform UX",
+      "duration_weeks": 2,
+      "goals": [
+        "Implement Google Calendar integration for project deadlines",
+        "Build Figma and GitHub integrations",
+        "Implement invoice generation from approved time entries",
+        "Build executive dashboard with 5 core KPIs",
+        "Implement SSO with Google Workspace"
+      ],
+      "deliverables": [
+        "Google Calendar sync for milestones, deadlines, and meetings",
+        "Figma URL linking with thumbnail preview in document management",
+        "GitHub repository linking with commit activity, branches, and PR status display",
+        "Automated draft invoice generation from approved time entries with manual adjustment",
+        "Executive dashboard: revenue/client, project profitability, utilization, on-time delivery, NPS",
+        "Google Workspace SSO via SAML 2.0/OIDC with fallback to email/password"
+      ],
+      "feature_ids": ["FR-012", "FR-022", "FR-023", "FR-024", "FR-029", "FR-046"],
+      "team_focus": {
+        "backend": "Build Google Calendar API integration (OAuth, event CRUD, auto-sync on date changes), Figma oEmbed/API for thumbnail generation, GitHub API client for commit/branch/PR data, invoice generation engine (aggregate approved time entries, apply billing rates, generate draft), executive dashboard aggregation queries, SSO service (SAML 2.0/OIDC with Google Workspace)",
+        "frontend": "Google Calendar connection settings UI, Figma link input with preview embed, GitHub activity widget for project dashboard, invoice generation wizard with line item editing and finalization, executive dashboard with drill-down charts (Chart.js/Recharts), SSO login button and admin configuration",
+        "qa": "Calendar sync accuracy and bi-directional update tests, Figma/GitHub integration display tests, invoice calculation accuracy against time entries and billing rates, executive dashboard data accuracy and drill-down tests, SSO authentication flow including edge cases (SSO down, first-time login)"
+      }
+    },
+    {
+      "sprint_number": 8,
+      "sprint_name": "Reporting, Analytics, Platform Features & Data Migration",
+      "duration_weeks": 2,
+      "goals": [
+        "Build project profitability reports with variance analysis",
+        "Implement configurable report export (PDF, CSV, Excel) with scheduling",
+        "Build NPS tracking and trend display",
+        "Implement responsive web application cross-browser compatibility",
+        "Build global search and notification center",
+        "Implement data migration import wizard"
+      ],
+      "deliverables": [
+        "Project profitability reports: budget vs actual, variance at project/client/portfolio levels",
+        "Report export in PDF, CSV, Excel formats with scheduled email delivery",
+        "NPS score recording, trend charts, and executive dashboard integration",
+        "Responsive web app tested across Chrome, Firefox, Safari, Edge at 768px-1920px",
+        "Global search across projects, tasks, documents, clients (RBAC-filtered)",
+        "In-app notification center with real-time updates, categories, and preferences",
+        "Data migration wizard: CSV/Excel upload, validation, dry-run preview, batch import"
+      ],
+      "feature_ids": ["FR-030", "FR-031", "FR-032", "FR-037", "FR-038", "FR-039", "FR-042"],
+      "team_focus": {
+        "backend": "Build report generation engine with variance calculations, PDF/CSV/Excel export service (using puppeteer/pdfkit for PDF, exceljs for Excel), scheduled report cron jobs with email delivery, NPS data model and aggregation, Elasticsearch/PostgreSQL full-text search index, WebSocket notification service, CSV/Excel parser with validation engine and batch import transaction management",
+        "frontend": "Report builder UI with parameter selection and chart visualizations, export buttons and schedule configuration dialog, NPS entry form and trend chart, responsive layout audit and fixes across breakpoints, global search bar with autocomplete and result categories, notification bell with dropdown panel and preference settings, data migration wizard with file upload, field mapping, validation results, and import progress",
+        "qa": "Report calculation accuracy against raw data, export format validation (PDF rendering, CSV/Excel data integrity), scheduled report delivery tests, NPS trend chart data accuracy, cross-browser responsive testing matrix, search relevance and RBAC filtering tests, notification delivery timing and preference enforcement, data migration with valid/invalid/edge-case data files"
+      }
+    },
+    {
+      "sprint_number": 9,
+      "sprint_name": "Phase 2 Prep, Integration Testing & Hardening",
+      "duration_weeks": 2,
+      "goals": [
+        "Stub out Phase 2 features (mobile app API, AI estimation, advanced analytics) for future development",
+        "Comprehensive end-to-end integration testing across all modules",
+        "Performance testing and optimization (page loads, API response times, dashboard queries)",
+        "Security hardening: penetration testing remediation, OWASP Top 10 validation",
+        "SOC2 compliance verification and documentation"
+      ],
+      "deliverables": [
+        "Mobile-optimized API endpoints documented for Phase 2 native app development",
+        "AI estimation feature flagged and stubbed with historical data collection hooks",
+        "Advanced analytics data pipeline foundations for Phase 2",
+        "Full integration test suite passing across all 11 modules",
+        "Performance benchmarks: pages < 2s, dashboards < 5s, APIs < 500ms (95th percentile)",
+        "Security scan report with zero critical/high findings",
+        "SOC2 control evidence documentation package"
+      ],
+      "feature_ids": ["FR-043", "FR-044", "FR-045"],
+      "team_focus": {
+        "backend": "API optimization (query tuning, caching strategy with Redis, connection pooling), security hardening (input validation audit, rate limiting on auth endpoints, CSRF tokens), SOC2 evidence collection (encryption verification, access control audit, backup procedures), Phase 2 API endpoint stubs",
+        "frontend": "UI performance optimization (code splitting, lazy loading, image optimization), accessibility audit and fixes, cross-browser regression testing, error message review for user-friendliness",
+        "qa": "End-to-end integration test execution across all modules, load testing (200 concurrent users), penetration testing coordination and finding validation, SOC2 control testing, regression test full suite execution"
+      }
+    },
+    {
+      "sprint_number": 10,
+      "sprint_name": "UAT, Documentation & Deployment Preparation",
+      "duration_weeks": 2,
+      "goals": [
+        "Execute User Acceptance Testing with TechNova stakeholders",
+        "Fix UAT-identified defects",
+        "Complete user documentation and training materials",
+        "Prepare production deployment runbook",
+        "Execute data migration dry-run with TechNova's actual data",
+        "Go-live readiness review"
+      ],
+      "deliverables": [
+        "UAT test execution report with pass/fail/blocked status",
+        "All critical and high UAT defects resolved",
+        "User guide for internal users and separate client portal user guide",
+        "Administrator operations manual",
+        "Production deployment runbook with rollback procedures",
+        "Data migration validation report from dry-run with real data",
+        "Go-live checklist signed off by all stakeholders",
+        "Production environment provisioned and configured"
+      ],
+      "feature_ids": [],
+      "team_focus": {
+        "backend": "UAT defect fixes (priority-driven), production environment configuration, database migration scripts for production, data migration execution and validation, deployment automation scripts, monitoring and alerting setup (CloudWatch/Datadog)",
+        "frontend": "UAT defect fixes (UI/UX issues), user guide screenshots and content, client portal onboarding flow polish, final responsive design adjustments",
+        "qa": "UAT facilitation and defect triage, regression testing after UAT fixes, data migration validation (record counts, data integrity checks), production smoke test planning, go-live readiness checklist verification"
+      }
+    }
+  ],
+  "milestones": [
+    {
+      "name": "Architecture Sign-Off",
+      "target_sprint": 0,
+      "description": "Solution architecture, technology stack, database schema design, and infrastructure plan reviewed and approved by technical and client stakeholders. ADRs documented.",
+      "stakeholder_review": true
+    },
+    {
+      "name": "Core Module Demo — Auth & Project Management",
+      "target_sprint": 2,
+      "description": "Demo of working authentication system with RBAC and 2FA, admin panel, and project management dashboard with task and milestone tracking. First tangible product demo to the client.",
+      "stakeholder_review": true
+    },
+    {
+      "name": "Client Portal Alpha Release",
+      "target_sprint": 5,
+      "description": "Client portal with project dashboard, deliverable review, messaging, document management, and resource allocation board demo to TechNova. Client users can be invited for early feedback.",
+      "stakeholder_review": true
+    },
+    {
+      "name": "Feature Complete — All Integrations Live",
+      "target_sprint": 7,
+      "description": "All 48 functional requirements implemented. QuickBooks, Slack, Google Calendar, Figma, GitHub integrations operational. Executive dashboard and reporting available. SSO enabled.",
+      "stakeholder_review": true
+    },
+    {
+      "name": "Performance & Security Certification",
+      "target_sprint": 9,
+      "description": "Performance benchmarks met (pages < 2s, APIs < 500ms). Security scan shows zero critical/high vulnerabilities. SOC2 control evidence documented and reviewed. System ready for UAT.",
+      "stakeholder_review": true
+    },
+    {
+      "name": "UAT Start",
+      "target_sprint": 10,
+      "description": "User Acceptance Testing begins with TechNova stakeholders. Dedicated UAT environment provisioned with migrated test data. UAT test scripts provided to client team.",
+      "stakeholder_review": true
+    },
+    {
+      "name": "Go-Live Readiness",
+      "target_sprint": 10,
+      "description": "All UAT defects resolved, production environment ready, data migration validated, deployment runbook approved, go-live checklist complete. Final sign-off for production deployment.",
+      "stakeholder_review": true
+    }
+  ],
+  "parallel_streams": [
+    {
+      "stream_name": "Backend API Development",
+      "sprints_active": [1, 2, 3, 4, 5, 6, 7, 8],
+      "team_members": "4 Backend Developers (1 Senior/Tech Lead, 2 Mid-Level, 1 Junior) + DevOps Engineer for infrastructure",
+      "description": "Continuous backend development from authentication through all modules. Backend leads frontend by 1-2 days within each sprint to unblock frontend integration. Tech Lead owns API design and code review."
+    },
+    {
+      "stream_name": "Frontend UI Development",
+      "sprints_active": [1, 2, 3, 4, 5, 6, 7, 8],
+      "team_members": "3 Frontend Developers (1 Senior, 1 Mid-Level, 1 Junior)",
+      "description": "Frontend development starts with component library and design system in Sprint 0-1, then builds feature UIs in lockstep with backend APIs. Senior Frontend Dev owns the component library and responsive framework."
+    },
+    {
+      "stream_name": "UI/UX Design (Lead Stream)",
+      "sprints_active": [0, 1, 2, 3, 4, 5, 6, 7],
+      "team_members": "2 UI/UX Designers (1 Senior Lead, 1 Mid-Level)",
+      "description": "Design leads development by 1 sprint. Sprint 0: design system and core layouts. Sprint 1: auth and admin wireframes. Sprint 2-3: project management and time tracking. Sprint 4-5: client portal (distinct UX). Sprint 6-7: integrations, reporting dashboards, and data migration wizard. Designs are reviewed with BA before handoff to frontend."
+    },
+    {
+      "stream_name": "QA & Test Automation",
+      "sprints_active": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      "team_members": "2 QA Engineers (1 Senior/QA Lead, 1 Mid-Level)",
+      "description": "QA is active throughout the entire project. Sprint 0: test framework setup. Sprints 1-8: test case creation and execution in parallel with development (testing features from the current and previous sprint). Sprint 9: dedicated integration testing, performance testing, security testing. Sprint 10: UAT support and regression."
+    },
+    {
+      "stream_name": "Integration Development",
+      "sprints_active": [6, 7],
+      "team_members": "1 Senior Backend Developer + 1 Mid-Level Backend Developer (focused allocation)",
+      "description": "QuickBooks, Slack, Google Calendar, Figma, and GitHub integrations are concentrated in Sprints 6-7. The Senior Backend Dev leads QuickBooks (most complex, bi-directional sync), while the Mid-Level Dev handles Slack, Calendar, Figma, and GitHub integrations in parallel."
+    },
+    {
+      "stream_name": "DevOps & Infrastructure",
+      "sprints_active": [0, 1, 8, 9, 10],
+      "team_members": "1 DevOps Engineer (Mid-Level) + Backend Tech Lead (advisory)",
+      "description": "Sprint 0: CI/CD pipeline, Docker, Terraform, staging environment. Sprint 1: monitoring and logging infrastructure. Sprints 2-7: maintenance mode (pipeline updates as needed). Sprint 8-9: performance optimization, production environment setup. Sprint 10: deployment automation and go-live support."
+    },
+    {
+      "stream_name": "Security & Compliance",
+      "sprints_active": [0, 1, 9],
+      "team_members": "Backend Tech Lead + QA Lead + External SOC2 Consultant (part-time)",
+      "description": "Sprint 0: SOC2 control mapping and security architecture. Sprint 1: core security implementation (RBAC, 2FA, audit trails). Ongoing: security controls built into each sprint's development. Sprint 9: dedicated security hardening, penetration testing, SOC2 evidence collection."
+    },
+    {
+      "stream_name": "Data Migration",
+      "sprints_active": [8, 10],
+      "team_members": "1 Backend Developer + 1 QA Engineer + BA (client coordination)",
+      "description": "Sprint 8: build migration wizard and import engine. Sprint 10: dry-run with TechNova's actual data, validation, and production migration execution. BA coordinates with TechNova for data cleansing and field mapping."
+    }
+  ],
+  "sprint_summary": {
+    "sprint_0": {
+      "theme": "Foundation",
+      "fr_count": 0,
+      "focus": "Environment, CI/CD, architecture, infrastructure"
+    },
+    "sprint_1": {
+      "theme": "Security & Admin",
+      "fr_count": 8,
+      "focus": "Authentication, RBAC, 2FA, audit trails, admin panel, user management"
+    },
+    "sprint_2": {
+      "theme": "Project Management Core",
+      "fr_count": 4,
+      "focus": "Project dashboard, CRUD, tasks, milestones"
+    },
+    "sprint_3": {
+      "theme": "Kanban & Time Tracking",
+      "fr_count": 5,
+      "focus": "Kanban board, time tracking, billing rates, approvals, timesheets"
+    },
+    "sprint_4": {
+      "theme": "Client Portal & Documents",
+      "fr_count": 5,
+      "focus": "Client portal, deliverable review, messaging, document management, versioning"
+    },
+    "sprint_5": {
+      "theme": "Portal Completion & Resources",
+      "fr_count": 5,
+      "focus": "Gantt view, email notifications, document comments, approval workflow, resource board"
+    },
+    "sprint_6": {
+      "theme": "Resources & Core Integrations",
+      "fr_count": 5,
+      "focus": "Resource assignment, capacity forecasting, QuickBooks, Slack"
+    },
+    "sprint_7": {
+      "theme": "Integrations & Reporting",
+      "fr_count": 6,
+      "focus": "Google Calendar, Figma, GitHub, invoicing, executive dashboard, SSO"
+    },
+    "sprint_8": {
+      "theme": "Reports, Platform & Migration",
+      "fr_count": 7,
+      "focus": "Profitability reports, exports, NPS, responsive web, search, notifications, data migration"
+    },
+    "sprint_9": {
+      "theme": "Hardening & Phase 2 Prep",
+      "fr_count": 3,
+      "focus": "Phase 2 stubs (mobile, AI, analytics), integration testing, performance, security"
+    },
+    "sprint_10": {
+      "theme": "UAT & Go-Live",
+      "fr_count": 0,
+      "focus": "UAT execution, defect fixes, documentation, deployment preparation"
+    }
+  },
+  "fr_to_sprint_mapping": {
+    "FR-001": 2,
+    "FR-002": 2,
+    "FR-003": 2,
+    "FR-004": 2,
+    "FR-005": 3,
+    "FR-006": 4,
+    "FR-007": 4,
+    "FR-008": 4,
+    "FR-009": 5,
+    "FR-010": 5,
+    "FR-011": 3,
+    "FR-012": 7,
+    "FR-013": 5,
+    "FR-014": 6,
+    "FR-015": 6,
+    "FR-016": 4,
+    "FR-017": 4,
+    "FR-018": 5,
+    "FR-019": 5,
+    "FR-020": 6,
+    "FR-021": 6,
+    "FR-022": 7,
+    "FR-023": 7,
+    "FR-024": 7,
+    "FR-025": 6,
+    "FR-026": 3,
+    "FR-027": 3,
+    "FR-028": 3,
+    "FR-029": 7,
+    "FR-030": 8,
+    "FR-031": 8,
+    "FR-032": 8,
+    "FR-033": 1,
+    "FR-034": 1,
+    "FR-035": 1,
+    "FR-036": 1,
+    "FR-037": 8,
+    "FR-038": 8,
+    "FR-039": 8,
+    "FR-040": 1,
+    "FR-041": 1,
+    "FR-042": 8,
+    "FR-043": 9,
+    "FR-044": 9,
+    "FR-045": 9,
+    "FR-046": 7,
+    "FR-047": 1,
+    "FR-048": 1
+  },
+  "dependency_map": {
+    "description": "Key inter-module dependencies that drive sprint ordering",
+    "dependencies": [
+      {
+        "upstream": ["FR-033", "FR-034", "FR-035", "FR-036"],
+        "downstream": ["FR-001", "FR-002", "FR-003", "FR-004", "FR-005", "FR-006"],
+        "reason": "All modules depend on RBAC, authentication, and audit trail infrastructure being in place first"
+      },
+      {
+        "upstream": ["FR-040", "FR-041"],
+        "downstream": ["FR-006", "FR-042"],
+        "reason": "Admin user management and invitation workflow must exist before client portal users can be onboarded or data migration can import user records"
+      },
+      {
+        "upstream": ["FR-001", "FR-002", "FR-003", "FR-004"],
+        "downstream": ["FR-005", "FR-006", "FR-011", "FR-013"],
+        "reason": "Project management core (projects, tasks, milestones) must exist before Kanban views, client portal project display, time tracking against tasks, and resource allocation against projects"
+      },
+      {
+        "upstream": ["FR-011", "FR-026", "FR-027"],
+        "downstream": ["FR-012", "FR-020"],
+        "reason": "Time entries must be trackable and approvable with billing rates before invoices can be generated and synced to QuickBooks"
+      },
+      {
+        "upstream": ["FR-016", "FR-017"],
+        "downstream": ["FR-018", "FR-019", "FR-007"],
+        "reason": "Document repository and versioning must exist before commenting/annotation and client approval workflows can be built on top of documents"
+      },
+      {
+        "upstream": ["FR-012", "FR-020"],
+        "downstream": ["FR-025"],
+        "reason": "QuickBooks sync configuration depends on the invoice sync feature being implemented"
+      },
+      {
+        "upstream": ["FR-011", "FR-028", "FR-001", "FR-013"],
+        "downstream": ["FR-029", "FR-030"],
+        "reason": "Executive dashboard and profitability reports depend on time tracking, timesheet, project, and resource data being available for aggregation"
+      }
+    ]
+  },
+  "risk_mitigations_in_plan": [
+    {
+      "risk": "R-001 — QuickBooks API complexity",
+      "mitigation_in_plan": "QuickBooks integration spike can begin during Sprint 3 (BA research) with full implementation in Sprint 6. Bi-directional sync queue with retry logic is a dedicated deliverable."
+    },
+    {
+      "risk": "R-002 — Data migration from unstructured spreadsheets",
+      "mitigation_in_plan": "BA requests sample data in Sprint 1. Migration wizard built in Sprint 8 with validation engine. Dry-run with real data in Sprint 10. Two iterations of migration testing planned."
+    },
+    {
+      "risk": "R-003 — Aggressive 5-month timeline",
+      "mitigation_in_plan": "11 sprints across 22 weeks (+ 1 week buffer = 23 weeks / ~5.3 months). 14-person team enables parallel streams. Client demos every 2 sprints. Strict scope control via SOW."
+    },
+    {
+      "risk": "R-004 — SOC2 compliance overhead",
+      "mitigation_in_plan": "Security controls built from Sprint 0-1 (not retrofitted). Audit trails, RBAC, encryption, and session management are Sprint 1 deliverables. Sprint 9 dedicated to SOC2 evidence collection."
+    },
+    {
+      "risk": "R-007 — $150K budget may be insufficient",
+      "mitigation_in_plan": "Phase 2 features (FR-043, FR-044, FR-045) are LOW priority and stubbed/flagged in Sprint 9 rather than fully built. If budget pressure arises, MEDIUM priority items (FR-015, FR-022, FR-032, FR-038, FR-039) can be descoped to Phase 2."
+    }
+  ],
+  "capacity_notes": {
+    "sprint_velocity_assumptions": "Each 2-week sprint assumes 8 story points per developer and 5 story points per QA engineer. With 7 developers and 2 QA engineers, theoretical sprint capacity is 66 story points. Practical capacity is ~50 points (75% efficiency accounting for meetings, code review, and unplanned work).",
+    "highest_load_sprints": "Sprints 7 and 8 carry the highest feature load (6-7 FRs each) but this is achievable because: (1) many are integration features with well-defined API contracts, (2) the team is at peak productivity by this point, and (3) UI/UX design is complete by Sprint 7 so frontend has no design dependencies.",
+    "buffer_allocation": "The 10% buffer (~2.2 weeks) is distributed as: 1 week absorbed into Sprint 9 hardening (which has only 3 LOW-priority stub FRs, leaving capacity for overflow), and 1 week added to the end date (August 21 vs. a pure 22-week end of August 7)."
+  },
+  "next_agent": "jira_agent",
+  "next_input_file": "outputs/planning/sprint_plan.json"
+}

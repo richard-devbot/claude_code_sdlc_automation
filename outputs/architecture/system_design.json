@@ -1,0 +1,999 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "architecture_agent",
+  "timestamp": "2026-03-12T10:30:00Z",
+  "project": {
+    "name": "TechNova Solutions — Client Project Management Platform",
+    "client": "TechNova Solutions",
+    "domain": "Professional Services / Digital Agency Management",
+    "compliance": "SOC2 Type II"
+  },
+  "tech_stack": {
+    "backend": "Node.js 20 LTS / Express.js 4.x / TypeScript 5.x",
+    "frontend": "React.js 18 / TypeScript 5.x / Ant Design 5.x",
+    "state_management": "Redux Toolkit + RTK Query",
+    "database_primary": "PostgreSQL 16",
+    "database_cache": "Redis 7",
+    "search_engine": "Elasticsearch 8",
+    "orm": "Prisma 5.x",
+    "authentication": "JWT + Refresh Tokens + TOTP 2FA",
+    "realtime": "Socket.IO 4.x (WebSocket)",
+    "file_storage": "AWS S3",
+    "email_service": "SendGrid",
+    "cloud_provider": "AWS",
+    "containerization": "Docker + Docker Compose",
+    "ci_cd": "GitHub Actions",
+    "reverse_proxy": "Nginx 1.25+",
+    "monitoring": "AWS CloudWatch + X-Ray",
+    "logging": "Winston (structured JSON)",
+    "api_documentation": "OpenAPI 3.0 (Swagger)"
+  },
+  "architecture_pattern": "modular_monolith",
+  "architecture_rationale": "With 11 modules, a medium-sized team, and a 5-month delivery timeline, a modular monolith provides clear module boundaries for future microservice extraction while keeping deployment simple and development velocity high.",
+  "services": [
+    {
+      "name": "Authentication Service",
+      "module": "auth_module",
+      "port": 3000,
+      "path_prefix": "/api/auth",
+      "description": "Handles user authentication, 2FA, SSO, session management, and password policies.",
+      "fr_coverage": ["FR-033", "FR-034", "FR-046", "FR-047", "FR-048"],
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/auth/register",
+          "description": "Register a new user account with email, password, and role assignment",
+          "auth_required": false,
+          "roles_allowed": ["*"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "description": "Authenticate user with email/password, returns JWT access and refresh tokens",
+          "auth_required": false,
+          "roles_allowed": ["*"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/auth/2fa/verify",
+          "description": "Verify TOTP 2FA code to complete login flow",
+          "auth_required": true,
+          "roles_allowed": ["*"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/auth/refresh",
+          "description": "Exchange refresh token for new access token",
+          "auth_required": false,
+          "roles_allowed": ["*"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/auth/logout",
+          "description": "Invalidate refresh token and end user session",
+          "auth_required": true,
+          "roles_allowed": ["*"]
+        }
+      ]
+    },
+    {
+      "name": "Project Management Service",
+      "module": "project_module",
+      "port": 3000,
+      "path_prefix": "/api/projects",
+      "description": "Manages projects, tasks, milestones, Kanban boards, and task dependencies.",
+      "fr_coverage": ["FR-001", "FR-002", "FR-003", "FR-004", "FR-005"],
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/projects",
+          "description": "List all projects with filtering, sorting, and pagination",
+          "auth_required": true,
+          "roles_allowed": ["admin", "executive", "pm", "team_lead", "team_member", "finance_manager"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/projects",
+          "description": "Create a new project with client, team, budget, and milestone configuration",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/projects/:projectId/tasks",
+          "description": "Create a task within a project with assignment, due date, and dependencies",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/projects/:projectId/tasks/:taskId",
+          "description": "Update task status, assignee, or details (supports Kanban drag-and-drop)",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "team_member"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/projects/:projectId/milestones",
+          "description": "Create a milestone with target date and deliverable associations",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm"]
+        }
+      ]
+    },
+    {
+      "name": "Client Portal Service",
+      "module": "client_module",
+      "port": 3000,
+      "path_prefix": "/api/portal",
+      "description": "Client-facing portal for project visibility, deliverable review, messaging, and milestone approvals.",
+      "fr_coverage": ["FR-006", "FR-007", "FR-008", "FR-009", "FR-010"],
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/portal/dashboard",
+          "description": "Get client dashboard with project statuses, milestones, and recent activity",
+          "auth_required": true,
+          "roles_allowed": ["client_user"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/portal/projects/:projectId/deliverables",
+          "description": "List deliverables for a client project with download links",
+          "auth_required": true,
+          "roles_allowed": ["client_user"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/portal/milestones/:milestoneId/approve",
+          "description": "Approve or request revision on a milestone with optional comment",
+          "auth_required": true,
+          "roles_allowed": ["client_user"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/portal/projects/:projectId/messages",
+          "description": "Get threaded messages for client-team communication",
+          "auth_required": true,
+          "roles_allowed": ["client_user", "pm", "team_member"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/portal/projects/:projectId/messages",
+          "description": "Send a message in a project thread with optional file attachment",
+          "auth_required": true,
+          "roles_allowed": ["client_user", "pm", "team_member"]
+        }
+      ]
+    },
+    {
+      "name": "Time Tracking Service",
+      "module": "time_module",
+      "port": 3000,
+      "path_prefix": "/api/time",
+      "description": "Time entry logging with start/stop timer and manual entry, timesheet approval workflows, and billing rate management.",
+      "fr_coverage": ["FR-011", "FR-027", "FR-028"],
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/time/entries",
+          "description": "Create a manual time entry linked to a project and task",
+          "auth_required": true,
+          "roles_allowed": ["team_member", "team_lead", "pm"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/time/timer/start",
+          "description": "Start a live timer for a specific project and task",
+          "auth_required": true,
+          "roles_allowed": ["team_member", "team_lead"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/time/timer/stop",
+          "description": "Stop the running timer and save the time entry",
+          "auth_required": true,
+          "roles_allowed": ["team_member", "team_lead"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/time/timesheets",
+          "description": "Get timesheets for a user or team for a given period",
+          "auth_required": true,
+          "roles_allowed": ["team_member", "team_lead", "pm", "admin"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/time/timesheets/:timesheetId/approve",
+          "description": "Approve or reject a submitted timesheet",
+          "auth_required": true,
+          "roles_allowed": ["pm", "team_lead", "admin"]
+        }
+      ]
+    },
+    {
+      "name": "Invoice Service",
+      "module": "invoice_module",
+      "port": 3000,
+      "path_prefix": "/api/invoices",
+      "description": "Invoice generation from approved time entries, billing rate management, finalization, and QuickBooks synchronization.",
+      "fr_coverage": ["FR-012", "FR-026"],
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/invoices/generate",
+          "description": "Generate a draft invoice from approved time entries for a project/client",
+          "auth_required": true,
+          "roles_allowed": ["admin", "finance_manager", "pm"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/invoices",
+          "description": "List invoices with filtering by client, project, status, and date range",
+          "auth_required": true,
+          "roles_allowed": ["admin", "finance_manager", "pm", "executive"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/invoices/:invoiceId",
+          "description": "Edit draft invoice line items and adjustments before finalization",
+          "auth_required": true,
+          "roles_allowed": ["admin", "finance_manager"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/invoices/:invoiceId/finalize",
+          "description": "Finalize an invoice making it immutable and ready for sending",
+          "auth_required": true,
+          "roles_allowed": ["admin", "finance_manager"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/invoices/:invoiceId/sync-quickbooks",
+          "description": "Push finalized invoice to QuickBooks Online and sync payment status",
+          "auth_required": true,
+          "roles_allowed": ["admin", "finance_manager"]
+        }
+      ]
+    },
+    {
+      "name": "Document Service",
+      "module": "document_module",
+      "port": 3000,
+      "path_prefix": "/api/documents",
+      "description": "Document upload/download to S3, version control, preview, commenting, and client approval workflows.",
+      "fr_coverage": ["FR-016", "FR-017", "FR-018", "FR-019"],
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/documents/upload",
+          "description": "Upload a document to a project with metadata and S3 storage",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "team_member"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/documents/:documentId/versions",
+          "description": "List all versions of a document with change history",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "team_member", "client_user"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/documents/:documentId/download",
+          "description": "Download a specific version of a document via signed S3 URL",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "team_member", "client_user"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/documents/:documentId/comments",
+          "description": "Add a comment or annotation to a document",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "team_member", "client_user"]
+        }
+      ]
+    },
+    {
+      "name": "Resource Management Service",
+      "module": "resource_module",
+      "port": 3000,
+      "path_prefix": "/api/resources",
+      "description": "Resource allocation board, utilization tracking, capacity forecasting, and conflict detection.",
+      "fr_coverage": ["FR-013", "FR-014", "FR-015"],
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/resources/allocations",
+          "description": "Get resource allocation board with team utilization and availability",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "executive"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/resources/assignments",
+          "description": "Assign a team member to a project with hours and date range",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/resources/utilization",
+          "description": "Get utilization metrics for team members over a date range",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "executive"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/resources/forecast",
+          "description": "Get capacity forecast for the next 4-12 weeks",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "executive"]
+        }
+      ]
+    },
+    {
+      "name": "Reporting Service",
+      "module": "report_module",
+      "port": 3000,
+      "path_prefix": "/api/reports",
+      "description": "Executive dashboards, profitability analysis, configurable reports, NPS tracking, and data exports.",
+      "fr_coverage": ["FR-029", "FR-030", "FR-031", "FR-032"],
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/reports/executive-dashboard",
+          "description": "Get executive dashboard with KPIs, revenue, utilization, and project health",
+          "auth_required": true,
+          "roles_allowed": ["admin", "executive"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/reports/profitability",
+          "description": "Get project and client profitability analysis",
+          "auth_required": true,
+          "roles_allowed": ["admin", "executive", "finance_manager"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/reports/generate",
+          "description": "Generate a configurable report with custom filters and grouping",
+          "auth_required": true,
+          "roles_allowed": ["admin", "executive", "pm", "finance_manager"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/reports/export/:reportId",
+          "description": "Export a report as PDF, CSV, or Excel format",
+          "auth_required": true,
+          "roles_allowed": ["admin", "executive", "pm", "finance_manager"]
+        }
+      ]
+    },
+    {
+      "name": "Integration Service",
+      "module": "integration_module",
+      "port": 3000,
+      "path_prefix": "/api/integrations",
+      "description": "Third-party integration management for QuickBooks, Slack, Google Calendar, Figma, and GitHub with circuit breaker pattern.",
+      "fr_coverage": ["FR-020", "FR-021", "FR-022", "FR-023", "FR-024", "FR-025"],
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/integrations/quickbooks/connect",
+          "description": "Initiate OAuth 2.0 flow to connect QuickBooks Online account",
+          "auth_required": true,
+          "roles_allowed": ["admin", "finance_manager"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/integrations/slack/connect",
+          "description": "Connect Slack workspace with bot token via OAuth 2.0",
+          "auth_required": true,
+          "roles_allowed": ["admin"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/integrations/google-calendar/connect",
+          "description": "Connect Google Calendar for bi-directional event sync",
+          "auth_required": true,
+          "roles_allowed": ["admin", "pm", "team_lead", "team_member"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/integrations/status",
+          "description": "Get connection status and health of all configured integrations",
+          "auth_required": true,
+          "roles_allowed": ["admin"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/integrations/:provider/sync",
+          "description": "Trigger manual sync for a specific integration provider",
+          "auth_required": true,
+          "roles_allowed": ["admin"]
+        }
+      ]
+    },
+    {
+      "name": "Admin Service",
+      "module": "admin_module",
+      "port": 3000,
+      "path_prefix": "/api/admin",
+      "description": "User management, role and permission configuration, system settings, billing rates, and audit log access.",
+      "fr_coverage": ["FR-033", "FR-040", "FR-041", "FR-042"],
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/admin/users",
+          "description": "List all users with role, status, and last login information",
+          "auth_required": true,
+          "roles_allowed": ["admin"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/admin/users",
+          "description": "Create a new user and send invitation email",
+          "auth_required": true,
+          "roles_allowed": ["admin"]
+        },
+        {
+          "method": "PUT",
+          "path": "/api/admin/roles/:roleId/permissions",
+          "description": "Update permissions for a role",
+          "auth_required": true,
+          "roles_allowed": ["admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/admin/audit-logs",
+          "description": "Query immutable audit logs with date, user, action, and resource filters",
+          "auth_required": true,
+          "roles_allowed": ["admin", "executive"]
+        },
+        {
+          "method": "PUT",
+          "path": "/api/admin/settings",
+          "description": "Update system-wide settings (billing rates, notification defaults, etc.)",
+          "auth_required": true,
+          "roles_allowed": ["admin"]
+        }
+      ]
+    },
+    {
+      "name": "Notification Service",
+      "module": "notification_module",
+      "port": 3000,
+      "path_prefix": "/api/notifications",
+      "description": "Multi-channel notification delivery (in-app, email via SendGrid, Slack) with user preference management and WebSocket push.",
+      "fr_coverage": ["FR-010", "FR-021", "FR-039"],
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/notifications",
+          "description": "Get paginated in-app notifications for the authenticated user",
+          "auth_required": true,
+          "roles_allowed": ["*"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/notifications/:notificationId/read",
+          "description": "Mark a notification as read",
+          "auth_required": true,
+          "roles_allowed": ["*"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/notifications/mark-all-read",
+          "description": "Mark all unread notifications as read for the authenticated user",
+          "auth_required": true,
+          "roles_allowed": ["*"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/notifications/preferences",
+          "description": "Get user notification preferences by channel and event type",
+          "auth_required": true,
+          "roles_allowed": ["*"]
+        },
+        {
+          "method": "PUT",
+          "path": "/api/notifications/preferences",
+          "description": "Update user notification preferences",
+          "auth_required": true,
+          "roles_allowed": ["*"]
+        }
+      ]
+    }
+  ],
+  "database_schema": {
+    "strategy": {
+      "primary_keys": "UUIDs (v4) to prevent sequential enumeration",
+      "timestamps": "created_at and updated_at on all tables",
+      "soft_deletes": "deleted_at column on critical tables for SOC2 data retention",
+      "audit": "Append-only audit_logs table with 2-year retention",
+      "normalization": "3NF for transactional data; denormalized views for dashboards",
+      "multi_tenancy": "Row-level security (RLS) with client_id filtering for client data isolation"
+    },
+    "tables": [
+      {
+        "name": "users",
+        "description": "All platform users including internal staff and client users",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "email", "type": "VARCHAR(255)", "constraints": "UNIQUE NOT NULL" },
+          { "name": "password_hash", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+          { "name": "first_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+          { "name": "last_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+          { "name": "is_active", "type": "BOOLEAN", "constraints": "DEFAULT true" },
+          { "name": "totp_secret", "type": "VARCHAR(255)", "constraints": "NULLABLE" },
+          { "name": "client_id", "type": "UUID", "constraints": "NULLABLE REFERENCES clients(id)" },
+          { "name": "last_login_at", "type": "TIMESTAMPTZ", "constraints": "NULLABLE" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "deleted_at", "type": "TIMESTAMPTZ", "constraints": "NULLABLE" }
+        ],
+        "indexes": [
+          { "name": "idx_users_email", "columns": ["email"], "unique": true },
+          { "name": "idx_users_client_id", "columns": ["client_id"] }
+        ]
+      },
+      {
+        "name": "roles",
+        "description": "RBAC role definitions (Admin, Executive, PM, Team Lead, Team Member, Finance Manager, Client User)",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "name", "type": "VARCHAR(50)", "constraints": "UNIQUE NOT NULL" },
+          { "name": "display_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+          { "name": "description", "type": "TEXT", "constraints": "NULLABLE" },
+          { "name": "permissions", "type": "JSONB", "constraints": "NOT NULL DEFAULT '{}'" },
+          { "name": "is_system", "type": "BOOLEAN", "constraints": "DEFAULT false" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_roles_name", "columns": ["name"], "unique": true }
+        ]
+      },
+      {
+        "name": "user_roles",
+        "description": "Many-to-many mapping of users to roles",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "user_id", "type": "UUID", "constraints": "NOT NULL REFERENCES users(id) ON DELETE CASCADE" },
+          { "name": "role_id", "type": "UUID", "constraints": "NOT NULL REFERENCES roles(id) ON DELETE CASCADE" },
+          { "name": "assigned_by", "type": "UUID", "constraints": "REFERENCES users(id)" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_user_roles_user_id", "columns": ["user_id"] },
+          { "name": "idx_user_roles_unique", "columns": ["user_id", "role_id"], "unique": true }
+        ]
+      },
+      {
+        "name": "clients",
+        "description": "Client organizations that have projects on the platform",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "name", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+          { "name": "industry", "type": "VARCHAR(100)", "constraints": "NULLABLE" },
+          { "name": "primary_contact_email", "type": "VARCHAR(255)", "constraints": "NULLABLE" },
+          { "name": "billing_address", "type": "JSONB", "constraints": "NULLABLE" },
+          { "name": "is_active", "type": "BOOLEAN", "constraints": "DEFAULT true" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_clients_name", "columns": ["name"] },
+          { "name": "idx_clients_is_active", "columns": ["is_active"] }
+        ]
+      },
+      {
+        "name": "projects",
+        "description": "Client projects with budget, timeline, and status tracking",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "client_id", "type": "UUID", "constraints": "NOT NULL REFERENCES clients(id)" },
+          { "name": "name", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+          { "name": "description", "type": "TEXT", "constraints": "NULLABLE" },
+          { "name": "status", "type": "VARCHAR(30)", "constraints": "NOT NULL DEFAULT 'active' CHECK (status IN ('draft','active','on_hold','completed','archived'))" },
+          { "name": "start_date", "type": "DATE", "constraints": "NOT NULL" },
+          { "name": "deadline", "type": "DATE", "constraints": "NOT NULL" },
+          { "name": "budget", "type": "DECIMAL(12,2)", "constraints": "NULLABLE" },
+          { "name": "created_by", "type": "UUID", "constraints": "NOT NULL REFERENCES users(id)" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "deleted_at", "type": "TIMESTAMPTZ", "constraints": "NULLABLE" }
+        ],
+        "indexes": [
+          { "name": "idx_projects_client_id", "columns": ["client_id"] },
+          { "name": "idx_projects_status", "columns": ["status"] }
+        ]
+      },
+      {
+        "name": "project_members",
+        "description": "Team member assignments to projects with role on the project",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "project_id", "type": "UUID", "constraints": "NOT NULL REFERENCES projects(id) ON DELETE CASCADE" },
+          { "name": "user_id", "type": "UUID", "constraints": "NOT NULL REFERENCES users(id)" },
+          { "name": "project_role", "type": "VARCHAR(50)", "constraints": "NOT NULL DEFAULT 'member'" },
+          { "name": "joined_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_project_members_project_id", "columns": ["project_id"] },
+          { "name": "idx_project_members_unique", "columns": ["project_id", "user_id"], "unique": true }
+        ]
+      },
+      {
+        "name": "tasks",
+        "description": "Tasks within projects with status tracking, assignment, and dependencies",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "project_id", "type": "UUID", "constraints": "NOT NULL REFERENCES projects(id) ON DELETE CASCADE" },
+          { "name": "title", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+          { "name": "description", "type": "TEXT", "constraints": "NULLABLE" },
+          { "name": "status", "type": "VARCHAR(30)", "constraints": "NOT NULL DEFAULT 'todo' CHECK (status IN ('todo','in_progress','in_review','done'))" },
+          { "name": "priority", "type": "VARCHAR(20)", "constraints": "DEFAULT 'medium' CHECK (priority IN ('low','medium','high','critical'))" },
+          { "name": "assignee_id", "type": "UUID", "constraints": "NULLABLE REFERENCES users(id)" },
+          { "name": "due_date", "type": "DATE", "constraints": "NULLABLE" },
+          { "name": "estimated_hours", "type": "DECIMAL(6,2)", "constraints": "NULLABLE" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_tasks_project_id", "columns": ["project_id"] },
+          { "name": "idx_tasks_assignee_status", "columns": ["assignee_id", "status"] }
+        ]
+      },
+      {
+        "name": "milestones",
+        "description": "Project milestones with target dates and client approval tracking",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "project_id", "type": "UUID", "constraints": "NOT NULL REFERENCES projects(id) ON DELETE CASCADE" },
+          { "name": "name", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+          { "name": "target_date", "type": "DATE", "constraints": "NOT NULL" },
+          { "name": "status", "type": "VARCHAR(30)", "constraints": "DEFAULT 'pending' CHECK (status IN ('pending','in_progress','awaiting_approval','approved','revision_requested','completed'))" },
+          { "name": "requires_client_approval", "type": "BOOLEAN", "constraints": "DEFAULT false" },
+          { "name": "approved_by", "type": "UUID", "constraints": "NULLABLE REFERENCES users(id)" },
+          { "name": "approved_at", "type": "TIMESTAMPTZ", "constraints": "NULLABLE" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_milestones_project_id", "columns": ["project_id"] },
+          { "name": "idx_milestones_status", "columns": ["status"] }
+        ]
+      },
+      {
+        "name": "time_entries",
+        "description": "Logged billable and non-billable hours against projects and tasks",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "user_id", "type": "UUID", "constraints": "NOT NULL REFERENCES users(id)" },
+          { "name": "project_id", "type": "UUID", "constraints": "NOT NULL REFERENCES projects(id)" },
+          { "name": "task_id", "type": "UUID", "constraints": "NULLABLE REFERENCES tasks(id)" },
+          { "name": "date", "type": "DATE", "constraints": "NOT NULL" },
+          { "name": "hours", "type": "DECIMAL(5,2)", "constraints": "NOT NULL CHECK (hours > 0)" },
+          { "name": "description", "type": "TEXT", "constraints": "NULLABLE" },
+          { "name": "is_billable", "type": "BOOLEAN", "constraints": "DEFAULT true" },
+          { "name": "approval_status", "type": "VARCHAR(20)", "constraints": "DEFAULT 'pending' CHECK (approval_status IN ('pending','approved','rejected'))" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_time_entries_user_date", "columns": ["user_id", "date"] },
+          { "name": "idx_time_entries_project_id", "columns": ["project_id"] }
+        ]
+      },
+      {
+        "name": "invoices",
+        "description": "Generated invoices with draft/finalized/sent/paid lifecycle",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "invoice_number", "type": "VARCHAR(50)", "constraints": "UNIQUE NOT NULL" },
+          { "name": "client_id", "type": "UUID", "constraints": "NOT NULL REFERENCES clients(id)" },
+          { "name": "project_id", "type": "UUID", "constraints": "NULLABLE REFERENCES projects(id)" },
+          { "name": "status", "type": "VARCHAR(20)", "constraints": "NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','finalized','sent','paid','void'))" },
+          { "name": "total_amount", "type": "DECIMAL(12,2)", "constraints": "NOT NULL DEFAULT 0" },
+          { "name": "due_date", "type": "DATE", "constraints": "NOT NULL" },
+          { "name": "quickbooks_id", "type": "VARCHAR(100)", "constraints": "NULLABLE" },
+          { "name": "finalized_at", "type": "TIMESTAMPTZ", "constraints": "NULLABLE" },
+          { "name": "created_by", "type": "UUID", "constraints": "NOT NULL REFERENCES users(id)" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_invoices_client_id", "columns": ["client_id"] },
+          { "name": "idx_invoices_status", "columns": ["status"] }
+        ]
+      },
+      {
+        "name": "invoice_line_items",
+        "description": "Individual line items on an invoice linked to time entries",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "invoice_id", "type": "UUID", "constraints": "NOT NULL REFERENCES invoices(id) ON DELETE CASCADE" },
+          { "name": "time_entry_id", "type": "UUID", "constraints": "NULLABLE REFERENCES time_entries(id)" },
+          { "name": "description", "type": "VARCHAR(500)", "constraints": "NOT NULL" },
+          { "name": "quantity", "type": "DECIMAL(8,2)", "constraints": "NOT NULL" },
+          { "name": "unit_rate", "type": "DECIMAL(10,2)", "constraints": "NOT NULL" },
+          { "name": "amount", "type": "DECIMAL(12,2)", "constraints": "NOT NULL" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_invoice_line_items_invoice_id", "columns": ["invoice_id"] }
+        ]
+      },
+      {
+        "name": "documents",
+        "description": "Uploaded files stored in S3 with project association and approval tracking",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "project_id", "type": "UUID", "constraints": "NOT NULL REFERENCES projects(id)" },
+          { "name": "name", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+          { "name": "mime_type", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+          { "name": "s3_key", "type": "VARCHAR(500)", "constraints": "NOT NULL" },
+          { "name": "size_bytes", "type": "BIGINT", "constraints": "NOT NULL" },
+          { "name": "current_version", "type": "INTEGER", "constraints": "DEFAULT 1" },
+          { "name": "uploaded_by", "type": "UUID", "constraints": "NOT NULL REFERENCES users(id)" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "deleted_at", "type": "TIMESTAMPTZ", "constraints": "NULLABLE" }
+        ],
+        "indexes": [
+          { "name": "idx_documents_project_id", "columns": ["project_id"] },
+          { "name": "idx_documents_uploaded_by", "columns": ["uploaded_by"] }
+        ]
+      },
+      {
+        "name": "document_versions",
+        "description": "Version history for documents with S3 storage references",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "document_id", "type": "UUID", "constraints": "NOT NULL REFERENCES documents(id) ON DELETE CASCADE" },
+          { "name": "version_number", "type": "INTEGER", "constraints": "NOT NULL" },
+          { "name": "s3_key", "type": "VARCHAR(500)", "constraints": "NOT NULL" },
+          { "name": "size_bytes", "type": "BIGINT", "constraints": "NOT NULL" },
+          { "name": "change_notes", "type": "TEXT", "constraints": "NULLABLE" },
+          { "name": "uploaded_by", "type": "UUID", "constraints": "NOT NULL REFERENCES users(id)" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_doc_versions_document_id", "columns": ["document_id"] },
+          { "name": "idx_doc_versions_unique", "columns": ["document_id", "version_number"], "unique": true }
+        ]
+      },
+      {
+        "name": "resources",
+        "description": "Team members as resource entities with capacity and skill metadata",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "user_id", "type": "UUID", "constraints": "UNIQUE NOT NULL REFERENCES users(id)" },
+          { "name": "department", "type": "VARCHAR(100)", "constraints": "NULLABLE" },
+          { "name": "skills", "type": "JSONB", "constraints": "DEFAULT '[]'" },
+          { "name": "weekly_capacity_hours", "type": "DECIMAL(5,2)", "constraints": "DEFAULT 40.00" },
+          { "name": "default_billing_rate", "type": "DECIMAL(10,2)", "constraints": "NULLABLE" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_resources_user_id", "columns": ["user_id"], "unique": true }
+        ]
+      },
+      {
+        "name": "resource_assignments",
+        "description": "Resource allocation to projects with hours per week and date range",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "resource_id", "type": "UUID", "constraints": "NOT NULL REFERENCES resources(id)" },
+          { "name": "project_id", "type": "UUID", "constraints": "NOT NULL REFERENCES projects(id)" },
+          { "name": "hours_per_week", "type": "DECIMAL(5,2)", "constraints": "NOT NULL" },
+          { "name": "start_date", "type": "DATE", "constraints": "NOT NULL" },
+          { "name": "end_date", "type": "DATE", "constraints": "NOT NULL" },
+          { "name": "assigned_by", "type": "UUID", "constraints": "REFERENCES users(id)" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" },
+          { "name": "updated_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_resource_assignments_resource_id", "columns": ["resource_id"] },
+          { "name": "idx_resource_assignments_project_id", "columns": ["project_id"] }
+        ]
+      },
+      {
+        "name": "audit_logs",
+        "description": "Immutable append-only audit trail for all CRUD operations, logins, and permission changes (2-year retention)",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "user_id", "type": "UUID", "constraints": "NULLABLE REFERENCES users(id)" },
+          { "name": "action", "type": "VARCHAR(50)", "constraints": "NOT NULL" },
+          { "name": "resource_type", "type": "VARCHAR(50)", "constraints": "NOT NULL" },
+          { "name": "resource_id", "type": "UUID", "constraints": "NULLABLE" },
+          { "name": "before_value", "type": "JSONB", "constraints": "NULLABLE" },
+          { "name": "after_value", "type": "JSONB", "constraints": "NULLABLE" },
+          { "name": "ip_address", "type": "INET", "constraints": "NULLABLE" },
+          { "name": "user_agent", "type": "TEXT", "constraints": "NULLABLE" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_audit_logs_user_id", "columns": ["user_id"] },
+          { "name": "idx_audit_logs_resource", "columns": ["resource_type", "resource_id"] }
+        ]
+      },
+      {
+        "name": "notifications",
+        "description": "In-app notifications for users with read status and multi-channel delivery tracking",
+        "columns": [
+          { "name": "id", "type": "UUID", "constraints": "PRIMARY KEY DEFAULT gen_random_uuid()" },
+          { "name": "user_id", "type": "UUID", "constraints": "NOT NULL REFERENCES users(id)" },
+          { "name": "type", "type": "VARCHAR(50)", "constraints": "NOT NULL" },
+          { "name": "title", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+          { "name": "message", "type": "TEXT", "constraints": "NOT NULL" },
+          { "name": "resource_type", "type": "VARCHAR(50)", "constraints": "NULLABLE" },
+          { "name": "resource_id", "type": "UUID", "constraints": "NULLABLE" },
+          { "name": "is_read", "type": "BOOLEAN", "constraints": "DEFAULT false" },
+          { "name": "channels_sent", "type": "JSONB", "constraints": "DEFAULT '[]'" },
+          { "name": "created_at", "type": "TIMESTAMPTZ", "constraints": "DEFAULT NOW()" }
+        ],
+        "indexes": [
+          { "name": "idx_notifications_user_unread", "columns": ["user_id", "is_read"] },
+          { "name": "idx_notifications_created_at", "columns": ["created_at"] }
+        ]
+      }
+    ]
+  },
+  "security_controls": [
+    {
+      "id": "SEC-001",
+      "name": "JWT Authentication",
+      "description": "Stateless JWT access tokens (RS256, 15-minute expiry) with Redis-backed refresh tokens (7-day TTL). Short-lived access tokens minimize exposure window; refresh tokens enable seamless session continuity with fast revocation on logout.",
+      "implementation": "jsonwebtoken library with RS256 signing. Refresh tokens stored in Redis with TTL. Auth middleware validates JWT on every request.",
+      "soc2_criteria": "CC6.1 - Logical Access Security"
+    },
+    {
+      "id": "SEC-002",
+      "name": "Role-Based Access Control (RBAC)",
+      "description": "Seven predefined roles (Admin, Executive, PM, Team Lead, Team Member, Finance Manager, Client User) with granular permission matrix per resource and action. Enforced at middleware level on every API endpoint.",
+      "implementation": "RBAC middleware checks user roles and permissions against endpoint requirements. Permissions stored in roles.permissions JSONB column.",
+      "soc2_criteria": "CC6.3 - Role-Based Access"
+    },
+    {
+      "id": "SEC-003",
+      "name": "Two-Factor Authentication (2FA)",
+      "description": "TOTP-based 2FA mandatory for all users via authenticator apps (Google Authenticator, Authy). SMS fallback available. Satisfies SOC2 MFA requirements.",
+      "implementation": "speakeasy library for TOTP generation and verification. 2FA setup required on first login. Backup codes generated during setup.",
+      "soc2_criteria": "CC6.1 - Multi-Factor Authentication"
+    },
+    {
+      "id": "SEC-004",
+      "name": "Encryption at Rest",
+      "description": "AES-256 encryption for all data at rest: PostgreSQL (RDS encryption), S3 (SSE-S3/SSE-KMS), Redis (encryption at rest). Passwords hashed with bcrypt (cost factor 12).",
+      "implementation": "AWS RDS encryption enabled. S3 bucket policy enforces SSE. Redis ElastiCache encryption at rest. bcrypt for password hashing.",
+      "soc2_criteria": "CC6.7 - Encryption of Data at Rest"
+    },
+    {
+      "id": "SEC-005",
+      "name": "Encryption in Transit",
+      "description": "TLS 1.2+ enforced for all data in transit. Nginx terminates TLS at the reverse proxy. Internal service communication within VPC uses encrypted channels.",
+      "implementation": "AWS ACM certificates on ALB. Nginx configured with TLS 1.2+ minimum. HSTS headers enabled.",
+      "soc2_criteria": "CC6.7 - Encryption of Data in Transit"
+    },
+    {
+      "id": "SEC-006",
+      "name": "Comprehensive Audit Logging",
+      "description": "All CRUD operations, login/logout events, permission changes, and data exports logged to an immutable append-only audit_logs table with before/after values, IP address, and user agent. 2-year retention with S3 Object Lock (WORM) for archival.",
+      "implementation": "Audit middleware intercepts all state-changing requests. Winston structured JSON logging. S3 Object Lock for immutable archival.",
+      "soc2_criteria": "CC7.2 - System Monitoring, CC4.1 - Monitoring Activities"
+    },
+    {
+      "id": "SEC-007",
+      "name": "Rate Limiting",
+      "description": "Rate limiting at Nginx reverse proxy level: 10 requests/minute on /api/auth endpoints to prevent brute force. Account lockout after 5 failed login attempts (15-minute cooldown). General API rate limiting of 100 requests/minute per user.",
+      "implementation": "Nginx rate limiting module. Redis-backed counters for account lockout. express-rate-limit middleware as secondary defense.",
+      "soc2_criteria": "CC6.1 - Protection Against Unauthorized Access"
+    },
+    {
+      "id": "SEC-008",
+      "name": "Input Validation and Injection Prevention",
+      "description": "Server-side validation on all inputs using schema validation. Parameterized queries via Prisma ORM prevent SQL injection. Output encoding prevents XSS. CSRF tokens on state-changing requests. Content Security Policy headers enforced.",
+      "implementation": "Joi/Zod schema validation middleware. Prisma parameterized queries. helmet.js for security headers. csurf for CSRF protection.",
+      "soc2_criteria": "CC6.6 - Security Event Management"
+    },
+    {
+      "id": "SEC-009",
+      "name": "CORS Policy",
+      "description": "Strict CORS whitelist allowing only the application frontend domain and approved integration callback URLs. Wildcard origins explicitly blocked. Credentials mode restricted.",
+      "implementation": "Nginx CORS headers. Express cors middleware with strict origin whitelist. Preflight request handling.",
+      "soc2_criteria": "CC6.1 - Logical Access Security"
+    },
+    {
+      "id": "SEC-010",
+      "name": "Client Data Isolation (Multi-Tenancy)",
+      "description": "Row-level security (RLS) with mandatory client_id foreign key on all client-scoped tables. PostgreSQL RLS policies automatically filter queries by the authenticated user's client_id. Prevents cross-tenant data access.",
+      "implementation": "PostgreSQL CREATE POLICY statements on client-scoped tables. Application-level client_id injection from JWT claims. Integration tests verify isolation.",
+      "soc2_criteria": "CC6.3 - Data Segregation, CC3.1 - Confidentiality"
+    }
+  ],
+  "middleware_stack": [
+    { "order": 1, "name": "CORS", "description": "Cross-origin resource sharing with strict whitelist" },
+    { "order": 2, "name": "Rate Limiter", "description": "Request rate limiting per IP and user" },
+    { "order": 3, "name": "Body Parser", "description": "JSON and multipart form data parsing with size limits" },
+    { "order": 4, "name": "JWT Authentication", "description": "Token validation and user context extraction" },
+    { "order": 5, "name": "RBAC Authorization", "description": "Role and permission checking per endpoint" },
+    { "order": 6, "name": "Input Validation", "description": "Schema-based request validation (Zod)" },
+    { "order": 7, "name": "Audit Logger", "description": "Automatic audit trail for state-changing operations" },
+    { "order": 8, "name": "Error Handler", "description": "Centralized error handling with structured error responses" }
+  ],
+  "integration_patterns": {
+    "pattern": "Event-Driven with Circuit Breaker",
+    "event_bus": "In-process event emitter (Node.js EventEmitter)",
+    "retry_strategy": "Exponential backoff with dead letter queue",
+    "circuit_breaker": "Per-integration circuit breaker with 5-failure threshold and 60-second recovery window",
+    "integrations": [
+      {
+        "name": "QuickBooks Online",
+        "auth": "OAuth 2.0",
+        "sync_type": "Bi-directional (push invoices, pull payment status)",
+        "failure_mode": "Queue + retry, manual reconciliation"
+      },
+      {
+        "name": "Slack",
+        "auth": "Bot Token (OAuth 2.0)",
+        "sync_type": "Outbound push (notifications)",
+        "failure_mode": "Queue + retry, fallback to email"
+      },
+      {
+        "name": "Google Calendar",
+        "auth": "OAuth 2.0",
+        "sync_type": "Bi-directional (event CRUD)",
+        "failure_mode": "Exponential backoff"
+      },
+      {
+        "name": "SendGrid",
+        "auth": "API Key",
+        "sync_type": "Outbound push (transactional emails)",
+        "failure_mode": "Queue + retry, log failures"
+      },
+      {
+        "name": "Figma",
+        "auth": "OAuth 2.0",
+        "sync_type": "Read-only (link embedding, thumbnails)",
+        "failure_mode": "Cache thumbnails, graceful degradation"
+      },
+      {
+        "name": "GitHub",
+        "auth": "OAuth 2.0",
+        "sync_type": "Read-only (commit activity display)",
+        "failure_mode": "Cache responses, graceful degradation"
+      }
+    ]
+  },
+  "deployment": {
+    "cloud_provider": "AWS",
+    "compute": "ECS Fargate (auto-scale 2-6 containers)",
+    "database_hosting": "RDS PostgreSQL 16 (Multi-AZ, encrypted)",
+    "cache_hosting": "ElastiCache Redis (Cluster mode)",
+    "search_hosting": "Amazon Elasticsearch Service (2-node)",
+    "cdn": "CloudFront for static assets (React SPA)",
+    "load_balancer": "Application Load Balancer (ALB) with WAF",
+    "environments": ["development", "staging", "production"],
+    "backup": {
+      "database_rpo": "1 hour",
+      "database_rto": "4 hours",
+      "s3_documents": "Near-zero RPO via cross-region replication"
+    }
+  },
+  "non_functional_targets": {
+    "page_load_time": "< 2 seconds (NFR-001)",
+    "dashboard_load_time": "< 5 seconds for executive dashboard (NFR-002)",
+    "concurrent_users": "330+ (NFR-003)",
+    "uptime_sla": "99.9% (NFR-004)",
+    "max_file_upload": "500 MB per file (NFR-015)",
+    "total_storage": "1 TB+ (NFR-015)",
+    "search_response_time": "< 1 second for global search"
+  },
+  "next_agent": "code_agent",
+  "next_input_file": "outputs/architecture/system_design.json"
+}

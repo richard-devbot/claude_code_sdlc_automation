@@ -1,0 +1,75 @@
+# ============================================================================
+# TechNova Platform — Backend Dockerfile
+# Multi-stage production build for Node.js 20 LTS / Express.js API
+# ============================================================================
+
+# ---------- Stage 1: Dependencies ----------
+FROM node:20-alpine AS deps
+
+WORKDIR /app
+
+# Copy package files for dependency caching
+COPY package.json package-lock.json* ./
+
+# Install production dependencies only
+RUN npm ci --only=production && \
+    # Cache production deps separately
+    cp -R node_modules /prod_node_modules && \
+    # Install all deps (including dev) for build/test stages
+    npm ci
+
+# ---------- Stage 2: Build & Lint ----------
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Run linter (non-blocking — logged only)
+RUN npm run lint 2>&1 || echo "WARN: lint issues detected — review before production"
+
+# ---------- Stage 3: Production ----------
+FROM node:20-alpine AS production
+
+# Security: run as non-root
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S technova -u 1001 -G nodejs
+
+WORKDIR /app
+
+# Install security updates and curl for health checks
+RUN apk update && apk upgrade --no-cache && \
+    apk add --no-cache curl tini dumb-init && \
+    rm -rf /var/cache/apk/*
+
+# Copy production dependencies only
+COPY --from=deps /prod_node_modules ./node_modules
+
+# Copy application source
+COPY --chown=technova:nodejs . .
+
+# Remove dev/test files from final image
+RUN rm -rf tests/ __tests__/ *.test.js *.spec.js .eslintrc* jest.config* \
+    .env .env.* docker-compose* Dockerfile* .git .github .dockerignore
+
+# Environment defaults
+ENV NODE_ENV=production \
+    PORT=3000 \
+    LOG_LEVEL=info
+
+# Expose API port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:3000/api/health || exit 1
+
+# Switch to non-root user
+USER technova
+
+# Use tini as PID 1 for proper signal handling
+ENTRYPOINT ["tini", "--"]
+
+# Start the application
+CMD ["node", "src/app.js"]

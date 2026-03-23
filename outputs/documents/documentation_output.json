@@ -1,0 +1,18 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "documentation_agent",
+  "timestamp": "2026-03-12T00:00:00Z",
+  "documents_created": [
+    "outputs/documents/BRD.md",
+    "outputs/documents/FRD.md",
+    "outputs/documents/SOW.md"
+  ],
+  "requirement_spec_path": "outputs/requirements/requirement_spec.json",
+  "total_functional_requirements": 48,
+  "total_non_functional_requirements": 20,
+  "total_modules": 11,
+  "estimated_complexity": "VERY_HIGH",
+  "domain": "Professional Services / Digital Agency Management",
+  "next_agent": "planning_agent",
+  "next_input_file": "outputs/documents/documentation_output.json"
+}

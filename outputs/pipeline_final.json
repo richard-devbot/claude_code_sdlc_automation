@@ -1,0 +1,109 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "summary_agent",
+  "timestamp": "2026-03-12T13:00:00Z",
+  "pipeline_complete": true,
+  "total_agents_executed": 10,
+  "agents_status": {
+    "transcript_agent": "COMPLETED",
+    "requirement_agent": "COMPLETED",
+    "documentation_agent": "COMPLETED",
+    "planning_agent": "COMPLETED",
+    "jira_agent": "COMPLETED",
+    "architecture_agent": "COMPLETED",
+    "code_agent": "COMPLETED",
+    "testing_agent": "COMPLETED",
+    "deployment_agent": "COMPLETED",
+    "summary_agent": "COMPLETED"
+  },
+  "project": {
+    "name": "TechNova Solutions — Client Project Management Platform",
+    "client": "TechNova Solutions",
+    "domain": "Professional Services / Digital Agency Management",
+    "compliance": "SOC2 Type II",
+    "budget": "$150,000 (Phase 1)",
+    "timeline": "23 weeks (March 16 — August 21, 2026)",
+    "team_size": 14
+  },
+  "artifacts_summary": {
+    "total_files_created": 60,
+    "documents": [
+      "outputs/documents/BRD.md",
+      "outputs/documents/FRD.md",
+      "outputs/documents/SOW.md",
+      "outputs/architecture/HLD.md",
+      "outputs/code/README.md",
+      "outputs/qa/test_plan.md",
+      "outputs/qa/test_cases.md",
+      "outputs/qa/api_test_outlines.md",
+      "outputs/qa/security_checklist.md",
+      "outputs/deployment/env-template.md",
+      "outputs/deployment/production_readiness.md",
+      "outputs/deployment/tool_status.md",
+      "outputs/jira/jira_tickets_readable.md",
+      "outputs/jira/ticketing_report.md",
+      "outputs/PROJECT_COMPLETE_SUMMARY.md",
+      "outputs/EXECUTIVE_DASHBOARD.md"
+    ],
+    "code_files": 20,
+    "test_cases": 237,
+    "test_scenarios_total": 552,
+    "security_checks": 141,
+    "deployment_configs": 10,
+    "json_contracts": 10,
+    "csv_exports": 1,
+    "shell_scripts": 3
+  },
+  "requirements_summary": {
+    "functional_requirements": 48,
+    "non_functional_requirements": 20,
+    "modules": 11,
+    "features_discussed": 17,
+    "phase_1_features": 14,
+    "phase_2_features": 3,
+    "constraints": 6,
+    "risks": 7,
+    "assumptions": 15
+  },
+  "planning_summary": {
+    "total_sprints": 11,
+    "total_weeks": 23,
+    "buffer_percentage": 10,
+    "milestones": 7,
+    "parallel_streams": 8
+  },
+  "ticketing_summary": {
+    "total_epics": 11,
+    "total_stories": 56,
+    "total_tasks": 168,
+    "total_story_points": 299,
+    "fr_coverage_percentage": 100
+  },
+  "architecture_summary": {
+    "pattern": "modular_monolith",
+    "services": 11,
+    "api_endpoints": 56,
+    "database_tables": "25+"
+  },
+  "qa_summary": {
+    "total_test_cases": 237,
+    "total_executable_scenarios": 552,
+    "api_test_scenarios": 260,
+    "security_checks": 141,
+    "user_story_coverage_percentage": 100
+  },
+  "all_output_directories": [
+    "outputs/transcripts/",
+    "outputs/requirements/",
+    "outputs/documents/",
+    "outputs/planning/",
+    "outputs/jira/",
+    "outputs/architecture/",
+    "outputs/code/",
+    "outputs/qa/",
+    "outputs/deployment/"
+  ],
+  "final_summary": "outputs/PROJECT_COMPLETE_SUMMARY.md",
+  "executive_dashboard": "outputs/EXECUTIVE_DASHBOARD.md",
+  "pipeline_status": "COMPLETED"
+}

@@ -1,0 +1,302 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "transcript_agent",
+  "timestamp": "2026-03-12T00:00:00Z",
+  "meeting_metadata": {
+    "date": "2026-03-05",
+    "duration_minutes": 75,
+    "location": "Virtual (Microsoft Teams)",
+    "project_name": "TechNova Solutions — Client Discovery Call",
+    "attendees": [
+      {
+        "name": "Marcus Chen",
+        "role": "CEO",
+        "organization": "TechNova Solutions"
+      },
+      {
+        "name": "Sarah Williams",
+        "role": "Head of Operations",
+        "organization": "TechNova Solutions"
+      },
+      {
+        "name": "David Park",
+        "role": "Business Analyst",
+        "organization": "Our Team"
+      },
+      {
+        "name": "Rachel Torres",
+        "role": "Sales Lead",
+        "organization": "Our Team"
+      },
+      {
+        "name": "Alex Kumar",
+        "role": "Technical Lead",
+        "organization": "Our Team"
+      }
+    ]
+  },
+  "domain": "Professional Services / Digital Agency Management",
+  "client_pain_points": [
+    {
+      "pain_point": "Scattered tools and lack of centralization — projects tracked in spreadsheets, communication via email, documents on a basic shared drive",
+      "severity": "HIGH",
+      "quote": "Our biggest problem right now is that everything is scattered — we use spreadsheets for tracking projects, emails for client communication, and a basic shared drive for documents. It's chaos."
+    },
+    {
+      "pain_point": "No operational visibility — compiling status reports manually takes hours every week because there is no single place to see project progress",
+      "severity": "HIGH",
+      "quote": "I spend 3 hours just compiling status reports from different team leads because there's no single place to see project progress."
+    },
+    {
+      "pain_point": "Missed deadlines due to lack of visibility into team workload and capacity",
+      "severity": "HIGH",
+      "quote": "We're also constantly missing deadlines because we don't have visibility into who's overloaded and who has capacity."
+    },
+    {
+      "pain_point": "No client-facing portal — clients email asking for status updates and the team scrambles to find answers",
+      "severity": "HIGH",
+      "quote": "Right now, clients email us asking 'what's the status of my project?' and we scramble to find answers."
+    },
+    {
+      "pain_point": "Revenue leakage from manual time tracking — under-billing by 15-20% because employees forget to log time in spreadsheets",
+      "severity": "HIGH",
+      "quote": "We track billable hours in spreadsheets, and by the time we generate invoices, we've usually under-billed by 15-20% because people forget to log time."
+    },
+    {
+      "pain_point": "Document version control chaos — no clear way to know which deliverable version is current",
+      "severity": "MEDIUM",
+      "quote": "Right now someone uploads 'final_v2_FINAL_actual.psd' to the shared drive and nobody knows which one is current."
+    },
+    {
+      "pain_point": "No resource allocation visibility — must ask each team lead individually to understand developer assignments and availability",
+      "severity": "HIGH",
+      "quote": "Right now I have to ask each team lead individually."
+    },
+    {
+      "pain_point": "Previous security incident — intern's password was compromised",
+      "severity": "HIGH",
+      "quote": "We've had a scare before where an intern's password was compromised. Never again."
+    }
+  ],
+  "discussed_features": [
+    {
+      "feature_id": "F-001",
+      "feature": "Internal Project Management Platform",
+      "description": "Centralized project management system to replace spreadsheet-based tracking. Should provide a single view of all project progress, assignments, and statuses for all 40+ active clients.",
+      "priority_mentioned": "CRITICAL",
+      "requested_by": "Marcus Chen",
+      "client_quote": "Our biggest problem right now is that everything is scattered — we use spreadsheets for tracking projects, emails for client communication, and a basic shared drive for documents."
+    },
+    {
+      "feature_id": "F-002",
+      "feature": "Client-Facing Portal with Dashboards",
+      "description": "A portal where clients can log in, see their project dashboard, view deliverables, approve milestones, and communicate with their dedicated team — all in one place.",
+      "priority_mentioned": "CRITICAL",
+      "requested_by": "Marcus Chen",
+      "client_quote": "I want clients to log in, see their project dashboard, view deliverables, approve milestones, and communicate with their dedicated team — all in one place."
+    },
+    {
+      "feature_id": "F-003",
+      "feature": "Automated Time Tracking and Invoicing",
+      "description": "Time tracking system tied directly to projects that automatically generates invoices. Must integrate with QuickBooks for accounting sync. Addresses 15-20% under-billing problem.",
+      "priority_mentioned": "CRITICAL",
+      "requested_by": "Sarah Williams",
+      "client_quote": "We need automated time tracking that ties directly to projects and generates invoices automatically."
+    },
+    {
+      "feature_id": "F-004",
+      "feature": "Resource Allocation and Capacity Planning",
+      "description": "Visual resource board showing which developers are assigned to which projects, their utilization rate, and availability. Enables at-a-glance capacity planning.",
+      "priority_mentioned": "HIGH",
+      "requested_by": "Sarah Williams",
+      "client_quote": "I need to see at a glance: which developers are assigned to which projects, what's their utilization rate, and when someone becomes available."
+    },
+    {
+      "feature_id": "F-005",
+      "feature": "Document Management System with Version Control",
+      "description": "Proper document versioning for deliverables with client approval workflows and commenting capabilities. Replaces the chaotic shared drive approach.",
+      "priority_mentioned": "HIGH",
+      "requested_by": "Marcus Chen",
+      "client_quote": "We need proper versioning, client approval workflows, and commenting on deliverables."
+    },
+    {
+      "feature_id": "F-006",
+      "feature": "QuickBooks Integration",
+      "description": "Invoicing system must sync with QuickBooks for accounting. Phase 1 requirement.",
+      "priority_mentioned": "HIGH",
+      "requested_by": "Marcus Chen",
+      "client_quote": "We use QuickBooks for accounting, so the invoicing system needs to sync with that."
+    },
+    {
+      "feature_id": "F-007",
+      "feature": "Slack Notification Integration",
+      "description": "Platform should send Slack notifications for key events such as milestone approvals and new client comments. Phase 1 requirement.",
+      "priority_mentioned": "HIGH",
+      "requested_by": "Marcus Chen",
+      "client_quote": "It would be great if the platform could send Slack notifications for things like 'milestone approved' or 'new client comment.'"
+    },
+    {
+      "feature_id": "F-008",
+      "feature": "Google Calendar Integration",
+      "description": "Calendar integration for project deadlines with Google Workspace. Phase 1 requirement.",
+      "priority_mentioned": "MEDIUM",
+      "requested_by": "Marcus Chen",
+      "client_quote": "We use Google Workspace for email and calendar, so calendar integration for project deadlines would be helpful."
+    },
+    {
+      "feature_id": "F-009",
+      "feature": "Figma Integration",
+      "description": "Document management should link to or preview Figma files used by the design team. Potentially Phase 2.",
+      "priority_mentioned": "LOW",
+      "requested_by": "Sarah Williams",
+      "client_quote": "If the document management could at least link to or preview Figma files... But I understand if that's Phase 2."
+    },
+    {
+      "feature_id": "F-010",
+      "feature": "GitHub Activity Integration",
+      "description": "Show Git commit activity per project within the platform for developer visibility. Potentially Phase 2.",
+      "priority_mentioned": "LOW",
+      "requested_by": "Sarah Williams",
+      "client_quote": "...and show Git commit activity per project, that would be incredible. But I understand if that's Phase 2."
+    },
+    {
+      "feature_id": "F-011",
+      "feature": "Role-Based Access Control (RBAC)",
+      "description": "Clients can only see their own projects, team members see only what's assigned to them, and managers get the full picture. Includes audit trails for all changes.",
+      "priority_mentioned": "CRITICAL",
+      "requested_by": "Marcus Chen",
+      "client_quote": "We need role-based access so that clients can only see their own projects, team members see only what's assigned to them, and managers get the full picture. Audit trails for who changed what and when."
+    },
+    {
+      "feature_id": "F-012",
+      "feature": "Two-Factor Authentication (2FA)",
+      "description": "Mandatory two-factor authentication for all users to prevent unauthorized access.",
+      "priority_mentioned": "CRITICAL",
+      "requested_by": "Sarah Williams",
+      "client_quote": "And two-factor authentication for sure. We've had a scare before where an intern's password was compromised. Never again."
+    },
+    {
+      "feature_id": "F-013",
+      "feature": "Reporting Dashboards",
+      "description": "Executive dashboards showing: revenue per client, project profitability (hours spent vs quoted), team utilization rates, on-time delivery percentage, and client satisfaction scores (NPS). Critical for board meetings.",
+      "priority_mentioned": "CRITICAL",
+      "requested_by": "Marcus Chen",
+      "client_quote": "Those dashboards are critical for our board meetings."
+    },
+    {
+      "feature_id": "F-014",
+      "feature": "Responsive Web Application",
+      "description": "Web application with responsive design for Phase 1. Accessible on laptops and tablets.",
+      "priority_mentioned": "HIGH",
+      "requested_by": "Marcus Chen",
+      "client_quote": "Responsive web app is fine for Phase 1. Our team is mostly on laptops."
+    },
+    {
+      "feature_id": "F-015",
+      "feature": "Mobile App for Time Tracking",
+      "description": "Native mobile application focused on time tracking on the go. Planned for Phase 2.",
+      "priority_mentioned": "LOW",
+      "requested_by": "Marcus Chen",
+      "client_quote": "But a mobile app for time tracking on the go would be nice eventually — Phase 2."
+    },
+    {
+      "feature_id": "F-016",
+      "feature": "AI-Powered Project Estimation",
+      "description": "AI-based project estimation capabilities. Planned for Phase 2.",
+      "priority_mentioned": "LOW",
+      "requested_by": "Marcus Chen",
+      "client_quote": null
+    },
+    {
+      "feature_id": "F-017",
+      "feature": "Advanced Analytics",
+      "description": "Advanced analytics capabilities beyond the basic reporting dashboards. Planned for Phase 2.",
+      "priority_mentioned": "LOW",
+      "requested_by": "Marcus Chen",
+      "client_quote": null
+    }
+  ],
+  "compliance_requirements": [
+    {
+      "regulation": "SOC2",
+      "description": "SOC2 compliance is required because TechNova handles client data, with some clients in healthcare and finance verticals. Must demonstrate security controls and data protection measures.",
+      "mandatory": true
+    },
+    {
+      "regulation": "Two-Factor Authentication (2FA)",
+      "description": "Mandatory 2FA for all users. Previous security incident with a compromised password drives this requirement.",
+      "mandatory": true
+    },
+    {
+      "regulation": "Role-Based Access Control with Audit Trails",
+      "description": "Strict RBAC ensuring client data isolation (clients see only their own projects) and full audit trails tracking who changed what and when.",
+      "mandatory": true
+    }
+  ],
+  "timeline_expectations": {
+    "client_desired_deadline": "Phase 1 live within 5 months (before next fiscal year, approximately August 2026)",
+    "phases_discussed": [
+      {
+        "phase": "Phase 1",
+        "scope": "Project Management, Client Portal, Time Tracking + Basic Invoicing, Document Management, Reporting Dashboards, QuickBooks Integration, Slack Notifications, Google Calendar Integration, RBAC, 2FA, Responsive Web App",
+        "timeline": "5 months"
+      },
+      {
+        "phase": "Phase 2",
+        "scope": "Mobile App, AI Project Estimation, Advanced Integrations (Figma deep integration, GitHub activity), Advanced Analytics",
+        "timeline": "Not specified"
+      }
+    ],
+    "key_milestones_mentioned": [
+      "Phase 1 go-live before next fiscal year",
+      "Detailed SOW required before signing",
+      "Clear deliverables and milestones in contract"
+    ]
+  },
+  "budget_info": {
+    "budget_mentioned": "$150,000 allocated for Phase 1",
+    "constraints": "Detailed SOW required before signing. Client has been burned before by scope creep with no documentation, so clear deliverables and milestones are essential. Phase 2 budget not discussed."
+  },
+  "technical_context": {
+    "existing_systems": [
+      "QuickBooks (accounting)",
+      "Slack (internal communication)",
+      "Google Workspace (email and calendar)",
+      "Figma (design team)",
+      "GitHub (development team)",
+      "Spreadsheets (current project tracking and time tracking)",
+      "Basic shared drive (document storage)",
+      "Email (client communication)"
+    ],
+    "existing_data": "Project data currently stored in spreadsheets; deliverables on shared drive; billable hours tracked in spreadsheets. Data migration from these sources will be needed.",
+    "technology_preferences": "Responsive web application for Phase 1; native mobile app for Phase 2. No other specific technology stack preferences mentioned.",
+    "expected_users": "~150 internal users (all employees), 60-80 client users (main contacts from 40+ clients), 5 admin/management users. Must scale to 250 employees and 80 clients within 18 months."
+  },
+  "open_questions": [
+    "QuickBooks API version and authentication method TechNova currently uses",
+    "Exact Figma and GitHub integration scope for Phase 1 vs Phase 2",
+    "NPS survey integration specifics — what tool does TechNova use for NPS surveys?",
+    "Data migration needs — volume and format of existing project data in spreadsheets",
+    "Specific report templates required for board meetings",
+    "Preferred cloud hosting region and data residency requirements",
+    "SSO requirements — Google Workspace SAML/OIDC configuration details",
+    "Phase 2 budget and timeline expectations",
+    "Specific performance SLAs beyond page load (2s) and dashboard load (5s)",
+    "Client approval workflow specifics — how many approval stages, who approves?"
+  ],
+  "decisions_made": [
+    "Phase 1 scope: Project Management, Client Portal, Time Tracking + Invoicing, Document Management, Reporting Dashboards",
+    "Phase 2 scope: Mobile App, AI Project Estimation, Advanced Integrations (Figma deep integration, GitHub activity), Advanced Analytics",
+    "SOC2 compliance is required",
+    "Two-factor authentication is mandatory",
+    "Responsive web app for Phase 1 (no native mobile)",
+    "Budget: $150,000 for Phase 1",
+    "Timeline: 5 months for Phase 1 go-live",
+    "QuickBooks integration for invoicing is Phase 1",
+    "Slack notification integration is Phase 1",
+    "Google Calendar integration is Phase 1",
+    "Detailed SOW with clear deliverables and milestones required before contract signing"
+  ],
+  "next_agent": "requirement_agent",
+  "next_input_file": "outputs/transcripts/structured_meeting_output.json"
+}

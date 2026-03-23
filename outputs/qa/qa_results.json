@@ -1,0 +1,111 @@
+{
+  "contract_version": "1.0",
+  "produced_by": "testing_agent",
+  "timestamp": "2026-03-12T12:30:00Z",
+  "project": {
+    "name": "TechNova Solutions — Client Project Management Platform",
+    "client": "TechNova Solutions",
+    "domain": "Professional Services / Digital Agency Management"
+  },
+  "artifacts_created": {
+    "test_plan": "outputs/qa/test_plan.md",
+    "test_cases": "outputs/qa/test_cases.md",
+    "api_test_outlines": "outputs/qa/api_test_outlines.md",
+    "security_checklist": "outputs/qa/security_checklist.md"
+  },
+  "test_summary": {
+    "total_test_cases": 237,
+    "parameterized_rbac_checks": 315,
+    "total_executable_scenarios": 552,
+    "test_coverage_by_module": {
+      "Project Management (US-001-005)": {
+        "test_cases": 24,
+        "user_stories_covered": ["US-001", "US-002", "US-003", "US-004", "US-005"]
+      },
+      "Client Portal (US-006-010)": {
+        "test_cases": 18,
+        "user_stories_covered": ["US-006", "US-007", "US-008", "US-009", "US-010"]
+      },
+      "Time Tracking & Invoicing (US-011-015)": {
+        "test_cases": 19,
+        "user_stories_covered": ["US-011", "US-012", "US-013", "US-014", "US-015"]
+      },
+      "Resource Management (US-016-018)": {
+        "test_cases": 10,
+        "user_stories_covered": ["US-016", "US-017", "US-018"]
+      },
+      "Document Management (US-019-022)": {
+        "test_cases": 15,
+        "user_stories_covered": ["US-019", "US-020", "US-021", "US-022"]
+      },
+      "Integrations (US-023-028)": {
+        "test_cases": 15,
+        "user_stories_covered": ["US-023", "US-024", "US-025", "US-026", "US-027", "US-028"]
+      },
+      "Reporting & Analytics (US-029-034)": {
+        "test_cases": 17,
+        "user_stories_covered": ["US-029", "US-030", "US-031", "US-032", "US-033", "US-034"]
+      },
+      "Security & Access Control (US-035-041)": {
+        "test_cases": 31,
+        "user_stories_covered": ["US-035", "US-036", "US-037", "US-038", "US-039", "US-040", "US-041"]
+      },
+      "Platform & UX (US-042-045)": {
+        "test_cases": 14,
+        "user_stories_covered": ["US-042", "US-043", "US-044", "US-045"]
+      },
+      "Administration (US-046-047)": {
+        "test_cases": 9,
+        "user_stories_covered": ["US-046", "US-047"]
+      },
+      "Data Migration (US-048)": {
+        "test_cases": 6,
+        "user_stories_covered": ["US-048"]
+      },
+      "Domain Stories (US-049-056)": {
+        "test_cases": 29,
+        "user_stories_covered": ["US-049", "US-050", "US-051", "US-052", "US-053", "US-054", "US-055", "US-056"]
+      },
+      "Cross-Cutting (Auth, Validation, Errors)": {
+        "test_cases": 23,
+        "user_stories_covered": ["ALL"]
+      },
+      "Performance": {
+        "test_cases": 6,
+        "user_stories_covered": ["NFR-001", "NFR-002", "NFR-003", "NFR-011", "NFR-015", "NFR-016"]
+      },
+      "Additional Security": {
+        "test_cases": 8,
+        "user_stories_covered": ["NFR-005", "NFR-008", "NFR-014", "NFR-020"]
+      }
+    },
+    "security_checks": 141,
+    "security_checks_breakdown": {
+      "owasp_top_10": 61,
+      "soc2_type_ii": 27,
+      "gdpr": 12,
+      "saas_domain": 41
+    },
+    "api_test_scenarios": 260,
+    "api_endpoints_covered": 56,
+    "test_types": {
+      "functional": 142,
+      "security": 52,
+      "integration": 28,
+      "performance": 15
+    },
+    "priority_distribution": {
+      "critical": 71,
+      "high": 114,
+      "medium": 49,
+      "low": 10
+    },
+    "user_story_coverage": {
+      "total_stories": 56,
+      "stories_with_test_cases": 56,
+      "coverage_percentage": 100
+    }
+  },
+  "next_agent": "deployment_agent",
+  "next_input_file": "outputs/qa/qa_results.json"
+}

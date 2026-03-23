@@ -1,0 +1,314 @@
+# ============================================================================
+# TechNova Platform — GitHub Actions CI/CD Pipeline
+# Triggers: push/PR to main and develop branches
+# Stages: lint, test, build, Docker push, deploy staging, deploy production
+# ============================================================================
+
+name: TechNova CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: "20"
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+# Cancel redundant runs on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+  actions: read
+
+jobs:
+  # ============================
+  # Stage 1: Lint
+  # ============================
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [backend, frontend]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: outputs/code/${{ matrix.project }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: outputs/code/${{ matrix.project }}
+        run: npm ci
+
+      - name: Run linter
+        working-directory: outputs/code/${{ matrix.project }}
+        run: npm run lint
+
+  # ============================
+  # Stage 2: Test
+  # ============================
+  test-backend:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    needs: lint
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: technova_test
+          POSTGRES_USER: technova_user
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U technova_user -d technova_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: outputs/code/backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: outputs/code/backend
+        run: npm ci
+
+      - name: Run database migrations
+        working-directory: outputs/code/backend
+        run: |
+          PGPASSWORD=test_password psql -h localhost -U technova_user -d technova_test \
+            -f src/migrations/001_initial_schema.sql
+        env:
+          PGHOST: localhost
+
+      - name: Run tests
+        working-directory: outputs/code/backend
+        run: npm test
+        env:
+          NODE_ENV: test
+          PORT: 3000
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: technova_test
+          DB_USER: technova_user
+          DB_PASSWORD: test_password
+          JWT_ACCESS_SECRET: test_jwt_access_secret_32_chars_long
+          JWT_REFRESH_SECRET: test_jwt_refresh_secret_32_chars_long
+          JWT_ACCESS_EXPIRY: 15m
+          JWT_REFRESH_EXPIRY: 7d
+          BCRYPT_SALT_ROUNDS: 4
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          LOG_LEVEL: error
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: outputs/code/backend/coverage/
+          retention-days: 14
+
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: outputs/code/frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: outputs/code/frontend
+        run: npm ci
+
+      - name: Run tests
+        working-directory: outputs/code/frontend
+        run: npm test -- --run
+        env:
+          CI: true
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: outputs/code/frontend/coverage/
+          retention-days: 14
+
+  # ============================
+  # Stage 3: Build Docker Images
+  # ============================
+  build-images:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: [test-backend, test-frontend]
+    if: github.event_name == 'push'
+    strategy:
+      matrix:
+        include:
+          - project: backend
+            dockerfile: outputs/deployment/Dockerfile.backend
+            context: outputs/code/backend
+          - project: frontend
+            dockerfile: outputs/deployment/Dockerfile.frontend
+            context: outputs/code/frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-${{ matrix.project }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL || 'http://localhost:3000/api' }}
+            VITE_WS_URL=${{ secrets.VITE_WS_URL || 'ws://localhost:3000' }}
+
+  # ============================
+  # Stage 4: Deploy to Staging
+  # ============================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-images
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment:
+      name: staging
+      url: https://staging.technova.example.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging server
+        run: |
+          echo "============================================"
+          echo "  Deploying to STAGING environment"
+          echo "============================================"
+          echo ""
+          echo "Image tags:"
+          echo "  Backend:  ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:develop"
+          echo "  Frontend: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:develop"
+          echo ""
+          echo "--- Deployment steps (customize for your infra) ---"
+          echo "1. SSH into staging server or use kubectl/ecs-deploy"
+          echo "2. Pull latest images"
+          echo "3. Run database migrations"
+          echo "4. Restart services with zero-downtime rolling update"
+          echo "5. Verify health check endpoints"
+          echo ""
+          echo "Replace this step with your actual deployment commands:"
+          echo "  - AWS ECS: aws ecs update-service ..."
+          echo "  - Kubernetes: kubectl rollout restart ..."
+          echo "  - Docker Compose: docker compose pull && docker compose up -d"
+
+      - name: Smoke test staging
+        run: |
+          echo "Running smoke tests against staging..."
+          echo "Replace with: curl -f https://staging.technova.example.com/api/health"
+
+  # ============================
+  # Stage 5: Deploy to Production
+  # ============================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build-images
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://app.technova.example.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production server
+        run: |
+          echo "============================================"
+          echo "  Deploying to PRODUCTION environment"
+          echo "============================================"
+          echo ""
+          echo "Image tags:"
+          echo "  Backend:  ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:latest"
+          echo "  Frontend: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:latest"
+          echo ""
+          echo "--- Production deployment steps ---"
+          echo "1. Create database backup"
+          echo "2. Run database migrations"
+          echo "3. Deploy with blue-green or rolling update"
+          echo "4. Verify health checks"
+          echo "5. Monitor error rates for 10 minutes"
+          echo "6. Rollback if error rate > threshold"
+          echo ""
+          echo "Replace this step with your actual deployment commands."
+
+      - name: Verify production health
+        run: |
+          echo "Verifying production deployment..."
+          echo "Replace with: curl -f https://app.technova.example.com/api/health"
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "Production deployment successful!"
+          echo "Notify via Slack/Teams webhook if configured."
