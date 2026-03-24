@@ -27,12 +27,52 @@ Cover: System Context Diagram, Service Architecture, Tech Stack Decisions,
 Database Strategy, Security Architecture, Integration Architecture,
 Deployment Architecture.
 
-### Task 2: Tech Stack Selection
-Select based on requirements using this framework:
-- **Backend**: Node.js/Express (API-heavy) | Python/FastAPI (data-heavy) | Java/Spring Boot (enterprise)
-- **Frontend**: React.js (versatile) | Next.js (SSR/SEO) | Vue.js (rapid dev)
-- **Database**: PostgreSQL (structured/compliance) | MongoDB (document-heavy) | Redis (caching)
-- **Auth**: JWT + refresh tokens | OAuth2 | MFA (TOTP) for compliance domains
+### Task 2: Tech Stack Selection — Interactive Decision
+First analyze the requirements and prepare your RECOMMENDED stack. Then present
+it to the user for confirmation, along with alternatives:
+
+```
+🏗️ TECH STACK RECOMMENDATION
+
+Based on [domain], [scale], and [compliance requirements], here's my recommendation:
+
+BACKEND FRAMEWORK
+  1. ★ [Recommended] — [reason based on requirements]
+  2. Node.js / Express — Best for API-heavy, real-time features
+  3. Python / FastAPI — Best for data-heavy, ML integration
+  4. Java / Spring Boot — Best for enterprise, strict compliance
+  5. Go / Gin — Best for high-performance microservices
+  6. Other — specify your preferred framework
+
+FRONTEND FRAMEWORK
+  1. ★ [Recommended] — [reason]
+  2. React.js — Versatile, largest ecosystem
+  3. Next.js — SSR/SSG, SEO-friendly, full-stack
+  4. Vue.js — Rapid development, gentle learning curve
+  5. Angular — Enterprise, TypeScript-first
+  6. Other — specify your preferred framework
+
+DATABASE
+  1. ★ [Recommended] — [reason]
+  2. PostgreSQL — Best for structured data, compliance domains
+  3. MySQL — Widely supported, proven at scale
+  4. MongoDB — Document-heavy, flexible schema
+  5. SQLite — Zero-config, great for prototypes and small apps
+  6. Other — specify your preferred database
+
+AUTHENTICATION
+  1. ★ [Recommended based on domain compliance] — [reason]
+  2. JWT + refresh tokens — Stateless, scalable
+  3. OAuth2 + OpenID Connect — Third-party login support
+  4. Session-based — Traditional, server-side state
+  5. MFA required (TOTP) — For compliance domains (healthcare, fintech)
+
+Would you like to go with the recommended stack (★), or modify any choices?
+```
+
+If the user confirms → proceed with recommended stack.
+If the user modifies → adjust all downstream design to match their choices.
+Record the final stack in the output contract under `user_preferences.tech_stack`.
 
 ### Task 3: Database Schema
 Define core tables with columns, types, constraints, indexes.

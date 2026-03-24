@@ -13,32 +13,84 @@ scale requirements, and tech stack from the architecture.
 1. **Input missing**: If any of qa_results.json, system_design.json, or code_output.json don't exist, stop and report.
 2. **Output directory**: Run `mkdir -p outputs/deployment/scripts` before writing.
 
-## TOOL RESOLUTION (Check BEFORE deploying)
-Read `outputs/environment_report.json` to check available tools.
-**If environment_report.json does not exist** (pipeline started from Agent 01):
-assume no Docker, no cloud credentials. Default to generating all configs as
-plain files + manual deployment scripts. This always works.
+## TOOL RESOLUTION — Interactive Decision
 
-### Docker
-- **Docker available**: Generate Dockerfiles + docker-compose, CAN test build
-- **Podman available**: Use Podman as drop-in Docker replacement
-- **Neither available**: Generate all Docker/Compose files as-is (they're just text files).
-  Include `DOCKER_SETUP.md` with install instructions.
-  Also generate `scripts/run_without_docker.sh` for manual deployment.
+### Step 1: Check Previous Decisions
+Read `outputs/environment_report.json` and check `user_preferences` for prior choices
+on deployment_platform, ci_cd_platform, cloud_provider. Reuse those — do NOT re-ask.
 
-### CI/CD
-- **GitHub repo exists**: Generate `.github/workflows/ci.yml`
-- **GitLab repo**: Generate `.gitlab-ci.yml`
-- **Neither**: Generate BOTH CI configs as files + a `Jenkinsfile` + manual `deploy.sh` script
-  User can pick whichever platform they use later
+### Step 2: Present Deployment Options
+If key decisions haven't been made yet, present options to the user:
 
-### Cloud Provider
-- **No cloud credentials needed**: Generate platform-agnostic configs
-- **If client mentioned AWS/Azure/GCP**: Generate specific IaC templates (Terraform/CloudFormation)
-  but note that deployment requires cloud credentials
+```
+🚀 DEPLOYMENT STRATEGY — How would you like to deploy this application?
 
-### NEVER STOP: All deployment artifacts are just CONFIG FILES (YAML, Dockerfile, shell scripts).
-They don't need Docker installed to be generated. They only need Docker to be executed.
+Based on the architecture and tech stack, here are the deployment options:
+
+🐳 CONTAINERIZATION
+  1. ★ Docker + Docker Compose (dev & staging)
+     [STATUS: Docker installed ✓ / not installed]
+     → If not installed: "Shall I install Docker Desktop, or generate files only?"
+  2. Podman (Docker-compatible, rootless)
+     [STATUS: Podman installed ✓ / not installed]
+  3. Kubernetes manifests (production-grade)
+     [STATUS: kubectl installed ✓ / not installed]
+  4. No containers — manual deployment scripts only
+
+🔄 CI/CD PIPELINE
+  1. ★ GitHub Actions (.github/workflows/)
+  2. GitLab CI (.gitlab-ci.yml)
+  3. Jenkins (Jenkinsfile)
+  4. Azure Pipelines (azure-pipelines.yml)
+  5. All of the above (generate configs for every platform)
+  6. None — manual deployment only
+
+☁️ CLOUD PROVIDER [if applicable]
+  1. AWS (Terraform + CloudFormation templates)
+     → Shall I generate ECS/EKS/Lambda configs?
+  2. Azure (Bicep + ARM templates)
+     → Shall I generate App Service/AKS configs?
+  3. Google Cloud (Terraform templates)
+     → Shall I generate Cloud Run/GKE configs?
+  4. DigitalOcean / Railway / Render / Vercel
+  5. ★ Cloud-agnostic (Docker Compose — runs anywhere)
+  6. On-premise / self-hosted
+
+🔒 SSL/HTTPS
+  1. ★ Let's Encrypt (free, auto-renewal via Certbot)
+  2. Cloudflare (free tier, proxy + SSL)
+  3. Custom certificates — I'll provide them
+  4. Skip for now — configure later
+
+Which options would you prefer? (e.g., "1, 1, 5, 1")
+```
+
+### Step 3: Execute Based on User Choice
+- **Docker chosen + installed** → Generate Dockerfiles, docker-compose.yml, AND test build
+- **Docker chosen + NOT installed** → Ask: "Install Docker now, or generate files only?"
+- **Kubernetes chosen** → Generate manifests, Helm charts, and deployment scripts
+- **CI/CD platform chosen** → Generate only that platform's config (not all of them)
+- **Cloud provider chosen** → Generate IaC templates for that specific provider
+  - If credentials available → validate them
+  - If not → generate templates + document what credentials are needed
+
+### Step 4: Offer Live Deployment (if tools are available)
+After generating all config files, if Docker is available, offer:
+
+```
+✅ All deployment configs generated!
+
+Would you like me to also:
+  1. Build and test Docker images right now? (docker build + docker compose up)
+  2. Just verify the Dockerfiles are valid? (docker build --check)
+  3. Skip — I'll deploy manually later
+
+Which option? (1/2/3)
+```
+
+### NEVER STOP: All deployment artifacts are CONFIG FILES (YAML, Dockerfile, shell scripts).
+They are always generated regardless of tool availability. Interactive decisions only
+affect whether we ALSO execute those configs or just generate them.
 
 ## Input
 Read: `outputs/qa/qa_results.json`

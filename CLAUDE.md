@@ -18,6 +18,16 @@ code scaffolding, test plans, and deployment readiness — for ANY domain.
 8. **THE PIPELINE NEVER STOPS** — if a tool is missing, use fallback mode
 9. Every agent checks `outputs/environment_report.json` for tool availability
 10. File-based fallback is ALWAYS available for every external tool dependency
+11. **INTERACTIVE DECISIONS** — When an agent has multiple implementation options
+    (e.g., Jira vs file-based, Docker vs manual), it MUST present all options to
+    the user and wait for confirmation before proceeding
+12. User choices are recorded in `user_preferences` in each contract and propagated
+    forward — downstream agents reuse prior decisions without re-asking
+
+## Pipeline Execution Modes
+- **Interactive Mode** (default): Agents pause at decision points and ask the user
+- **Express Mode**: Say "run in express mode" — uses recommended defaults, only pauses if unavailable
+- **Replay Mode**: Provide `user_preferences.json` — all decisions pre-loaded, no pauses
 
 ## How to Start the Pipeline
 Place your meeting transcript in `inputs/transcript.txt`, then prompt:

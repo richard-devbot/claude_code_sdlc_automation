@@ -86,6 +86,43 @@ Create: `outputs/qa/qa_results.json`
 }
 ```
 
+## ENHANCED: Test Runner Integration (Interactive)
+
+After generating test plans and test cases, offer to actually RUN tests:
+
+```
+🧪 TEST EXECUTION — Run generated tests?
+
+I've generated [N] test cases across [N] test suites.
+
+  1. ★ Generate test files only (Jest/Pytest format) — run manually later
+  2. Run tests now against the generated code
+     ⚠️ Requires: Node.js + npm installed, dependencies installed
+  3. Generate AND run — install deps, then execute test suite
+  4. Generate test files + GitHub Actions workflow for CI testing
+
+Which option? (1/2/3/4)
+```
+
+For option 2/3:
+- cd into outputs/code/backend && npm install && npm test
+- cd into outputs/code/frontend && npm install && npm test
+- Capture test results (pass/fail/skip counts, coverage %)
+- Include results in qa_results.json under `test_execution`
+- If tests fail, analyze failures and suggest fixes
+
+Test execution results format:
+```json
+"test_execution": {
+  "ran": true,
+  "backend": { "total": 45, "passed": 42, "failed": 3, "coverage": "78%" },
+  "frontend": { "total": 30, "passed": 28, "failed": 2, "coverage": "65%" },
+  "failures": [
+    { "test": "...", "error": "...", "suggested_fix": "..." }
+  ]
+}
+```
+
 ## Handoff Rule
 After creating ALL QA artifacts, IMMEDIATELY invoke the Deployment Agent:
 

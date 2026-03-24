@@ -165,3 +165,37 @@ Use Claude Code hooks to enforce quality when teammates finish:
 
 These hooks are configured in `.claude/hooks/` and integrate with Agent Teams
 automatically.
+
+## DAG-Based Parallel Execution (Pipeline v2.0)
+
+The pipeline can execute agents in parallel where dependencies allow. This is
+defined in `sdlc-pipeline.yml` under `execution.parallel_groups`.
+
+### Dependency Graph
+
+```
+Phase 1: [Environment] + [Transcript]          (parallel)
+    ↓
+Phase 2: [Requirement]                          (sequential)
+    ↓
+Phase 3: [Documentation] + [Planning]           (parallel)
+    ↓
+Phase 4: [Jira] + [Architecture]                (parallel)
+    ↓
+Phase 5: [Security Threat Model]                (optional)
+    ↓
+Phase 6: [Code Generation]                      (sequential)
+    ↓
+Phase 7: [Testing] + [Compliance Check]         (parallel)
+    ↓
+Phase 8: [Deployment]                            (sequential)
+    ↓
+Phase 9: [Summary] → [Cost Estimation] → [Feedback Loop]  (sequential)
+```
+
+### Rules for Parallel Execution
+1. Agents in the same phase can run simultaneously as separate Task agents
+2. A phase starts only when ALL agents in the previous phase are complete
+3. Optional agents that are disabled are skipped — their phase completes immediately
+4. If any agent in a phase fails, other agents in that phase continue
+5. The failed agent's output is marked as empty — downstream agents handle gracefully

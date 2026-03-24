@@ -19,13 +19,35 @@ Every JSON contract MUST include:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `contract_version` | string | Always "1.0" |
+| `contract_version` | string | Always "1.1" |
 | `produced_by` | string | Agent identifier (e.g., "transcript_agent") |
 | `timestamp` | string | ISO 8601 timestamp |
 | `next_agent` | string | Name of the next agent to invoke |
 | `next_input_file` | string | Path to this contract |
+| `user_preferences` | object | (Optional) User choices made during interactive decisions |
 
 The final agent sets `pipeline_complete: true` instead of next_agent.
+
+## User Preferences Field
+
+When an agent presents options to the user and receives a choice, it records
+the decision in the `user_preferences` object. Downstream agents MUST check
+this field from ALL previous contracts before presenting redundant options.
+
+```json
+"user_preferences": {
+  "ticketing_platform": "jira_cloud",
+  "ticketing_credentials_provided": true,
+  "database_engine": "postgresql",
+  "deployment_platform": "docker_compose",
+  "ci_cd_platform": "github_actions",
+  "cloud_provider": "aws",
+  "install_tools_when_missing": true
+}
+```
+
+If a user chose "Jira Cloud" in Agent 05, Agent 10 should reference that
+choice — not re-ask. Preferences propagate forward through the chain.
 
 ## Contract Chain (11 Agents)
 

@@ -12,29 +12,128 @@ criteria to the project's domain and user roles.
 1. **Input missing**: If sprint_plan.json or requirement_spec.json don't exist, stop and report.
 2. **Output directory**: Run `mkdir -p outputs/jira` before writing.
 
-## TOOL RESOLUTION (Check BEFORE creating tickets)
-Read `outputs/environment_report.json` to determine ticketing mode.
-**If environment_report.json does not exist** (pipeline started from Agent 01):
-default to Mode 3 (File-Based) — this always works.
+## TOOL RESOLUTION — Interactive Decision
 
-### Mode 1: Jira Cloud (if JIRA_BASE_URL + JIRA_API_TOKEN are SET)
-- Create tickets via Jira REST API using curl/fetch
-- Also generate local JSON + Markdown as backup
+### Step 1: Check Previous Decisions
+Read `outputs/environment_report.json` and check `user_preferences.ticketing_platform`.
+If the user ALREADY chose a ticketing platform in Agent 00 → use that choice directly.
+Do NOT re-ask.
 
-### Mode 2: GitHub Issues (if `gh` CLI is available + GITHUB_TOKEN is SET)
-- Create GitHub Issues using `gh issue create`
-- Map: Epic → GitHub Milestone, Story → Issue with labels, Task → Checklist in issue
-- Also generate local JSON + Markdown as backup
+### Step 2: If No Previous Decision Exists
+If environment_report.json doesn't exist or `user_preferences.ticketing_platform` is not set,
+present the following options to the user:
 
-### Mode 3: File-Based (DEFAULT — always works, no tool needed)
-- Generate all tickets as structured JSON + readable Markdown + importable CSV
-- This is the FALLBACK and is ALWAYS available
-- The pipeline NEVER stops here
+```
+📋 TICKETING PLATFORM — How would you like tickets to be created?
+
+I've generated [N] Epics, [N] User Stories, and [N] Tasks from your requirements.
+Here are the available options for creating these tickets:
+
+  1. Jira Cloud — Create real Jira tickets via REST API
+     ✅ Best for teams already using Jira
+     ⚠️ Requires: JIRA_BASE_URL, JIRA_API_TOKEN, JIRA_PROJECT_KEY
+     [STATUS: Credentials NOT detected / Credentials detected ✓]
+
+  2. GitHub Issues — Create issues via GitHub CLI
+     ✅ Free, integrates with code repos
+     ⚠️ Requires: GitHub CLI + authentication
+     [STATUS: gh CLI available ✓ / not installed]
+
+  3. Azure DevOps — Create work items via Azure CLI
+     ✅ Best for Microsoft/Azure teams
+     ⚠️ Requires: Azure DevOps PAT + organization URL
+
+  4. Linear — Create issues via Linear API
+     ✅ Modern, fast issue tracker
+     ⚠️ Requires: LINEAR_API_KEY
+
+  5. ★ File-Based (always works) — Generate JSON + Markdown + CSV
+     ✅ No credentials needed, import into ANY tool later
+     ✅ Generates importable CSV for Jira, Azure DevOps, Linear
+     📁 Files: jira_tickets.json + jira_tickets_readable.md + jira_import.csv
+
+  6. Multiple outputs — Generate file-based AND push to a platform
+     ✅ Best of both worlds — local backup + live tickets
+
+Which option would you prefer? (1/2/3/4/5/6)
+```
+
+### Step 3: Execute Based on User Choice
+
+**Option 1 — Jira Cloud:**
+- Ask user for credentials if not already set: JIRA_BASE_URL, JIRA_API_TOKEN, JIRA_PROJECT_KEY
+- Test connection: `curl -s "$JIRA_BASE_URL/rest/api/3/myself" -H "Authorization: Basic <token>"`
+- If connection works → create tickets via Jira REST API
+- Also generate local files as backup
+- If connection fails → explain the error, offer to retry or fall back to file-based
+
+**Option 2 — GitHub Issues:**
+- Check `gh auth status`. If not authenticated, ask user to run `gh auth login`
+- Create GitHub Milestones for Epics
+- Create Issues for User Stories with labels and checklists for Tasks
+- Also generate local files as backup
+
+**Option 3 — Azure DevOps:**
+- Ask for Azure DevOps org URL and PAT
+- Create Work Items via Azure DevOps REST API
+- Also generate local files as backup
+
+**Option 4 — Linear:**
+- Ask for LINEAR_API_KEY
+- Create Linear issues via GraphQL API
+- Also generate local files as backup
+
+**Option 5 — File-Based:**
+- Generate all tickets as JSON + Markdown + importable CSV
+- Include import instructions for Jira, Azure DevOps, GitHub, Linear
+
+**Option 6 — Dual Output:**
+- First ask which platform (1-4), then generate both
+
+### Mode Fallback
+If ANY platform integration fails mid-execution → automatically fall back to
+file-based, notify the user of the failure, and continue the pipeline.
 
 ## Input
 Read: `outputs/planning/sprint_plan.json`
 Also read: `outputs/requirements/requirement_spec.json`
 Also read: `outputs/environment_report.json` (for tool availability)
+
+## ENHANCED: Bidirectional Sync with Existing Projects
+
+If the user chose a live ticketing platform (Jira, GitHub, Azure DevOps, Linear):
+
+### Step A: Check for Existing Project
+Before creating new tickets, check if the project already has tickets:
+
+```
+🔄 EXISTING PROJECT CHECK
+
+I detected an existing [Jira/GitHub/etc.] project with:
+  - [N] existing epics
+  - [N] existing stories
+  - [N] existing tasks
+
+How should I handle this?
+  1. ★ Merge — Add new tickets alongside existing ones, avoid duplicates
+  2. Replace — Archive/close existing tickets and create fresh ones
+  3. Supplement — Only create tickets for requirements NOT already covered
+  4. Skip — Don't push to platform, just generate files
+
+Which option? (1/2/3/4)
+```
+
+### Step B: Duplicate Detection
+When merging, compare new tickets against existing ones:
+- Match by title similarity (>80% match = potential duplicate)
+- Match by linked requirement IDs
+- Present duplicates to user for confirmation before skipping
+
+### Step C: Pull & Merge
+If existing tickets exist, pull them and include in the output:
+- Mark existing tickets with `"source": "existing_platform"`
+- Mark new tickets with `"source": "pipeline_generated"`
+- Include a `sync_report` section showing what was added, skipped, or merged
 
 ## Ticket Hierarchy
 ```

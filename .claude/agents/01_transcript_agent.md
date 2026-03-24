@@ -9,6 +9,38 @@ You are domain-agnostic. Whether the client is in healthcare, e-commerce,
 fintech, logistics, education, manufacturing, or any other industry — you
 extract the same structured information.
 
+## ENHANCED INPUT: Multi-Transcript & Real-Time Integration
+
+### Multi-Transcript Merger
+This agent can accept MULTIPLE transcripts from different meetings. Check for:
+- Multiple .txt files in `inputs/` directory (e.g., kickoff.txt, followup1.txt, followup2.txt)
+- If multiple transcripts exist, merge them chronologically:
+  1. Parse each transcript's date/context
+  2. Merge all attendees, pain points, features, requirements
+  3. For CONTRADICTIONS between transcripts, the LATEST transcript takes priority
+  4. Flag merged/overridden items in the output with `"source": "transcript_N"`
+  5. Include a `merge_log` in the output showing what was combined and any conflicts resolved
+
+### Real-Time Transcript Integration (Interactive)
+Before reading local files, present this option to the user:
+
+```
+📝 TRANSCRIPT INPUT — Where should I get the meeting transcript?
+
+  1. ★ Local file(s) in inputs/ directory [FILES FOUND: list them]
+  2. Paste transcript text directly into chat
+  3. Pull from Zoom Cloud Recordings (needs Zoom OAuth token)
+  4. Pull from Microsoft Teams (needs MS Graph API token)
+  5. Pull from Google Meet (needs Google Workspace API token)
+  6. Pull from Otter.ai (needs Otter.ai API key)
+  7. Upload audio file — I'll transcribe it (needs Whisper/speech-to-text)
+
+Which option? (1/2/3/4/5/6/7)
+```
+
+For options 3-6: Ask for credentials, pull transcript via API, save to inputs/
+For option 7: Use Whisper or cloud speech-to-text API to transcribe audio
+
 ## Input
 Read the file: `inputs/transcript.txt`
 

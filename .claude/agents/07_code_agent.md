@@ -12,30 +12,51 @@ design JSON. Generate code that matches those decisions exactly.
 1. **Input missing**: If system_design.json or HLD.md don't exist, stop and report.
 2. **Output directory**: Run `mkdir -p outputs/code/backend/src outputs/code/frontend/src` before writing.
 
-## TOOL RESOLUTION (Check BEFORE generating code)
-Read `outputs/environment_report.json` to check available tools.
-**If environment_report.json does not exist** (pipeline started from Agent 01):
-assume Node.js, Git, and SQLite are available (most common baseline).
-Proceed with code generation — all outputs are just files regardless.
+## TOOL RESOLUTION — Interactive Decision
 
-### Node.js / npm
-- **Available**: Generate package.json, run `npm init` if possible
-- **Not available**: Generate all code files anyway. Include `SETUP_NODE.md`
-  with installation instructions. Code is still valid — just needs Node to run.
+### Step 1: Check Previous Decisions
+Read `outputs/environment_report.json` and check `user_preferences` for prior choices
+on database_engine, deployment_platform, etc. Reuse those — do NOT re-ask.
 
-### Git / GitHub
-- **Git available**: Optionally `git init` the output directory
-- **GitHub CLI available + token**: Optionally create a repo
-- **Neither**: Just generate code files. Include `.gitignore` anyway.
+### Step 2: Present Code Setup Options
+If key decisions haven't been made yet, present options to the user:
 
-### Database
-- **PostgreSQL/MySQL available**: Generate connection config pointing to it
-- **Docker available**: Suggest `docker run postgres:16` in setup instructions
-- **SQLite available (or nothing)**: Default to SQLite — zero config, always works
-- Generate SQL migration files regardless (they work with any DB)
+```
+⚡ CODE SCAFFOLDING — Setup Options
 
-### NEVER STOP: All code is generated as FILES regardless of what tools exist.
-The code works once the user installs the required runtime.
+I'm about to generate the backend and frontend code based on the architecture design.
+Here are some setup decisions:
+
+📦 PACKAGE INITIALIZATION
+  1. ★ Run `npm init` + install dependencies now (Node.js detected ✓)
+  2. Generate package.json only — I'll install later
+  3. Node.js not installed — would you like me to install it first?
+
+🗃️ DATABASE SETUP [if not decided in Agent 00]
+  1. PostgreSQL — [STATUS: installed ✓ / not installed]
+     → If not installed: "Shall I install it, use Docker, or skip?"
+  2. MySQL — [STATUS: installed ✓ / not installed]
+  3. ★ SQLite — zero config, always works, great for development
+  4. MongoDB — [STATUS: installed ✓ / not installed]
+  5. I have a database — let me provide the connection string
+
+🔧 GIT REPOSITORY
+  1. ★ Initialize git repo + first commit in output directory
+  2. Create GitHub repo (needs `gh` CLI + auth)
+  3. Skip git setup — I'll handle version control myself
+
+Which options would you prefer? (e.g., "1, 3, 1" for npm init + SQLite + git init)
+```
+
+### Step 3: Execute Based on User Choice
+- **npm init chosen** → Run `npm init -y` in backend/ and frontend/, install deps
+- **Database chosen** → Configure connection in `src/config/database.js` for that DB
+- **Git chosen** → Run `git init`, create `.gitignore`, make initial commit
+- **Connection string provided** → Use it directly in config, test connectivity
+
+### NEVER STOP: All code is generated as FILES regardless of tool choices.
+The tool choices only affect whether we also RUN setup commands (npm install, git init, etc.)
+or just generate the config files for later.
 
 ## Input
 Read: `outputs/architecture/system_design.json`
@@ -114,6 +135,62 @@ Create: `outputs/code/code_output.json`
 - Include proper error handling
 - Auth middleware must verify JWT AND check role permissions
 - Audit middleware must log: who, what, when, from where
+
+## ENHANCED: Repository Auto-Setup (Interactive)
+
+After generating all code files, offer to set up a real repository:
+
+```
+📦 REPOSITORY SETUP — Initialize a real project?
+
+  1. ★ Initialize local git repo with first commit
+  2. Create GitHub repository + push code + set up branch protection
+     ⚠️ Requires: GitHub CLI authenticated
+  3. Create GitLab repository + push code
+     ⚠️ Requires: GitLab CLI/API token
+  4. Create Azure DevOps repository
+     ⚠️ Requires: Azure DevOps PAT
+  5. Skip — just keep code as local files
+
+Which option? (1/2/3/4/5)
+```
+
+For GitHub (option 2):
+- `gh repo create [project-name] --private --source=outputs/code`
+- Set up branch protection on main (require PR reviews, CI passing)
+- Create PR template, issue templates, CODEOWNERS
+- Configure GitHub Actions CI from Agent 09's output
+
+## ENHANCED: Dependency Vulnerability Scan
+
+After generating package.json files, automatically run:
+- `npm audit` (or `pip audit` for Python projects) on the generated dependencies
+- Flag any HIGH or CRITICAL vulnerabilities
+- Suggest alternative packages for vulnerable dependencies
+- Include scan results in code_output.json under `vulnerability_scan`
+
+If vulnerabilities found, present to user:
+```
+⚠️ DEPENDENCY VULNERABILITIES FOUND
+
+  [N] critical, [N] high, [N] moderate vulnerabilities detected
+
+  1. ★ Auto-fix — run `npm audit fix` and update package.json
+  2. Show details — list all vulnerabilities with alternatives
+  3. Ignore — proceed with current dependencies (not recommended)
+
+Which option? (1/2/3)
+```
+
+## ENHANCED: Code Quality Scoring
+
+After generating code, perform self-analysis:
+- Check for common anti-patterns (god functions, deep nesting, missing error handling)
+- Verify input validation on all endpoints
+- Check for SQL injection, XSS, CSRF vulnerabilities
+- Score: Security (0-100), Maintainability (0-100), Performance (0-100)
+- Include in code_output.json under `quality_score`
+- If any score < 70, regenerate the affected files with improvements
 
 ## Handoff Rule
 After all code files and the JSON contract are created, IMMEDIATELY invoke

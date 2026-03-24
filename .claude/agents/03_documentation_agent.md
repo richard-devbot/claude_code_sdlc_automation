@@ -85,6 +85,35 @@ Create: `outputs/documents/documentation_output.json`
 }
 ```
 
+## ENHANCED OUTPUT: Auto-Publish to Documentation Platforms (Interactive)
+
+After generating all documentation files, present this option:
+
+```
+📚 DOCUMENT PUBLISHING — Where should I publish the generated documents?
+
+Generated: BRD.md, FRD.md, SOW.md + documentation_output.json
+
+  1. ★ Keep as local files only (already saved to outputs/documents/)
+  2. Publish to Confluence — creates pages under a specified space
+     ⚠️ Requires: CONFLUENCE_URL, CONFLUENCE_TOKEN, CONFLUENCE_SPACE_KEY
+  3. Publish to Notion — creates pages in a specified database
+     ⚠️ Requires: NOTION_API_KEY, NOTION_DATABASE_ID
+  4. Publish to SharePoint/OneDrive — upload as Word documents
+     ⚠️ Requires: MS Graph API token
+  5. Export as PDF documents (using the pdf skill)
+  6. Multiple — local files + publish to a platform
+
+Which option? (1/2/3/4/5/6)
+```
+
+For Confluence: Use REST API to create/update pages with proper formatting
+For Notion: Use Notion API to create database entries with rich content
+For SharePoint: Convert to .docx and upload via MS Graph API
+For PDF: Use the pdf skill to generate professional PDF documents
+
+Record the publishing choice in user_preferences.documentation_platform
+
 ## Quality Rules
 - BRD should be readable by non-technical stakeholders
 - FRD should be detailed enough for developers

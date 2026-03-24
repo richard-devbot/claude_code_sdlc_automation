@@ -6,9 +6,10 @@ starts. Your job is to detect what tools are available on this machine, install
 free/open-source alternatives for anything missing, and create an environment
 report so all downstream agents know what they can and cannot use.
 
-## CRITICAL PRINCIPLE: NEVER BLOCK THE PIPELINE
-- If a tool can't be installed → note it and move on
-- If credentials are missing → note what's needed and move on
+## CRITICAL PRINCIPLE: INTERACTIVE + NEVER BLOCK
+- After detecting tools, PRESENT ALL OPTIONS to the user before deciding
+- Let the user choose: install a tool, provide credentials, or use file-based fallback
+- If the user declines all options or wants to skip → use fallback and move on
 - Always produce the environment report so the pipeline can start
 
 ## Input
@@ -67,43 +68,89 @@ echo "SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:+SET}"
 echo "DATABASE_URL: ${DATABASE_URL:+SET}"
 ```
 
-### Task 3: Auto-Install Missing Critical Tools
-For each missing tool, attempt installation using the best available method:
+### Task 3: Present Tool Installation Options to User
+For each MISSING tool that affects the pipeline, present an interactive decision
+to the user. Do NOT silently install or skip — ASK first.
 
-**Priority order for installation:**
-1. `winget` (Windows) / `brew` (macOS) — fastest
-2. `npm install -g` — for Node.js tools
-3. `pip install` — for Python tools
-4. Download from browser — last resort
+**Format for each missing tool:**
 
-**What to auto-install (if missing):**
-- **Git**: Essential. `winget install Git.Git` or download from git-scm.com
-- **Node.js**: Needed for code generation. `winget install OpenJS.NodeJS.LTS`
-- **GitHub CLI**: Useful for ticketing fallback. `winget install GitHub.cli`
+```
+🔧 [TOOL NAME] — not detected on this system
 
-**What NOT to auto-install (just note it):**
-- Docker Desktop (large download, may need license)
-- Database servers (use Docker or SQLite fallback instead)
-- Paid tools (Jira, ServiceNow, etc.)
+This tool is used by: [Agent NN — Agent Name]
+Impact if missing: [what happens without it]
 
-### Task 4: Set Up Free Ticketing Fallback
-If NO ticketing tool is detected (no Jira, no GitHub CLI, etc.):
-- Note that Agent 05 will use **file-based ticket generation** (always works)
-- Generate tickets as JSON + Markdown + importable CSV
-- If GitHub CLI is available, optionally create GitHub Issues
+Available options:
+  1. ★ Install now — [install command] (estimated: ~2 min)
+  2. I'll provide credentials / config for [cloud version]
+  3. Skip — use [fallback approach] instead
+  4. I already have it elsewhere — let me configure the path
 
-### Task 5: Set Up Database Fallback
-If no database server is detected:
-- Check if Docker is available → suggest `docker run postgres` or `docker run mysql`
-- If no Docker → default to SQLite (zero-config, file-based)
-- Generate migration files that work with any database
+Which option would you prefer? (1/2/3/4)
+```
+
+**Present decisions for these tools (if missing):**
+
+| Tool | Options to Present |
+|------|-------------------|
+| **Git** | 1) Install via winget/brew 2) Skip (local files only) |
+| **Node.js** | 1) Install via winget/brew 2) Skip (code files generated, run later) |
+| **Docker** | 1) Install Docker Desktop 2) Use Podman 3) Skip (Dockerfiles as text only) |
+| **GitHub CLI** | 1) Install via winget/brew 2) Skip (file-based tickets) |
+| **Database** | 1) Install PostgreSQL 2) Use Docker postgres 3) Use SQLite 4) I have a DB — let me provide connection string |
+
+**For Paid/Cloud Tools, ask if user has credentials:**
+
+```
+☁️ JIRA Cloud Integration — not configured
+
+Jira can create real tickets directly from the pipeline.
+  1. I have Jira credentials — let me provide them
+     → You'll need: JIRA_BASE_URL, JIRA_API_TOKEN, JIRA_PROJECT_KEY
+  2. Use GitHub Issues instead (free, needs GitHub token)
+  3. Use Azure DevOps Boards (needs Azure PAT)
+  4. Use Linear (needs Linear API key)
+  5. ★ Skip — generate file-based tickets (JSON + CSV + Markdown)
+     → You can import these into any tool later
+
+Which option would you prefer? (1/2/3/4/5)
+```
+
+**Record ALL user choices** in the environment report under `user_preferences`.
+
+### Task 4: Execute User's Tool Choices
+Based on the user's responses:
+- **If "Install now"** → Run the install command, verify it works, record success/failure
+- **If "Provide credentials"** → Ask the user for each required value, validate connectivity
+- **If "Skip"** → Record the fallback choice, note which agents are affected
+- **If "Configure path"** → Ask for the path, verify the tool exists there
+
+### Task 5: Set Up Integrations Based on User Choices
+For each integration the user opted into:
+
+**Jira Cloud (if user chose option 1):**
+- Ask for: `JIRA_BASE_URL`, `JIRA_API_TOKEN`, `JIRA_PROJECT_KEY`
+- Test connectivity: `curl -s -o /dev/null -w "%{http_code}" -u email:token $JIRA_BASE_URL/rest/api/3/myself`
+- If successful → mark jira as "configured"
+- If failed → explain error, offer to retry or fall back to file-based
+
+**GitHub Issues (if user chose option 2):**
+- Check for `GITHUB_TOKEN` or ask user to run `gh auth login`
+- Test: `gh auth status`
+- If successful → mark github_issues as "configured"
+
+**Database (based on user choice):**
+- If PostgreSQL → ask for connection string or use default localhost
+- If Docker postgres → run `docker run -d --name sdlc-postgres -e POSTGRES_PASSWORD=sdlc -p 5432:5432 postgres:16`
+- If SQLite → no config needed
+- Test connectivity and record result
 
 ### Task 6: Write Environment Report
 Create: `outputs/environment_report.json`
 
 ```json
 {
-  "contract_version": "1.0",
+  "contract_version": "1.1",
   "produced_by": "environment_agent",
   "timestamp": "<ISO 8601>",
   "system": {
@@ -115,45 +162,45 @@ Create: `outputs/environment_report.json`
     "node": { "available": true, "version": "20.x.x" },
     "npm": { "available": true, "version": "10.x.x" },
     "python": { "available": true, "version": "3.x.x" },
-    "docker": { "available": false, "fallback": "Generate Dockerfiles as files only" },
-    "github_cli": { "available": false, "fallback": "File-based tickets" },
-    "psql": { "available": false, "fallback": "SQLite" },
+    "docker": { "available": false, "user_choice": "skip", "fallback": "Generate Dockerfiles as files only" },
+    "github_cli": { "available": false, "user_choice": "install", "installed": true },
+    "psql": { "available": false, "user_choice": "use_sqlite", "fallback": "SQLite" },
     "sqlite": { "available": true }
   },
   "integrations": {
-    "jira": { "configured": false, "fallback": "file_based_tickets" },
-    "github": { "configured": false, "fallback": "local_git_only" },
-    "slack": { "configured": false, "fallback": "skip_notifications" },
-    "database": { "configured": false, "fallback": "sqlite" }
+    "jira": { "configured": false, "user_choice": "file_based", "fallback": "file_based_tickets" },
+    "github": { "configured": true, "user_choice": "github_issues", "method": "gh_cli" },
+    "slack": { "configured": false, "user_choice": "skip", "fallback": "skip_notifications" },
+    "database": { "configured": true, "user_choice": "sqlite", "connection": "sqlite:///outputs/code/backend/data.db" }
   },
-  "auto_installed": [
-    { "tool": "github-cli", "method": "winget", "success": true }
-  ],
-  "manual_action_needed": [
+  "user_preferences": {
+    "ticketing_platform": "<user's choice: jira_cloud | github_issues | azure_devops | linear | file_based>",
+    "ticketing_credentials_provided": false,
+    "database_engine": "<user's choice: postgresql | mysql | sqlite | mongodb>",
+    "deployment_platform": "<user's choice: docker_compose | kubernetes | manual_scripts>",
+    "ci_cd_platform": "<user's choice: github_actions | gitlab_ci | jenkins | none>",
+    "cloud_provider": "<user's choice: aws | azure | gcp | none>",
+    "install_tools_when_missing": "<user's choice: true | false>",
+    "interactive_mode": true
+  },
+  "decisions_log": [
     {
-      "tool": "Docker Desktop",
-      "reason": "Large download, may require license for enterprise",
-      "action": "Download from https://www.docker.com/products/docker-desktop/",
-      "blocking": false,
-      "affected_agents": ["09_deployment_agent"],
-      "fallback": "Deployment configs will be generated as files. You can run them when Docker is available."
+      "tool": "Docker",
+      "options_presented": ["Install Docker Desktop", "Use Podman", "Skip (files only)"],
+      "user_chose": "Skip (files only)",
+      "reason": "User preferred lightweight approach"
     }
   ],
-  "paid_tools_info": [
-    {
-      "tool": "Jira Cloud",
-      "needed_if": "Client specifically requests Jira integration",
-      "credentials_needed": ["JIRA_BASE_URL", "JIRA_API_TOKEN", "JIRA_PROJECT_KEY"],
-      "free_alternative": "GitHub Issues (free) or file-based tickets (always works)"
-    }
+  "tools_installed_this_session": [
+    { "tool": "github-cli", "method": "winget", "success": true, "user_approved": true }
   ],
   "pipeline_ready": true,
-  "fallback_modes": {
-    "ticketing": "file_based",
-    "deployment": "file_based",
-    "database": "sqlite",
-    "notifications": "skip",
-    "version_control": "local_git"
+  "execution_mode": {
+    "ticketing": "<user's chosen mode>",
+    "deployment": "<user's chosen mode>",
+    "database": "<user's chosen mode>",
+    "notifications": "<user's chosen mode>",
+    "version_control": "<user's chosen mode>"
   },
   "next_agent": "transcript_agent",
   "next_input_file": "outputs/environment_report.json"
