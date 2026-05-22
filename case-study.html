@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Study — SDLC Automation Platform</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:      #0f0f0f;
+      --ink-2:    #3a3a3a;
+      --ink-3:    #6b7280;
+      --rule:     #e5e7eb;
+      --surface:  #f9fafb;
+      --white:    #ffffff;
+      --accent:   #1a56db;
+      --accent-2: #0e3fa6;
+      --green:    #059669;
+      --amber:    #d97706;
+      --radius:   12px;
+      --shadow:   0 2px 16px rgba(0,0,0,.08);
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink);
+      background: var(--white);
+    }
+
+    /* ─── HERO ──────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1a56db 100%);
+      color: var(--white);
+      padding: 100px 24px 80px;
+      text-align: center;
+    }
+    .hero .badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 40px;
+      padding: 6px 18px;
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 780px;
+      margin: 0 auto 20px;
+    }
+    .hero h1 span { color: #93c5fd; }
+    .hero p.sub {
+      font-size: 18px;
+      color: rgba(255,255,255,.75);
+      max-width: 600px;
+      margin: 0 auto 48px;
+    }
+    .hero-metrics {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .hero-metric {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius);
+      padding: 20px 32px;
+      text-align: center;
+      min-width: 160px;
+    }
+    .hero-metric .number {
+      font-size: 36px;
+      font-weight: 800;
+      color: #93c5fd;
+      display: block;
+    }
+    .hero-metric .label {
+      font-size: 13px;
+      color: rgba(255,255,255,.7);
+      margin-top: 4px;
+    }
+
+    /* ─── LAYOUT ─────────────────────────────────────────── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    section { padding: 80px 24px; }
+    section:nth-child(even) { background: var(--surface); }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    p { color: var(--ink-2); margin-bottom: 16px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ─── PROBLEM / BEFORE ───────────────────────────────── */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .pain-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-left: 4px solid #ef4444;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .pain-card .icon { font-size: 28px; margin-bottom: 12px; }
+    .pain-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .pain-card p { font-size: 14px; color: var(--ink-3); margin: 0; }
+
+    /* ─── SOLUTION / HOW IT WORKS ────────────────────────── */
+    .steps {
+      margin-top: 40px;
+      position: relative;
+    }
+    .steps::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), #93c5fd);
+    }
+    .step {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      z-index: 1;
+      box-shadow: 0 0 0 4px var(--white);
+    }
+    .step-body h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .step-body p { font-size: 15px; color: var(--ink-2); margin: 0; }
+    .step-body .tag {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--accent);
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      font-size: 12px;
+      padding: 2px 10px;
+      margin-top: 8px;
+    }
+
+    /* ─── OUTCOME / RESULTS ──────────────────────────────── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .result-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .result-card .big {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+      display: block;
+    }
+    .result-card .unit { font-size: 20px; color: var(--green); }
+    .result-card .desc {
+      font-size: 14px;
+      color: var(--ink-3);
+      margin-top: 8px;
+    }
+
+    /* ─── BEFORE / AFTER TABLE ───────────────────────────── */
+    .compare {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 32px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .compare thead tr {
+      background: #0f172a;
+      color: var(--white);
+    }
+    .compare thead th {
+      padding: 16px 20px;
+      font-size: 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .compare thead th:first-child { width: 36%; }
+    .compare tbody tr { border-bottom: 1px solid var(--rule); }
+    .compare tbody tr:last-child { border-bottom: none; }
+    .compare tbody tr:nth-child(even) td { background: var(--surface); }
+    .compare tbody td {
+      padding: 14px 20px;
+      font-size: 14px;
+      color: var(--ink-2);
+      vertical-align: top;
+    }
+    .compare tbody td:first-child { font-weight: 600; color: var(--ink); }
+    .compare tbody td.before { color: #b91c1c; }
+    .compare tbody td.after { color: var(--green); font-weight: 600; }
+
+    /* ─── QUOTE ─────────────────────────────────────────── */
+    .quote-block {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 5px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 32px 36px;
+      margin-top: 48px;
+    }
+    .quote-block blockquote {
+      font-size: 20px;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .quote-block .attribution {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* ─── DOMAINS ────────────────────────────────────────── */
+    .domains {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .domain-pill {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-2);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .domain-pill .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ─── DELIVERABLES ───────────────────────────────────── */
+    .deliverables-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .deliverable {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .deliverable .icon { font-size: 24px; margin-bottom: 10px; }
+    .deliverable h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .deliverable p { font-size: 13px; color: var(--ink-3); margin: 0; }
+
+    /* ─── AGENT PIPELINE ────────────────────────────────── */
+    .pipeline-scroll {
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-top: 40px;
+    }
+    .pipeline-track {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      min-width: max-content;
+    }
+    .pipeline-agent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 130px;
+      position: relative;
+    }
+    .pipeline-agent:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 28px;
+      left: calc(50% + 28px);
+      width: calc(100% - 56px);
+      height: 2px;
+      background: linear-gradient(to right, var(--accent), #93c5fd);
+    }
+    .agent-bubble {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(26,86,219,.2);
+      border: 2px solid var(--white);
+    }
+    .agent-bubble.core   { background: linear-gradient(135deg, #1a56db, #0e3fa6); }
+    .agent-bubble.opt    { background: linear-gradient(135deg, #7c3aed, #5b21b6); }
+    .agent-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-2);
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.3;
+      max-width: 110px;
+    }
+    .agent-role {
+      font-size: 10px;
+      color: var(--ink-3);
+      text-align: center;
+      margin-top: 3px;
+      max-width: 110px;
+      line-height: 1.3;
+    }
+
+    .pipeline-legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .optional-agents {
+      margin-top: 40px;
+    }
+    .optional-agents h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .opt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+    .opt-card {
+      background: var(--white);
+      border: 1px solid #ede9fe;
+      border-left: 4px solid #7c3aed;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .opt-card .opt-icon { font-size: 20px; margin-bottom: 8px; }
+    .opt-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--ink); }
+    .opt-card p { font-size: 13px; color: var(--ink-3); margin: 0; }
+
+    /* ─── SKILL PACKS ────────────────────────────────────── */
+    .skill-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .skill-cat {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .skill-cat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .skill-cat-icon { font-size: 22px; }
+    .skill-cat h3 { font-size: 15px; font-weight: 700; color: var(--ink); }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .skill-tag {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+
+    /* ─── CTA ────────────────────────────────────────────── */
+    .cta-section {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 80px 24px;
+    }
+    .cta-section h2 { color: var(--white); font-size: 32px; margin-bottom: 16px; }
+    .cta-section p { color: rgba(255,255,255,.75); max-width: 520px; margin: 0 auto 36px; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--white);
+      color: var(--accent-2);
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: #0f172a;
+      color: rgba(255,255,255,.45);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 13px;
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .steps::before { display: none; }
+      .compare thead th:nth-child(2) { display: none; }
+      .compare tbody td:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════ -->
+<header class="hero">
+  <div class="badge">Client Case Study</div>
+  <h1>From One Meeting to a <span>Fully Planned Project</span> — In Hours, Not Weeks</h1>
+  <p class="sub">
+    How the SDLC Automation Platform turns a discovery call into ready-to-build
+    software — without a single spreadsheet or planning session.
+  </p>
+  <div class="hero-metrics">
+    <div class="hero-metric">
+      <span class="number">3 hrs</span>
+      <span class="label">Average delivery time</span>
+    </div>
+    <div class="hero-metric">
+      <span class="number">10+</span>
+      <span class="label">Ready-to-use deliverables</span>
+    </div>
+    <div class="hero-metric">
+      <span class="number">90%</span>
+      <span class="label">Faster than traditional BA process</span>
+    </div>
+    <div class="hero-metric">
+      <span class="number">Any</span>
+      <span class="label">Industry, any domain</span>
+    </div>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     THE PROBLEM
+════════════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <p class="section-label">The Problem</p>
+    <h2>Every project starts the same painful way</h2>
+    <p>
+      You have a client. They have a problem. You hold a great discovery call.
+      Then… weeks pass before anything tangible is on paper. Requirements get
+      lost in email threads, planning meetings pile up, and by the time a
+      developer writes a single line of code — your client has lost confidence.
+    </p>
+
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">📅</div>
+        <h3>2–4 Weeks Just to Plan</h3>
+        <p>Traditional discovery → requirements → planning takes weeks before any build work starts.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🗂️</div>
+        <h3>Requirements Lost in Translation</h3>
+        <p>What the client said in the meeting rarely matches what ends up in the Jira backlog.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">💸</div>
+        <h3>Pre-Build Costs Are Invisible</h3>
+        <p>BA time, project manager overhead, and planning meetings are expensive and often under-quoted.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔁</div>
+        <h3>Rework Is the Default</h3>
+        <p>Misaligned requirements mean the first sprint is often thrown away. The client pays twice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     THE SOLUTION — HOW IT WORKS
+════════════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <p class="section-label">How It Works</p>
+    <h2>One transcript in. A full project out.</h2>
+    <p>
+      The platform reads your meeting recording or notes — and handles
+      everything a Business Analyst, Project Manager, Architect, and Developer
+      would normally spend weeks producing. You stay in control; the machine
+      does the heavy lifting.
+    </p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Give Us the Meeting</h3>
+          <p>
+            Paste in your discovery call transcript — Teams, Zoom, or even
+            handwritten notes. No special format required.
+          </p>
+          <span class="tag">Takes 2 minutes</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>We Extract What Actually Matters</h3>
+          <p>
+            The platform identifies the business goals, pain points, constraints,
+            and success criteria hidden inside the conversation — automatically.
+          </p>
+          <span class="tag">No manual analysis needed</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Requirements Are Written for You</h3>
+          <p>
+            Clear, structured, signed-off-ready requirements land in your hands
+            in plain English — no BA shorthand, no ambiguity.
+          </p>
+          <span class="tag">Client-ready language</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>The Project Plan Builds Itself</h3>
+          <p>
+            Sprints, milestones, priorities, and effort estimates are generated
+            from the requirements — not guessed. Jira tickets are created and
+            ready to assign.
+          </p>
+          <span class="tag">Backlog ready in minutes</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Architecture and Code Scaffolding Drop In</h3>
+          <p>
+            The right tech stack is recommended, the system is designed, and
+            starter code is scaffolded — so your developers can start building
+            on day one, not day thirty.
+          </p>
+          <span class="tag">Developer-ready</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>QA and Deployment Plans Are Included</h3>
+          <p>
+            Test plans, quality checks, and deployment readiness guides are
+            produced automatically — so nothing is forgotten before go-live.
+          </p>
+          <span class="tag">Nothing left behind</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     DELIVERABLES
+════════════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <p class="section-label">What You Receive</p>
+    <h2>Every deliverable a project needs — ready before the second meeting</h2>
+
+    <div class="deliverables-grid">
+      <div class="deliverable">
+        <div class="icon">📋</div>
+        <h4>Business Requirements Document</h4>
+        <p>Structured, client-approved requirements in plain English</p>
+      </div>
+      <div class="deliverable">
+        <div class="icon">📄</div>
+        <h4>Statement of Work</h4>
+        <p>Scope, timeline, and deliverables — ready for client signature</p>
+      </div>
+      <div class="deliverable">
+        <div class="icon">🗓️</div>
+        <h4>Sprint Plan</h4>
+        <p>2-week sprints with effort estimates and priorities defined</p>
+      </div>
+      <div class="deliverable">
+        <div class="icon">🎫</div>
+        <h4>Jira Backlog</h4>
+        <p>User stories, epics, and acceptance criteria — created automatically</p>
+      </div>
+      <div class="deliverable">
+        <div class="icon">🏗️</div>
+        <h4>System Architecture</h4>
+        <p>Tech stack recommendation and architecture diagram</p>
+      </div>
+      <div class="deliverable">
+        <div class="icon">💻</div>
+        <h4>Code Scaffolding</h4>
+        <p>Project structure and starter code — developers start on day one</p>
+      </div>
+      <div class="deliverable">
+        <div class="icon">🧪</div>
+        <h4>QA & Test Plan</h4>
+        <p>Test scenarios and quality gates built from requirements</p>
+      </div>
+      <div class="deliverable">
+        <div class="icon">🚀</div>
+        <h4>Deployment Readiness Guide</h4>
+        <p>Infrastructure, CI/CD, and go-live checklist</p>
+      </div>
+      <div class="deliverable">
+        <div class="icon">📊</div>
+        <h4>Executive Summary</h4>
+        <p>One-page overview for stakeholders and leadership sign-off</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     BEFORE vs AFTER
+════════════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <p class="section-label">Before & After</p>
+    <h2>The difference is not incremental. It is structural.</h2>
+
+    <table class="compare">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Traditional Approach</th>
+          <th>With This Platform</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Discovery to requirements</td>
+          <td class="before">5–10 business days, multiple BA sessions</td>
+          <td class="after">Under 1 hour after the call</td>
+        </tr>
+        <tr>
+          <td>SOW / documentation</td>
+          <td class="before">2–3 days, writer + reviewer cycles</td>
+          <td class="after">Auto-generated, ready to review</td>
+        </tr>
+        <tr>
+          <td>Sprint planning</td>
+          <td class="before">Half-day workshop with the full team</td>
+          <td class="after">Generated from requirements automatically</td>
+        </tr>
+        <tr>
+          <td>Jira ticket creation</td>
+          <td class="before">4–8 hours of manual ticket writing</td>
+          <td class="after">Full backlog created in minutes</td>
+        </tr>
+        <tr>
+          <td>Architecture design</td>
+          <td class="before">1–2 weeks with a solution architect</td>
+          <td class="after">Recommendation + diagram in hours</td>
+        </tr>
+        <tr>
+          <td>First line of code</td>
+          <td class="before">Week 3–5 at earliest</td>
+          <td class="after">Day 1 — scaffolding is ready</td>
+        </tr>
+        <tr>
+          <td>Risk of rework</td>
+          <td class="before">High — requirements often misaligned</td>
+          <td class="after">Low — requirements traced directly to the transcript</td>
+        </tr>
+        <tr>
+          <td>Cost of pre-build phase</td>
+          <td class="before">$15,000–$40,000 in staff time (typical)</td>
+          <td class="after">Fraction of the cost</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     RESULTS
+════════════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <p class="section-label">The Results</p>
+    <h2>What changes when planning is no longer the bottleneck</h2>
+
+    <div class="results-grid">
+      <div class="result-card">
+        <span class="big">90<span class="unit">%</span></span>
+        <p class="desc">Reduction in time from discovery call to project kickoff</p>
+      </div>
+      <div class="result-card">
+        <span class="big">10<span class="unit">×</span></span>
+        <p class="desc">More client proposals delivered per month by delivery teams</p>
+      </div>
+      <div class="result-card">
+        <span class="big">3 hrs</span>
+        <p class="desc">Average time to produce a complete project package</p>
+      </div>
+      <div class="result-card">
+        <span class="big">Day 1</span>
+        <p class="desc">Developers building against real requirements from the very first day</p>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <blockquote>
+        "We used to spend two weeks just getting alignment on what we were building.
+        Now we walk out of the client meeting and hand them a full project plan by
+        the next morning. The client thinks we have a team of 20 people.
+        We have four."
+      </blockquote>
+      <div class="attribution">— Delivery Lead, Technology Consultancy</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     DOMAINS
+════════════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <p class="section-label">Works For Any Industry</p>
+    <h2>One platform. Every domain.</h2>
+    <p>
+      The platform reads what the client talks about and adapts automatically.
+      No configuration, no templates to swap out. If a client needs it built,
+      this handles the planning — regardless of industry.
+    </p>
+
+    <div class="domains">
+      <div class="domain-pill"><span class="dot"></span> Healthcare & MedTech</div>
+      <div class="domain-pill"><span class="dot"></span> Financial Services & Fintech</div>
+      <div class="domain-pill"><span class="dot"></span> E-Commerce & Retail</div>
+      <div class="domain-pill"><span class="dot"></span> Education Technology</div>
+      <div class="domain-pill"><span class="dot"></span> HR & People Platforms</div>
+      <div class="domain-pill"><span class="dot"></span> Logistics & Supply Chain</div>
+      <div class="domain-pill"><span class="dot"></span> SaaS & Cloud Platforms</div>
+      <div class="domain-pill"><span class="dot"></span> Government & Public Sector</div>
+      <div class="domain-pill"><span class="dot"></span> Real Estate & PropTech</div>
+      <div class="domain-pill"><span class="dot"></span> Legal & Compliance</div>
+      <div class="domain-pill"><span class="dot"></span> Media & Entertainment</div>
+      <div class="domain-pill"><span class="dot"></span> Travel & Hospitality</div>
+      <div class="domain-pill"><span class="dot"></span> Manufacturing & IoT</div>
+      <div class="domain-pill"><span class="dot"></span> Agriculture & AgriTech</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PIPELINE AGENTS
+════════════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <p class="section-label">Under the Hood</p>
+    <h2>11 specialist agents. One seamless pipeline.</h2>
+    <p>
+      Each agent is a dedicated expert — it reads the output of the previous
+      agent, does one job exceptionally well, and hands off to the next.
+      No human relay required.
+    </p>
+
+    <div class="pipeline-scroll">
+      <div class="pipeline-track">
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">⚙️</div>
+          <div class="agent-label">Environment Setup</div>
+          <div class="agent-role">Scans tools & configures the run</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">🎙️</div>
+          <div class="agent-label">Transcript Analyst</div>
+          <div class="agent-role">Extracts meaning from the meeting</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">📋</div>
+          <div class="agent-label">Requirements Engineer</div>
+          <div class="agent-role">Writes structured requirements</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">📄</div>
+          <div class="agent-label">Technical Writer</div>
+          <div class="agent-role">Produces SOW &amp; docs</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">🗓️</div>
+          <div class="agent-label">Project Manager</div>
+          <div class="agent-role">Builds sprint plan &amp; milestones</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">🎫</div>
+          <div class="agent-label">Scrum Master</div>
+          <div class="agent-role">Creates Jira backlog &amp; tickets</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">🏗️</div>
+          <div class="agent-label">Solution Architect</div>
+          <div class="agent-role">Designs system &amp; tech stack</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">💻</div>
+          <div class="agent-label">Senior Developer</div>
+          <div class="agent-role">Scaffolds production-ready code</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">🧪</div>
+          <div class="agent-label">QA Engineer</div>
+          <div class="agent-role">Writes test plans &amp; cases</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">🚀</div>
+          <div class="agent-label">DevOps Engineer</div>
+          <div class="agent-role">CI/CD &amp; deployment readiness</div>
+        </div>
+
+        <div class="pipeline-agent">
+          <div class="agent-bubble core">📊</div>
+          <div class="agent-label">Delivery Lead</div>
+          <div class="agent-role">Executive summary &amp; sign-off</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pipeline-legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#1a56db"></div>
+        Core pipeline — runs on every project
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#7c3aed"></div>
+        Optional modules — activate when needed
+      </div>
+    </div>
+
+    <div class="optional-agents">
+      <h3>Optional Specialist Modules</h3>
+      <div class="opt-grid">
+        <div class="opt-card">
+          <div class="opt-icon">🔄</div>
+          <h4>Feedback Loop Agent</h4>
+          <p>Audits all pipeline output end-to-end and flags gaps before handoff to the client.</p>
+        </div>
+        <div class="opt-card">
+          <div class="opt-icon">🛡️</div>
+          <h4>Security Threat Model</h4>
+          <p>Runs STRIDE threat modelling on the architecture — surfaces risks before a line of code is written.</p>
+        </div>
+        <div class="opt-card">
+          <div class="opt-icon">⚖️</div>
+          <h4>Compliance Checker</h4>
+          <p>Verifies the design meets GDPR, HIPAA, PCI-DSS, or any domain-specific regulatory requirement.</p>
+        </div>
+        <div class="opt-card">
+          <div class="opt-icon">💰</div>
+          <h4>Cloud Cost Estimator</h4>
+          <p>Produces a detailed FinOps breakdown — infrastructure spend before the client approves the build.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SKILL PACKS
+════════════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <p class="section-label">Skill Packs</p>
+    <h2>30 embedded knowledge packs. Instantly available.</h2>
+    <p>
+      Every agent draws on a library of domain skill packs — deep, pre-loaded
+      knowledge about how to do the job right. No prompt engineering required
+      from your team. The expertise is already built in.
+    </p>
+
+    <div class="skill-categories">
+
+      <div class="skill-cat">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon">📐</div>
+          <h3>Architecture &amp; Engineering</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">Architecture Design</span>
+          <span class="skill-tag">Code Patterns</span>
+          <span class="skill-tag">Performance Monitoring</span>
+          <span class="skill-tag">Claude API</span>
+          <span class="skill-tag">MCP Builder</span>
+        </div>
+      </div>
+
+      <div class="skill-cat">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon">🚦</div>
+          <h3>Delivery &amp; Planning</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">SDLC Process</span>
+          <span class="skill-tag">Requirements Planning</span>
+          <span class="skill-tag">Pipeline Orchestration</span>
+          <span class="skill-tag">Domain Adaptation</span>
+          <span class="skill-tag">Automation</span>
+        </div>
+      </div>
+
+      <div class="skill-cat">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon">🧪</div>
+          <h3>Quality &amp; Security</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">Testing &amp; QA</span>
+          <span class="skill-tag">Security &amp; Compliance</span>
+          <span class="skill-tag">Webapp Testing</span>
+        </div>
+      </div>
+
+      <div class="skill-cat">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon">🚀</div>
+          <h3>DevOps &amp; Deployment</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">DevOps Deployment</span>
+          <span class="skill-tag">Frontend Design</span>
+          <span class="skill-tag">Web Artifacts Builder</span>
+        </div>
+      </div>
+
+      <div class="skill-cat">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon">📝</div>
+          <h3>Documentation &amp; Content</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">Documentation Writing</span>
+          <span class="skill-tag">Doc Co-Authoring</span>
+          <span class="skill-tag">Internal Comms</span>
+          <span class="skill-tag">PDF</span>
+          <span class="skill-tag">DOCX</span>
+          <span class="skill-tag">PPTX</span>
+          <span class="skill-tag">XLSX</span>
+        </div>
+      </div>
+
+      <div class="skill-cat">
+        <div class="skill-cat-header">
+          <div class="skill-cat-icon">🎨</div>
+          <h3>Design &amp; Brand</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag">Canvas Design</span>
+          <span class="skill-tag">Brand Guidelines</span>
+          <span class="skill-tag">Theme Factory</span>
+          <span class="skill-tag">Algorithmic Art</span>
+          <span class="skill-tag">Skill Creator</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     CTA
+════════════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <h2>Ready to see it work on your next client?</h2>
+  <p>
+    Bring us a transcript from your last discovery call.
+    We will show you what the platform produces in real time —
+    no setup, no commitment.
+  </p>
+  <a href="mailto:contact@yourdomain.com" class="cta-btn">Book a Live Demo</a>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════ -->
+<footer>
+  <p>SDLC Automation Platform &mdash; Built to close the gap between a client conversation and a running product.</p>
+</footer>
+
+</body>
+</html>
