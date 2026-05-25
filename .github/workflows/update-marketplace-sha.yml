@@ -1,0 +1,57 @@
+name: Update marketplace SHA
+
+# Runs on every push to main EXCEPT when it's the bot updating the SHA itself.
+# Keeps .claude-plugin/marketplace.json in sync so `claude plugin marketplace update`
+# always fetches exactly the commit that was just pushed.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.claude-plugin/marketplace.json'   # avoid infinite loop
+
+permissions:
+  contents: write
+
+jobs:
+  update-sha:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stamp latest SHA into marketplace.json
+        run: |
+          SHA=$(git rev-parse HEAD)
+          python3 - <<PYEOF
+          import json, pathlib
+
+          mkt = pathlib.Path(".claude-plugin/marketplace.json")
+          data = json.loads(mkt.read_text())
+          data["plugins"][0]["source"]["sha"] = "$SHA"
+          mkt.write_text(json.dumps(data, indent=2) + "\n")
+          print(f"Updated marketplace SHA → $SHA")
+          PYEOF
+
+      - name: Bump plugin patch version
+        run: |
+          python3 - <<PYEOF
+          import json, pathlib
+
+          p = pathlib.Path("plugins/sdlc-automation/.claude-plugin/plugin.json")
+          data = json.loads(p.read_text())
+          major, minor, patch = data["version"].split(".")
+          data["version"] = f"{major}.{minor}.{int(patch) + 1}"
+          p.write_text(json.dumps(data, indent=2) + "\n")
+          print(f"Bumped plugin version → {data['version']}")
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .claude-plugin/marketplace.json plugins/sdlc-automation/.claude-plugin/plugin.json
+          git diff --staged --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "chore: auto-stamp marketplace SHA + bump plugin version [skip ci]"
+          git push
