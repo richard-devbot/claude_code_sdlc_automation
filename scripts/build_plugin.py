@@ -12,10 +12,8 @@ Usage:
 """
 
 import argparse
-import io
 import json
 import zipfile
-from datetime import datetime, timezone
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -44,7 +42,6 @@ PLUGIN_JSON = {
         "sdlc", "automation", "agents", "pipeline", "requirements",
         "architecture", "jira", "devops", "security", "cowork", "claude-code",
     ],
-    "built_at": datetime.now(timezone.utc).isoformat(),
 }
 
 # ── Agent metadata ─────────────────────────────────────────────────────────────
@@ -602,26 +599,49 @@ Domain intelligence flows automatically from the transcript through JSON contrac
 
 # ── Builder ────────────────────────────────────────────────────────────────────
 
+def _inject_frontmatter(agent: dict, content: bytes) -> bytes:
+    """
+    Prepend YAML frontmatter to an agent file if it doesn't already have one.
+    Claude Code needs ---frontmatter--- to register agents properly.
+    """
+    text = content.decode("utf-8", errors="replace")
+    if text.startswith("---"):
+        return content  # already has frontmatter
+    frontmatter = (
+        f"---\n"
+        f"name: {agent['id']}\n"
+        f"description: \"{agent['desc']}\"\n"
+        f"---\n\n"
+    )
+    return (frontmatter + text).encode("utf-8")
+
+
 def build_plugin(output_path: Path) -> None:
     print(f"Building plugin → {output_path}")
 
-    # Collect existing assets from base plugin
+    # Collect assets from base plugin — skip legacy commands (they have YAML errors
+    # from double-compression in the original zip) and files we regenerate.
     existing_assets: dict[str, bytes] = {}
+    SKIP_LEGACY_COMMANDS = True  # legacy commands from base plugin have corrupt frontmatter
     if EXISTING_PLUGIN.exists():
         print(f"  Reading base plugin: {EXISTING_PLUGIN.name}")
         with zipfile.ZipFile(EXISTING_PLUGIN, "r") as base:
             for name in base.namelist():
                 if name.endswith("/"):
-                    continue  # skip directory entries
-                # Skip files we are replacing
-                skip_prefixes = (".claude-plugin/", "README.md")
-                if any(name.startswith(p) or name == p for p in skip_prefixes):
+                    continue
+                # Always skip: manifest, readme, legacy commands (corrupt YAML)
+                if name.startswith(".claude-plugin/") or name == "README.md":
+                    continue
+                if SKIP_LEGACY_COMMANDS and name.startswith("commands/"):
+                    continue  # we only ship our own /sdlc-* commands
+                # Skip specialist agents — they're referenced by main agents but
+                # the documentation-expert.md has corrupt YAML that blocks install
+                if name.startswith("agents/specialists/"):
                     continue
                 existing_assets[name] = base.read(name)
-        print(f"  Carried over {len(existing_assets)} existing files")
+        print(f"  Carried over {len(existing_assets)} existing files (commands excluded)")
     else:
         print("  No base plugin found — building from scratch")
-        # Collect agent files from project
         for agent in AGENTS:
             src = PROJECT_ROOT / ".claude" / "agents" / agent["file"]
             if src.exists():
@@ -653,6 +673,16 @@ def build_plugin(output_path: Path) -> None:
         "agents/_COMMUNICATION_PROTOCOL.md": PROJECT_ROOT / ".claude" / "agents" / "_COMMUNICATION_PROTOCOL.md",
     }
 
+    # Inject frontmatter into agent files that don't already have it
+    agent_lookup = {a["file"]: a for a in AGENTS}
+    for name in list(existing_assets.keys()):
+        if name.startswith("agents/") and name.endswith(".md"):
+            filename = name.split("/")[-1]
+            if filename in agent_lookup:
+                existing_assets[name] = _inject_frontmatter(
+                    agent_lookup[filename], existing_assets[name]
+                )
+
     # Merge into one dict so there are zero duplicate entries in the zip.
     # Priority (highest wins): manifest/readme > extra_files > new_commands > existing_assets
     merged: dict[str, bytes] = {}
@@ -666,9 +696,14 @@ def build_plugin(output_path: Path) -> None:
         merged[name] = content.encode("utf-8")
 
     # 3. Fresh project files (always overwrite stale base-plugin copies)
+    #    Also inject frontmatter into agent files coming from extra_files
     for dest, src in extra_files.items():
         if src.exists():
-            merged[dest] = src.read_bytes()
+            data = src.read_bytes()
+            filename = dest.split("/")[-1]
+            if dest.startswith("agents/") and filename in agent_lookup:
+                data = _inject_frontmatter(agent_lookup[filename], data)
+            merged[dest] = data
 
     # 4. Manifest and README always win (highest priority)
     merged[".claude-plugin/plugin.json"] = json.dumps(PLUGIN_JSON, indent=2).encode("utf-8")
