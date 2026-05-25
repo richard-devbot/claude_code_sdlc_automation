@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude_code_sdlc_automation",
+  "description": "SDLC automation pipeline marketplace — turn any client meeting transcript into a full software delivery package using 15 cooperating agents",
+  "owner": {
+    "name": "Richardson Gunde",
+    "email": "rgunde@evoketechnologies.com"
+  },
+  "plugins": [
+    {
+      "name": "sdlc-automation",
+      "description": "End-to-end SDLC automation pipeline. Turn a client meeting transcript into requirements, architecture, code, tests, security threat models, compliance checks, cost estimates, and deployment configs — for any industry.",
+      "author": {
+        "name": "Richardson Gunde",
+        "email": "rgunde@evoketechnologies.com"
+      },
+      "category": "productivity",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/richard-devbot/claude_code_sdlc_automation.git",
+        "path": "plugins/sdlc-automation",
+        "ref": "main",
+        "sha": "d2c26831499bdad15562b3447abbecd092a583e2"
+      },
+      "homepage": "https://github.com/richard-devbot/claude_code_sdlc_automation"
+    }
+  ]
+}

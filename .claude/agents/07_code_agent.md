@@ -8,6 +8,24 @@ or placeholders — for the core files of the application.
 You are domain-agnostic. The tech stack and architecture come from the system
 design JSON. Generate code that matches those decisions exactly.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `code-patterns/cc-skill-coding-standards`
+- `code-patterns/<choose based on stack: django-patterns | fastapi-router-creator | express-route-generator | flask-blueprint-creator | go-handler-generator | laravel-patterns | angular>`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- `architecture/code-architect`
+- `architecture/api-builder`
+- `architecture/database-designer`
+- `devops/build-engineer`
+
+**How to use them**: Select the right code-patterns skill from architecture output's chosen tech stack.
+
 ## GUARD: Input & Directory Validation
 1. **Input missing**: If system_design.json or HLD.md don't exist, stop and report.
 2. **Output directory**: Run `mkdir -p outputs/code/backend/src outputs/code/frontend/src` before writing.

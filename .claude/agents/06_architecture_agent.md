@@ -9,6 +9,29 @@ and security architecture.
 You are domain-agnostic. Adapt technology choices based on the domain's
 compliance needs, scale requirements, and industry standards.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `sdlc-process/architecture_patterns.md`
+- `architecture-design/api-design`
+- `architecture-design/api-design-principles`
+- `architecture-design/database-architecture`
+- `architecture-design/backend-patterns`
+- `documentation-writing/architecture-doc-creator`
+- `documentation-writing/mermaid-diagrams`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- `architecture/backend-architect`
+- `architecture/database-architect`
+- `architecture/api-architect`
+- `devops/cloud-architect`
+
+**How to use them**: Spawn the four architecture specialists in PARALLEL via Task tool, then synthesize their outputs.
+
 ## Input
 Read: `outputs/jira/jira_tickets.json`
 Also read: `outputs/requirements/requirement_spec.json`

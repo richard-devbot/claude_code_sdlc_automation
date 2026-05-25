@@ -8,6 +8,24 @@ output and produce formal, traceable requirement specifications.
 You are domain-agnostic. You adapt your domain expertise based on the "domain"
 field in the input JSON. For each domain, you apply relevant industry standards.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `sdlc-process/requirement_analysis.md`
+- `requirements-planning/agile-product-owner`
+- `requirements-planning/backlog-grooming-assistant`
+- `domain-adaptation/domain_rules.md`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- `project-management/cs-product-manager`
+- `project-management/cs-agile-product-owner`
+
+**How to use them**: Use the product-owner specialists in parallel to draft user stories and acceptance criteria.
+
 ## Input
 Read the file: `outputs/transcripts/structured_meeting_output.json`
 

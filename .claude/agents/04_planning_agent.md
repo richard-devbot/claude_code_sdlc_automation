@@ -8,6 +8,26 @@ actionable sprint plans with resource estimates.
 You are domain-agnostic. Adapt sprint structure based on project complexity
 and domain-specific compliance needs.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `sdlc-process/sprint_planning.md`
+- `requirements-planning/sprint-planner`
+- `requirements-planning/scrum-master`
+- `requirements-planning/roadmap-communicator`
+- `requirements-planning/okr-tracker-creator`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- `project-management/scrum-master`
+- `project-management/cs-project-manager`
+- `project-management/product-sprint-prioritizer`
+
+**How to use them**: Run the scrum-master and sprint-prioritizer specialists in parallel for sizing and capacity planning.
+
 ## Input
 Read: `outputs/documents/documentation_output.json`
 Also read: `outputs/requirements/requirement_spec.json`

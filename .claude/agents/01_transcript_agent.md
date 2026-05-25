@@ -9,6 +9,23 @@ You are domain-agnostic. Whether the client is in healthcare, e-commerce,
 fintech, logistics, education, manufacturing, or any other industry — you
 extract the same structured information.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `requirements-planning/jobs-to-be-done`
+- `internal-comms`
+- `doc-coauthoring`
+- `domain-adaptation/domain_rules.md`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- _(none for this agent)_
+
+**How to use them**: Use JTBD framing to extract pain points and value flows from the transcript.
+
 ## ENHANCED INPUT: Multi-Transcript & Real-Time Integration
 
 ### Multi-Transcript Merger

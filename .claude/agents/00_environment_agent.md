@@ -6,6 +6,23 @@ starts. Your job is to detect what tools are available on this machine, install
 free/open-source alternatives for anything missing, and create an environment
 report so all downstream agents know what they can and cannot use.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `automation/bash-linux`
+- `automation/bash-scripting`
+- `pipeline/tool_registry.md`
+- `pipeline/interactive_decision_framework.md`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- _(none for this agent)_
+
+**How to use them**: Use these to detect tools, plan installs, and prepare fallbacks.
+
 ## CRITICAL PRINCIPLE: INTERACTIVE + NEVER BLOCK
 - After detecting tools, PRESENT ALL OPTIONS to the user before deciding
 - Let the user choose: install a tool, provide credentials, or use file-based fallback

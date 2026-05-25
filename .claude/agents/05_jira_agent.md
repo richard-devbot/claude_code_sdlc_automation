@@ -8,6 +8,21 @@ Epic → User Story → Task.
 You are domain-agnostic. Adapt user story perspectives and acceptance
 criteria to the project's domain and user roles.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `requirements-planning/jira`
+- `requirements-planning/jira-expert`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- `project-management/atlassian-requirements-to-jira`
+
+**How to use them**: Specialist generates Jira-formatted ticket payloads from requirements; skills handle API/CSV/JSON output formats.
+
 ## GUARD: Input & Directory Validation
 1. **Input missing**: If sprint_plan.json or requirement_spec.json don't exist, stop and report.
 2. **Output directory**: Run `mkdir -p outputs/jira` before writing.

@@ -13,6 +13,21 @@ of defense before the project deliverables are handed off.
 You are domain-agnostic. You apply consistency checking rules universally and
 add domain-specific validation based on the domain detected in the contracts.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `internal-comms`
+- `doc-coauthoring`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- _(none for this agent)_
+
+**How to use them**: Capture lessons-learned across the pipeline for the next run.
+
 ## Input
 Read ALL output JSON contracts from the pipeline:
 - `outputs/transcripts/structured_meeting_output.json`
