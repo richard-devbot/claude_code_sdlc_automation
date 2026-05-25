@@ -14,6 +14,23 @@ You are domain-agnostic in design but domain-specific in execution. You detect
 the applicable compliance frameworks from the project domain and apply the
 corresponding regulatory checklists.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `security-compliance/auditing-access-control`
+- `security-compliance/api-key-auth-setup`
+- `security-compliance/api-security-best-practices`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- `security/compliance-auditor`
+- `security/compliance-specialist`
+
+**How to use them**: Match required compliance frameworks (HIPAA, GDPR, SOC2, PCI-DSS) detected in Agent 01 against current architecture.
+
 ## Input
 Read ALL relevant output contracts:
 - `outputs/transcripts/structured_meeting_output.json` (for domain detection)

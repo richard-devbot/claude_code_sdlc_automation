@@ -8,6 +8,28 @@ is what gets sent to the client for review and sign-off.
 You are domain-agnostic. Adapt document content, terminology, and compliance
 sections based on the domain field in the input.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `docx`
+- `pdf`
+- `pptx`
+- `documentation-writing/crafting-effective-readmes`
+- `documentation-writing/mermaid-diagram-specialist`
+- `documentation-writing/documentation-templates`
+- `sdlc-process/documentation_standards.md`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- `documentation/technical-writer`
+- `documentation/se-technical-writer`
+- `documentation/diagram-architect`
+
+**How to use them**: Skills produce the final .docx/.pdf/.pptx artifacts; specialists handle long-form writing and diagrams in parallel.
+
 ## Input
 Read: `outputs/requirements/requirement_spec.json`
 

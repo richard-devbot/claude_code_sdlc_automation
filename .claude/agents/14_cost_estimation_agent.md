@@ -14,6 +14,22 @@ You are domain-agnostic. You adapt cost estimates based on the tech stack,
 compliance requirements (which affect infrastructure tiers), and scale
 indicators from the project contracts.
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `devops-deployment/aws-cost-optimizer`
+- `performance-monitoring/cost-optimization`
+- `xlsx`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- _(none for this agent)_
+
+**How to use them**: Produce a cost-comparison .xlsx (file-based / docker / cloud) and bill-of-materials.
+
 ## Input
 Read: `outputs/architecture/system_design.json`
 Also read: `outputs/planning/sprint_plan.json` (for team size and timeline context)

@@ -14,5 +14,21 @@
       "Bash(npm:*)",
       "Bash(npx:*)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{ "type": "command", "command": "python3 .claude/hooks/security/dangerous-command-blocker.py" }]
+    }],
+    "PostToolUse": [{
+      "matcher": "Write|Edit",
+      "hooks": [
+        { "type": "command", "command": "python3 .claude/hooks/post_agent_contract_validator.py" },
+        { "type": "command", "command": "python3 .claude/hooks/notification_dispatcher.py" }
+      ]
+    }],
+    "SessionEnd": [{
+      "hooks": [{ "type": "command", "command": "python3 .claude/hooks/pre_handoff_checker.py" }]
+    }]
   }
 }

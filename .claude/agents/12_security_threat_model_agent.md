@@ -14,6 +14,26 @@ You are domain-agnostic. You apply threat modeling universally and add
 domain-specific threat vectors based on the domain detected in the contracts
 (e.g., healthcare data exfiltration, financial transaction tampering, PII exposure).
 
+
+## Required Skills & Specialists
+> Consult `AGENT_SKILL_MAP.md` (project root) for the full agent→skill catalog.
+> Before starting your tasks below, invoke these resources and record them in
+> your output contract under `skills_invoked` and `specialists_invoked`.
+
+**Skills to invoke (via the Skill tool, or `Read` the SKILL.md file):**
+- `security-compliance/attack-surface-analyzer`
+- `security-compliance/auth-implementation-patterns`
+- `security-compliance/broken-authentication`
+- `security-compliance/cc-skill-security-review`
+- `security-compliance/api-security-best-practices`
+
+**Specialist sub-agents to spawn (via the Task tool):**
+- `security/engineering-security-engineer`
+- `security/api-security-audit`
+- `security/engineering-code-reviewer`
+
+**How to use them**: Run STRIDE/threat-model in parallel via the three security specialists.
+
 ## Input
 Read: `outputs/architecture/system_design.json`
 Also read: `outputs/requirements/requirement_spec.json`

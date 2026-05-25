@@ -36,11 +36,11 @@ execution:
       agents: [jira_agent, architecture_agent]
       parallel: true
       depends_on: [phase_3_documentation]
-    phase_5_security:  # Optional
+    phase_5_security:  # Shift-left security — runs before code is written
       agents: [security_threat_model_agent]
       depends_on: [phase_4_design]
       optional: true
-      enabled: false  # Set to true to enable
+      enabled: true   # OWASP top 10 + STRIDE threat model before code agent
     phase_6_implementation:
       agents: [code_agent]
       depends_on: [phase_4_design, phase_5_security]
@@ -75,27 +75,35 @@ user_preferences:
 
 # Optional agents toggle
 optional_agents:
-  security_threat_model: false
-  compliance_checker: true  # Auto-enable for regulated domains
-  cost_estimation: false
+  security_threat_model: true   # Shift-left: threat model before code generation
+  compliance_checker: true      # Auto-enable for regulated domains
+  cost_estimation: true         # Stakeholders always ask "what will this cost?"
   feedback_loop: true
 
 # Notification configuration
+# To enable: set enabled: true and fill in at least one webhook_url below.
+# The notification_dispatcher hook fires on every agent_completed event.
+# If no webhook is configured, falls back to a macOS desktop notification.
 notifications:
-  enabled: false
+  enabled: true
   channels:
-    # slack:
-    #   webhook_url: ""
-    #   channel: "#sdlc-pipeline"
-    # teams:
-    #   webhook_url: ""
+    slack:
+      webhook_url: ""          # Paste your Slack Incoming Webhook URL here
+      channel: "#sdlc-pipeline"
+      notify_on: [agent_completed, pipeline_completed, error_occurred, retry_triggered]
+    teams:
+      webhook_url: ""          # Paste your MS Teams Incoming Webhook URL here
+      notify_on: [pipeline_completed, error_occurred]
     # email:
     #   smtp_server: ""
     #   recipients: []
+  fallback: "desktop"          # "desktop" = macOS osascript notification; "log" = log only
   events:
     - agent_completed
     - pipeline_completed
     - error_occurred
+    - retry_triggered          # Fires when testing loop retries code agent
+    - deployment_live          # Fires when a live URL is available after docker deploy
 
 # Analytics
 analytics:
@@ -110,3 +118,22 @@ quality_gates:
   test_coverage_minimum: 60
   vulnerability_max_critical: 0
   vulnerability_max_high: 3
+
+# Cyclic auto-fix loop (Testing Agent → Code Agent)
+# If tests fail, the pipeline retries by sending failed_tests.json back to the
+# code agent. The loop stops when tests pass or max_retries is reached.
+testing_retry_loop:
+  enabled: true
+  max_retries: 3               # After 3 failures, escalate to user instead of retrying
+  retry_contract: "outputs/qa/failed_tests.json"
+  retry_state_file: "outputs/qa/retry_state.json"
+  escalation_action: "pause"   # "pause" = ask user | "fail" = hard stop pipeline
+
+# Live deployment execution (Deployment Agent)
+# If docker_auto_deploy is true and Docker is available, the deployment agent will
+# run `docker compose up` and write a live URL to deployment_output.json.
+live_deployment:
+  docker_auto_deploy: false    # Set true to spin up containers automatically
+  health_check_timeout_seconds: 30
+  staging_url_template: "http://localhost:{port}"
+  output_url_field: "live_staging_url"  # Written to deployment_output.json
