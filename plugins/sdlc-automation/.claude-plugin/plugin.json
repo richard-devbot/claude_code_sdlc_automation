@@ -1,7 +1,7 @@
 {
   "name": "sdlc-automation",
-  "version": "3.0.0",
-  "description": "End-to-end SDLC automation pipeline. Turn a client meeting transcript into requirements, architecture, code, tests, security threat models, compliance checks, cost estimates, and deployment configs — for any industry. Works in Claude.ai web and Claude Desktop.",
+  "version": "3.1.0",
+  "description": "End-to-end SDLC automation pipeline. Turn a client meeting transcript into requirements, architecture, code, tests, security threat models, compliance checks, cost estimates, and deployment configs \u2014 for any industry. Works in Claude.ai web and Claude Desktop.",
   "author": {
     "name": "Richardson Gunde",
     "email": "rgunde@evoketechnologies.com"

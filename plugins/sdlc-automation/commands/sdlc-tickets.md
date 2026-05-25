@@ -12,7 +12,7 @@ description: "Ticketing Agent — Create Epic → Story → Task hierarchy (Jira
 - `outputs/planning/sprint_plan.json`
 - `outputs/requirements/requirement_spec.json`
 
-!`python3 helpers/harness.py pre jira_agent 2>&1 || echo '[harness] input check skipped'`
+!`SDLC_HELPERS=$(python3 -c "import pathlib; paths=[pathlib.Path('helpers'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/helpers')]; print(next((str(p) for p in paths if (p/'harness.py').exists()), 'helpers'))" 2>/dev/null); python3 $SDLC_HELPERS/harness.py pre jira_agent 2>&1 || echo '[harness] input check skipped'`
 
 Read the agent instructions and execute them:
 

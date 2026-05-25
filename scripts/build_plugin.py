@@ -229,6 +229,38 @@ AGENTS = [
     },
 ]
 
+# ── Shared shell snippet — finds scripts/helpers in project OR plugin install ──
+
+# Injected into every command that calls scripts/ or helpers/.
+# Priority: local project copy → plugin marketplace install → plugin cache.
+_PATH_RESOLVER = """\
+!`python3 -c "
+import pathlib, sys, os
+
+def find_sdlc_root():
+    # 1. Local project copy (preferred — user ran /sdlc-setup)
+    local = pathlib.Path('scripts/orchestrator.py')
+    if local.exists():
+        return pathlib.Path('.').resolve()
+    # 2. Search all known plugin install locations
+    for base in [
+        pathlib.Path.home() / '.claude/plugins/marketplaces',
+        pathlib.Path.home() / '.claude/plugins/data',
+        pathlib.Path.home() / '.claude/plugins/cache',
+    ]:
+        for p in base.rglob('sdlc-automation/scripts/orchestrator.py'):
+            return p.parent.parent
+    return None
+
+root = find_sdlc_root()
+if root:
+    os.environ['SDLC_ROOT'] = str(root)
+    print(f'SDLC_ROOT={root}')
+else:
+    print('SDLC_ROOT=NOT_FOUND — run /sdlc-setup first')
+" 2>/dev/null`
+"""
+
 # ── Command generators ─────────────────────────────────────────────────────────
 
 def _agent_command(agent: dict) -> str:
@@ -239,7 +271,14 @@ def _agent_command(agent: dict) -> str:
         inputs_section = f"\n**Expected inputs:**\n{items}\n"
 
     optional_tag = " *(optional)*" if agent["optional"] else ""
-    harness_check = f"!`python3 helpers/harness.py pre {agent['id']} 2>&1 || echo '[harness] input check skipped'`\n\n" if agent["inputs"] else ""
+    # Use path-resolver so harness.py is found whether local or in plugin dir
+    harness_check = (
+        f"!`SDLC_HELPERS=$(python3 -c \""
+        f"import pathlib; paths=[pathlib.Path('helpers'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/helpers')]; "
+        f"print(next((str(p) for p in paths if (p/'harness.py').exists()), 'helpers'))\""
+        f" 2>/dev/null); python3 $SDLC_HELPERS/harness.py pre {agent['id']} 2>&1 || echo '[harness] input check skipped'`\n\n"
+        if agent["inputs"] else ""
+    )
 
     return f"""---
 allowed-tools: Read, Write, Edit, Bash
@@ -263,6 +302,96 @@ description: "{agent['label']} — {agent['desc']}"
 """
 
 
+def _setup_command() -> str:
+    return """\
+---
+allowed-tools: Bash, Read, Write
+description: "Bootstrap SDLC pipeline in this project — copies helpers, scripts, config from plugin install"
+---
+
+# SDLC Setup — Bootstrap This Project
+
+Copies `helpers/`, `scripts/`, and `sdlc-pipeline.yml` from the plugin install directory
+into your current project, then creates the `inputs/` and `outputs/` directory structure.
+
+**Run this once after installing the plugin in a new project.**
+
+!`python3 - <<'SETUP_EOF'
+import pathlib, shutil, sys, os
+
+cwd = pathlib.Path.cwd()
+
+def find_plugin_root():
+    for base in [
+        pathlib.Path.home() / ".claude/plugins/marketplaces",
+        pathlib.Path.home() / ".claude/plugins/data",
+        pathlib.Path.home() / ".claude/plugins/cache",
+    ]:
+        for p in base.rglob("sdlc-automation/scripts/orchestrator.py"):
+            return p.parent.parent
+    return None
+
+plugin_root = find_plugin_root()
+if not plugin_root:
+    print("ERROR: sdlc-automation plugin not found. Install with:")
+    print("  claude plugin marketplace add richard-devbot/claude_code_sdlc_automation")
+    print("  claude plugin install sdlc-automation@claude_code_sdlc_automation")
+    sys.exit(1)
+
+print(f"Plugin found: {plugin_root}")
+copied = []
+
+# Copy helpers/
+src_helpers = plugin_root / "helpers"
+dst_helpers = cwd / "helpers"
+if src_helpers.exists():
+    dst_helpers.mkdir(exist_ok=True)
+    for f in src_helpers.glob("*.py"):
+        shutil.copy2(f, dst_helpers / f.name)
+        copied.append(f"helpers/{f.name}")
+
+# Copy scripts/
+src_scripts = plugin_root / "scripts"
+dst_scripts = cwd / "scripts"
+if src_scripts.exists():
+    dst_scripts.mkdir(exist_ok=True)
+    for f in src_scripts.iterdir():
+        shutil.copy2(f, dst_scripts / f.name)
+        copied.append(f"scripts/{f.name}")
+
+# Copy sdlc-pipeline.yml (only if not already present)
+src_yml = plugin_root / "sdlc-pipeline.yml"
+dst_yml = cwd / "sdlc-pipeline.yml"
+if src_yml.exists() and not dst_yml.exists():
+    shutil.copy2(src_yml, dst_yml)
+    copied.append("sdlc-pipeline.yml")
+
+# Create inputs/ and outputs/ directory structure
+(cwd / "inputs").mkdir(exist_ok=True)
+(cwd / "inputs" / "samples").mkdir(exist_ok=True)
+for d in ["transcripts","requirements","documents","planning","jira","architecture",
+          "code","qa","deployment","security","compliance","cost","feedback","analytics"]:
+    out_dir = cwd / "outputs" / d
+    out_dir.mkdir(parents=True, exist_ok=True)
+    keep = out_dir / ".gitkeep"
+    if not keep.exists():
+        keep.touch()
+
+# Create transcript placeholder if missing
+transcript = cwd / "inputs" / "transcript.txt"
+if not transcript.exists():
+    transcript.write_text("# Paste your client meeting transcript here\\n")
+    copied.append("inputs/transcript.txt (placeholder)")
+
+print(f"\\nSetup complete! Copied {len(copied)} files:")
+for f in copied:
+    print(f"  + {f}")
+print("\\nNext step: add your transcript to inputs/transcript.txt")
+print("Then run: /sdlc-start")
+SETUP_EOF`
+"""
+
+
 def _pipeline_start_command() -> str:
     return """\
 ---
@@ -273,9 +402,17 @@ argument-hint: [--express | --replay]
 
 # Start SDLC Automation Pipeline
 
+First time in this project? Run `/sdlc-setup` to copy helpers and scripts.
+
 Place your client meeting transcript in `inputs/transcript.txt`, then start:
 
-!`bash scripts/run_pipeline.sh`
+!`bash scripts/run_pipeline.sh 2>/dev/null || python3 -c "
+import pathlib, sys
+for base in [pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/run_pipeline.sh')]:
+    for p in base:
+        import subprocess; subprocess.run(['bash', str(p)]); sys.exit()
+print('Run /sdlc-setup first, then retry /sdlc-start')
+"`
 
 ---
 
@@ -303,8 +440,23 @@ subsequent agents (01 → 14) via JSON contract handoffs.
 """
 
 
+def _orch_cmd(flag: str) -> str:
+    """Return a shell snippet that runs orchestrator.py with the given flag,
+    finding it in the local project or the plugin install dir."""
+    return (
+        f'!`python3 -c "'
+        f"import pathlib, subprocess, sys; "
+        f"paths = [pathlib.Path('scripts/orchestrator.py'), "
+        f"*pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/orchestrator.py')]; "
+        f"orch = next((p for p in paths if p.exists()), None); "
+        f"(subprocess.run(['python3', str(orch), '{flag}']) if orch else "
+        f"print('Run /sdlc-setup first to install helpers and scripts.'))"
+        f'"`'
+    )
+
+
 def _parallel_command() -> str:
-    return """\
+    return f"""\
 ---
 allowed-tools: Bash, Read
 description: "Run SDLC pipeline in parallel DAG mode — each agent gets a fresh context window"
@@ -316,7 +468,10 @@ Each agent runs as an isolated subprocess with a **fresh 200K context window**.
 Agents within the same phase run concurrently. JSON contracts on disk are the
 only communication channel.
 
-!`python3 scripts/orchestrator.py --mode parallel`
+> First time? Run `/sdlc-setup` to copy the scripts into this project.
+
+{_orch_cmd('--mode parallel')}
+
 
 ---
 
@@ -344,7 +499,7 @@ If shell commands are not available, use `/sdlc-start` to run interactively.
 
 
 def _sequential_command() -> str:
-    return """\
+    return f"""\
 ---
 allowed-tools: Bash, Read
 description: "Run SDLC pipeline sequentially — one agent at a time, fresh context per agent"
@@ -355,7 +510,10 @@ description: "Run SDLC pipeline sequentially — one agent at a time, fresh cont
 Each agent runs as an isolated subprocess — fresh context window per agent.
 Agents run one at a time (safer for debugging, easier to resume).
 
-!`python3 scripts/orchestrator.py --mode sequential`
+> First time? Run `/sdlc-setup` to copy the scripts into this project.
+
+{_orch_cmd('--mode sequential')}
+
 
 ---
 
@@ -374,7 +532,7 @@ If shell commands are not available, use `/sdlc-start` to run interactively.
 
 
 def _status_command() -> str:
-    return """\
+    return f"""\
 ---
 allowed-tools: Bash, Read
 description: "Show current SDLC pipeline status — which agents completed, which are pending"
@@ -382,29 +540,21 @@ description: "Show current SDLC pipeline status — which agents completed, whic
 
 # SDLC Pipeline — Status
 
-!`python3 scripts/orchestrator.py --status`
-
----
+{_orch_cmd('--status')}
 
 ## Legend
 
 - `[OK]` — Agent completed and output contract is valid
 - `[  ]` — Agent has not run yet (or contract is missing/invalid)
 
-## Check status without shell
+## Detailed status
 
-Read these files to assess pipeline progress:
-
-!`python3 helpers/pipeline_status.py`
-
-Run the analytics report:
-
-!`python3 helpers/pipeline_analytics.py 2>/dev/null || echo "Run pipeline first to generate analytics"`
+!`python3 -c "import pathlib,subprocess,sys; paths=[pathlib.Path('helpers/pipeline_status.py'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/helpers/pipeline_status.py')]; p=next((x for x in paths if x.exists()),None); subprocess.run(['python3',str(p)]) if p else print('Run /sdlc-setup first')"`
 """
 
 
 def _resume_command() -> str:
-    return """\
+    return f"""\
 ---
 allowed-tools: Bash, Read
 description: "Resume SDLC pipeline from a specific agent"
@@ -416,7 +566,7 @@ argument-hint: <agent-name-or-number>
 Resume the pipeline starting from the specified agent.
 All agents before it are assumed to have completed (their JSON contracts exist).
 
-!`python3 scripts/orchestrator.py --resume-from $ARGUMENTS`
+!`python3 -c "import pathlib,subprocess,sys; paths=[pathlib.Path('scripts/orchestrator.py'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/orchestrator.py')]; orch=next((p for p in paths if p.exists()),None); subprocess.run(['python3',str(orch),'--resume-from','$ARGUMENTS']) if orch else print('Run /sdlc-setup first')"`
 
 ---
 
@@ -458,7 +608,7 @@ Read outputs/[previous_output].json and execute .claude/agents/[NN_agent].md"
 
 
 def _single_agent_command() -> str:
-    return """\
+    return f"""\
 ---
 allowed-tools: Bash, Read, Write, Edit
 description: "Run a single SDLC agent in isolation with a fresh context window"
@@ -471,7 +621,7 @@ Runs exactly one agent in isolation as a fresh `claude -p` subprocess.
 The agent reads its inputs from disk, does its work, writes its JSON contract,
 and exits. The pipeline does not continue automatically.
 
-!`python3 scripts/orchestrator.py --mode single --agent $ARGUMENTS`
+!`python3 -c "import pathlib,subprocess,sys; paths=[pathlib.Path('scripts/orchestrator.py'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/orchestrator.py')]; orch=next((p for p in paths if p.exists()),None); subprocess.run(['python3',str(orch),'--mode','single','--agent','$ARGUMENTS']) if orch else print('Run /sdlc-setup first')"`
 
 ---
 
@@ -649,6 +799,7 @@ def build_plugin(output_path: Path) -> None:
 
     # New SDLC commands
     new_commands: dict[str, str] = {
+        "commands/sdlc-setup.md":      _setup_command(),       # ← NEW: bootstrap project
         "commands/sdlc-start.md":      _pipeline_start_command(),
         "commands/sdlc-parallel.md":   _parallel_command(),
         "commands/sdlc-sequential.md": _sequential_command(),

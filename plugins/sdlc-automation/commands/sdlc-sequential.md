@@ -8,7 +8,10 @@ description: "Run SDLC pipeline sequentially — one agent at a time, fresh cont
 Each agent runs as an isolated subprocess — fresh context window per agent.
 Agents run one at a time (safer for debugging, easier to resume).
 
-!`python3 scripts/orchestrator.py --mode sequential`
+> First time? Run `/sdlc-setup` to copy the scripts into this project.
+
+!`python3 -c "import pathlib, subprocess, sys; paths = [pathlib.Path('scripts/orchestrator.py'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/orchestrator.py')]; orch = next((p for p in paths if p.exists()), None); (subprocess.run(['python3', str(orch), '--mode sequential']) if orch else print('Run /sdlc-setup first to install helpers and scripts.'))"`
+
 
 ---
 

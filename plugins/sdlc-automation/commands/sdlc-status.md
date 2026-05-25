@@ -5,21 +5,13 @@ description: "Show current SDLC pipeline status — which agents completed, whic
 
 # SDLC Pipeline — Status
 
-!`python3 scripts/orchestrator.py --status`
-
----
+!`python3 -c "import pathlib, subprocess, sys; paths = [pathlib.Path('scripts/orchestrator.py'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/orchestrator.py')]; orch = next((p for p in paths if p.exists()), None); (subprocess.run(['python3', str(orch), '--status']) if orch else print('Run /sdlc-setup first to install helpers and scripts.'))"`
 
 ## Legend
 
 - `[OK]` — Agent completed and output contract is valid
 - `[  ]` — Agent has not run yet (or contract is missing/invalid)
 
-## Check status without shell
+## Detailed status
 
-Read these files to assess pipeline progress:
-
-!`python3 helpers/pipeline_status.py`
-
-Run the analytics report:
-
-!`python3 helpers/pipeline_analytics.py 2>/dev/null || echo "Run pipeline first to generate analytics"`
+!`python3 -c "import pathlib,subprocess,sys; paths=[pathlib.Path('helpers/pipeline_status.py'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/helpers/pipeline_status.py')]; p=next((x for x in paths if x.exists()),None); subprocess.run(['python3',str(p)]) if p else print('Run /sdlc-setup first')"`

@@ -9,7 +9,10 @@ Each agent runs as an isolated subprocess with a **fresh 200K context window**.
 Agents within the same phase run concurrently. JSON contracts on disk are the
 only communication channel.
 
-!`python3 scripts/orchestrator.py --mode parallel`
+> First time? Run `/sdlc-setup` to copy the scripts into this project.
+
+!`python3 -c "import pathlib, subprocess, sys; paths = [pathlib.Path('scripts/orchestrator.py'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/orchestrator.py')]; orch = next((p for p in paths if p.exists()), None); (subprocess.run(['python3', str(orch), '--mode parallel']) if orch else print('Run /sdlc-setup first to install helpers and scripts.'))"`
+
 
 ---
 

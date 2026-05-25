@@ -12,7 +12,7 @@ description: "Deployment Agent — Generate Dockerfiles, CI/CD pipelines, IaC te
 - `outputs/qa/qa_results.json`
 - `outputs/architecture/system_design.json`
 
-!`python3 helpers/harness.py pre deployment_agent 2>&1 || echo '[harness] input check skipped'`
+!`SDLC_HELPERS=$(python3 -c "import pathlib; paths=[pathlib.Path('helpers'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/helpers')]; print(next((str(p) for p in paths if (p/'harness.py').exists()), 'helpers'))" 2>/dev/null); python3 $SDLC_HELPERS/harness.py pre deployment_agent 2>&1 || echo '[harness] input check skipped'`
 
 Read the agent instructions and execute them:
 

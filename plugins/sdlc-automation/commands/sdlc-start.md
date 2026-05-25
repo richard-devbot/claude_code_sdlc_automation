@@ -6,9 +6,17 @@ argument-hint: [--express | --replay]
 
 # Start SDLC Automation Pipeline
 
+First time in this project? Run `/sdlc-setup` to copy helpers and scripts.
+
 Place your client meeting transcript in `inputs/transcript.txt`, then start:
 
-!`bash scripts/run_pipeline.sh`
+!`bash scripts/run_pipeline.sh 2>/dev/null || python3 -c "
+import pathlib, sys
+for base in [pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/run_pipeline.sh')]:
+    for p in base:
+        import subprocess; subprocess.run(['bash', str(p)]); sys.exit()
+print('Run /sdlc-setup first, then retry /sdlc-start')
+"`
 
 ---
 

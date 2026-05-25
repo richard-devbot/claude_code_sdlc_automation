@@ -9,7 +9,7 @@ argument-hint: <agent-name-or-number>
 Resume the pipeline starting from the specified agent.
 All agents before it are assumed to have completed (their JSON contracts exist).
 
-!`python3 scripts/orchestrator.py --resume-from $ARGUMENTS`
+!`python3 -c "import pathlib,subprocess,sys; paths=[pathlib.Path('scripts/orchestrator.py'), *pathlib.Path.home().glob('.claude/plugins/**/sdlc-automation/scripts/orchestrator.py')]; orch=next((p for p in paths if p.exists()),None); subprocess.run(['python3',str(orch),'--resume-from','$ARGUMENTS']) if orch else print('Run /sdlc-setup first')"`
 
 ---
 
