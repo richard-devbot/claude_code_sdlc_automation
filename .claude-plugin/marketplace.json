@@ -20,7 +20,7 @@
         "url": "https://github.com/richard-devbot/claude_code_sdlc_automation.git",
         "path": "plugins/sdlc-automation",
         "ref": "main",
-        "sha": "ffc753e1d15952639edabaa1a8085ce2290004a8"
+        "sha": "7b5340c143dd30a0a8a65d6d79148fb70ff0a0a5"
       },
       "homepage": "https://github.com/richard-devbot/claude_code_sdlc_automation"
     }
