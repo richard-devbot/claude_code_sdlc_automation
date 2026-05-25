@@ -37,36 +37,63 @@ AGENT_LABELS = {
 
 
 def load_notification_config():
-    """Parse notification config from sdlc-pipeline.yml without a YAML library."""
+    """Parse notification config from sdlc-pipeline.yml.
+
+    Uses an indentation-aware state machine so nested keys like
+    notifications.channels.slack.webhook_url are correctly extracted.
+    """
+    config = {"enabled": False, "slack_webhook": "", "teams_webhook": "", "fallback": "desktop"}
     if not PIPELINE_YML.exists():
-        return {"enabled": False}
+        return config
     try:
-        content = PIPELINE_YML.read_text()
-        lines = content.splitlines()
         in_notifications = False
-        config = {"enabled": False, "slack_webhook": "", "teams_webhook": "", "fallback": "desktop"}
-        for line in lines:
-            stripped = line.strip()
+        current_channel: str | None = None  # "slack" or "teams"
+
+        for raw_line in PIPELINE_YML.read_text().splitlines():
+            stripped = raw_line.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+
+            # Enter notifications block
             if stripped.startswith("notifications:"):
                 in_notifications = True
+                current_channel = None
                 continue
-            if in_notifications:
-                if stripped.startswith("enabled:"):
-                    config["enabled"] = "true" in stripped.lower()
-                if "webhook_url:" in stripped and "slack" not in stripped and "teams" not in stripped:
-                    pass
-                if stripped.startswith("webhook_url:") or "webhook_url:" in stripped:
-                    val = stripped.split("webhook_url:")[-1].strip().strip('"').strip("'")
-                    if val and not val.startswith("#"):
-                        if not config.get("slack_webhook"):
-                            config["slack_webhook"] = val
-                        else:
-                            config["teams_webhook"] = val
-                if stripped.startswith("fallback:"):
-                    config["fallback"] = stripped.split(":")[-1].strip().strip('"').strip("'")
-                if stripped and not stripped.startswith("#") and ":" in stripped and not stripped.startswith(" ") and not stripped.startswith("\t"):
-                    if stripped.split(":")[0].strip() not in ("notifications", "enabled", "fallback"):
-                        in_notifications = False
+
+            # Exit notifications block on any non-indented line
+            if in_notifications and not raw_line[0].isspace():
+                break
+
+            if not in_notifications:
+                continue
+
+            # Depth-1 keys: enabled, fallback, channels, events
+            if stripped.startswith("enabled:"):
+                config["enabled"] = "true" in stripped.lower()
+            elif stripped.startswith("fallback:"):
+                config["fallback"] = stripped.split(":", 1)[1].split("#")[0].strip().strip('"\'').strip()
+            # Depth-2: channel names
+            elif stripped.startswith("slack:"):
+                current_channel = "slack"
+            elif stripped.startswith("teams:"):
+                current_channel = "teams"
+            # Depth-3: webhook_url under the active channel
+            elif stripped.startswith("webhook_url:"):
+                raw_val = stripped.split(":", 1)[1].strip()
+                # Strip inline comment, then surrounding quotes
+                val = raw_val.split("#")[0].strip().strip('"\'').strip()
+                if val:
+                    if current_channel == "slack" and not config["slack_webhook"]:
+                        config["slack_webhook"] = val
+                    elif current_channel == "teams" and not config["teams_webhook"]:
+                        config["teams_webhook"] = val
+            # Reset channel tracker on any other depth-2 key
+            elif ":" in stripped and current_channel and raw_line[:6].strip() == "":
+                # Still 4-space indent → within same channel block, do nothing
+                pass
+            elif ":" in stripped:
+                current_channel = None
+
         return config
     except Exception:
         return {"enabled": False}

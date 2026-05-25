@@ -93,7 +93,11 @@ MAX_WAIT_SECONDS      = 1800  # 30 minutes per agent max
 # ── YAML parser (no pyyaml dependency) ────────────────────────────────────────
 
 def _parse_optional_toggles() -> dict[str, bool]:
-    """Read optional_agents block from sdlc-pipeline.yml."""
+    """Read optional_agents block from sdlc-pipeline.yml.
+
+    Uses the RAW (un-stripped) line to detect block boundaries so that
+    indented keys inside optional_agents: are not mistaken for top-level keys.
+    """
     defaults = {
         "security_threat_model": True,
         "compliance_checker": True,
@@ -104,15 +108,16 @@ def _parse_optional_toggles() -> dict[str, bool]:
         return defaults
     in_block = False
     result = dict(defaults)
-    for line in PIPELINE_YML.read_text().splitlines():
-        stripped = line.strip()
+    for raw_line in PIPELINE_YML.read_text().splitlines():
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
         if stripped.startswith("optional_agents:"):
             in_block = True
             continue
         if in_block:
-            if not stripped or stripped.startswith("#"):
-                continue
-            if ":" in stripped and not stripped.startswith(" ") and not stripped.startswith("\t") and stripped != "optional_agents:":
+            # Exit block on any non-indented, non-comment line (use raw_line)
+            if raw_line and not raw_line[0].isspace():
                 break
             if ":" in stripped:
                 key, _, val = stripped.partition(":")
